@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/IPCIIMiniP.iml" filepath="$PROJECT_DIR$/.idea/IPCIIMiniP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IPCII_Project.iml" filepath="$PROJECT_DIR$/IPCII_Project.iml" />
     </modules>
   </component>
 </project>
