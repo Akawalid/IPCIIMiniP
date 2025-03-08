@@ -3,7 +3,7 @@ package View;
 import javax.swing.*;
 import java.awt.*;
 
-public class FarmerPanel extends EntitiesPanel {
+public class FarmerPanel extends ControlPanel {
     public FarmerPanel(){
         super();
         setPreferredSize(new Dimension(200, 200));
