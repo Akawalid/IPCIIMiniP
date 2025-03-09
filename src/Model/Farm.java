@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Farm {
-    public static final int WIDTH = 100, HEIGHT = 100;
+    public static final int WIDTH = 20, HEIGHT = 15;//spots
     private HashSet<Entity> entities;
     private ArrayList<Spot> spots;
     private Bank bank;

@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ShepherdActionPanel extends JPanel {
+    //This class corresponds to displayer of the shepherd's actions (on the bottom left side of the screen)
 
     public ShepherdActionPanel(){
         super();

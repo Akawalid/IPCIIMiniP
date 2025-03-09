@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class World extends JPanel {
+    //World is the page that visualizes the core of the game, it contains the land and the control panel.
     public World(){
         super();
         assert(getParent() != null);
@@ -12,15 +13,11 @@ public class World extends JPanel {
         setLayout(new BorderLayout());
 
         // World Panel (Left Column)
-        JPanel gamePanel = new JPanel();
-        gamePanel.setBackground(Color.BLUE);
-        gamePanel.setBorder(BorderFactory.createTitledBorder("World"));
-        add(gamePanel, BorderLayout.CENTER);
+        JPanel land = new Land();
+        add(land, BorderLayout.CENTER);
 
         // Control Panel (Right Column)
         JPanel controlPanel = new ControlPanel();
-        controlPanel.setBackground(Color.GREEN);
-        controlPanel.setBorder(BorderFactory.createTitledBorder("Control Panel"));
         add(controlPanel, BorderLayout.EAST);
     }
 

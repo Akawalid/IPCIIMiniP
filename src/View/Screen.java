@@ -7,8 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Screen extends JFrame {
+    //This class handles the whole screen with different pages, Menu, World, GameOver, etc.
     private Farm farm;
     public static void main(String[] args){
+
+        //The font doesnt work for the moment I will correct it later.
         Font defaultFont = new Font("Mincraftia", Font.PLAIN, 24);
         UIManager.put("Button.font", defaultFont);       // Buttons
         UIManager.put("Label.font", defaultFont);        // Labels

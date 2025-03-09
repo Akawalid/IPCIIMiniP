@@ -1,6 +1,7 @@
 package Model;
 
 public class Bank {
+    //This class Handles the bidget of the Shepherd
     private static final int INITIAL_BALANCE = 2000;
     private int balance;//dollars
     public Bank(){
