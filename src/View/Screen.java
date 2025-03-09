@@ -1,14 +1,36 @@
 package View;
 
+import Model.Farm;
+import Model.Shepherd;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Screen extends JFrame {
+    private Farm farm;
     public static void main(String[] args){
-        new Screen();
+        Font defaultFont = new Font("Mincraftia", Font.PLAIN, 24);
+        UIManager.put("Button.font", defaultFont);       // Buttons
+        UIManager.put("Label.font", defaultFont);        // Labels
+        UIManager.put("TextField.font", defaultFont);    // Text fields
+        UIManager.put("TextArea.font", defaultFont);     // Text areas
+        UIManager.put("ComboBox.font", defaultFont);     // Combo boxes
+        UIManager.put("List.font", defaultFont);         // Lists
+        UIManager.put("Menu.font", defaultFont);         // Menus
+        UIManager.put("MenuItem.font", defaultFont);     // Menu items
+        UIManager.put("Table.font", defaultFont);        // Tables
+        UIManager.put("Tree.font", defaultFont);         // Trees
+        UIManager.put("TabbedPane.font", defaultFont);   // Tabbed panes
+        UIManager.put("TitledBorder.font", defaultFont); // Titled borders
+
+        Farm fr = new Farm();
+
+        new Screen(fr);
     }
-    public Screen(){
+    public Screen(Farm farm){
         super();
+        this.farm = farm;
+
         setTitle("Farm");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
