@@ -23,51 +23,55 @@ public class ControlPanel extends JPanel {
     private JPanel actionPanel;
 
     private Farm farm;
+
     public ControlPanel(Farm farm){
         super();
         this.farm = farm;
 
-        setBackground(new Color(0x03071e));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        setActiveEntity(new Shepherd("Robbert"));
+        //We add a random entity for the moment
+        setActiveEntity(new Shepherd("John"));
         setGameStatePanel();
     }
 
-    public void setActiveEntity(Entity e){
-        informationPanel = new ShepherdInformationPanel((Shepherd) e);
-        actionPanel = new ShepherdActionPanel();
+    public void setActiveEntity(Shepherd e){
+        //Active entity represents the entity on which the user has clicked on.
+        //the polymorphism, will choose this methode for the shepherd's entities.
+        if(e == null) return;
+        informationPanel = new ShepherdInformationPanel(e);
+        actionPanel = new ShepherdActionPanel(e);
         removeAll();
         add(informationPanel);
         add(Box.createRigidArea(new Dimension(0, MARGIN)));
         add(actionPanel);
     }
 
-    private void setGameStatePanel(){
+    /*
+    for the ewe's, we call this function by polymorphism
+        public void setActiveEntity(Ewe e){}
+    }
+    */
 
+    private void setGameStatePanel(){
+        //this method displays the game state,in which we count, the store, the bank, the day and the objective
         gameStatePanel = new JPanel();
         gameStatePanel.setBackground(Color.WHITE);
         gameStatePanel.setLayout(new BoxLayout(gameStatePanel, BoxLayout.Y_AXIS));
         gameStatePanel.add(new JLabel("Game State"));
         gameStatePanel.add(new JLabel("Day: 1"));
-        gameStatePanel.add(new JLabel("Time: 12:00"));
-        gameStatePanel.add(new JLabel("Weather: Sunny"));
-        gameStatePanel.add(new JLabel("Bank Balance:" +  farm.getBank().getBalance()));
+        gameStatePanel.add(new JLabel("Objective: 20k"));
+        gameStatePanel.add(new JLabel("Balance:" +  farm.getBank().getBalance()));
 
 
         CustomButton storeButton = new CustomButton("Store");
+
+        //when we click on the store button, a pop up window, shows up, with the items available in the store.
+        storeButton.addActionListener(e -> {
+            ((World) getParent().getParent()).showStore();
+        });
         gameStatePanel.add(storeButton);
 
-
         add(gameStatePanel, 0);
-    }
-
-    //The dimensions of the current container depends on the parent container's dimensions.
-    //This methode executes once the current component is added to parent container.
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        assert(getParent() != null);
-        setPreferredSize(new Dimension(W, getParent().getHeight()));
     }
 }

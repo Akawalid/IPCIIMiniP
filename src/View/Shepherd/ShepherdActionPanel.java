@@ -1,7 +1,10 @@
 package View.Shepherd;
 
+import Controller.ReactionMoveShepherd;
+import Model.Shepherd;
 import View.ControlPanel;
 import View.CustomButton;
+import View.World;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +13,11 @@ public class ShepherdActionPanel extends JPanel {
     //This class corresponds to displayer of the shepherd's actions (on the bottom left side of the screen)
     private static final int MARGIN = 5;
     private CustomButton moveButton, collectButton, putButton;
-    public ShepherdActionPanel(){
+    private Shepherd s;
+    public ShepherdActionPanel(Shepherd s){
         super();
+        this.s = s;
+
         setBackground(new Color(0x03071e));
 
         moveButton = new CustomButton("Move");
@@ -24,10 +30,9 @@ public class ShepherdActionPanel extends JPanel {
         add(collectButton);
         add(Box.createRigidArea(new Dimension(0, MARGIN)));
         add(putButton);
-    }
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        setPreferredSize(new Dimension(getParent().getWidth() , ControlPanel.H_INFO_PANEL));
+
+
+        //We add a controller to the button.
+        moveButton.addMouseListener(new ReactionMoveShepherd(s));
     }
 }

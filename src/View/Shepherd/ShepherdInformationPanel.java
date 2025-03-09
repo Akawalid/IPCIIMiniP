@@ -14,8 +14,6 @@ public class ShepherdInformationPanel extends JPanel {
         super();
 
         this.s = s;
-        setBackground(new Color(0x03071e));
-
         displayShepherdInfo();
     }
     private void displayShepherdInfo() {
@@ -25,16 +23,5 @@ public class ShepherdInformationPanel extends JPanel {
         JLabel nameLabel = new JLabel("Name: " + s.getName());
         nameLabel.setForeground(Color.WHITE);
         add(nameLabel, BorderLayout.NORTH);
-
-        // Display Shepherd's image
-        //JLabel imageLabel = new JLabel(new ImageIcon(s.getImagePath()));
-        //add(imageLabel, BorderLayout.CENTER);
     }
-
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        setPreferredSize(new Dimension(getParent().getWidth() ,ControlPanel.H_INFO_PANEL));
-    }
-
 }

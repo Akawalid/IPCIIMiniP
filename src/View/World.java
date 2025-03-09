@@ -8,10 +8,16 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public class World extends JLayeredPane {
+    //World is a layeredPane, the store and the bank will be displayed as pop up's on the screen that why we use a layeredPane.
+    //It is important to note that LayeredPane doesnt not support setPereferredSize, it uses a null Layout, so we have to set
+    //the bounds of each element inside manually.
+    private static final int STORE_W = 500, STORE_H = 400;
     //World is the page that visualizes the core of the game, it contains the land and the control panel.
     private Farm farm;
+    //shadowPanel, is for visualisation purposes, it will be displayed when the store or the bank are displayed.
     private JPanel shadowPanel;
     private JPanel storePanel;
+    //worldPanel, is the main panel that contains the land and the control panel.
     private JPanel worldPanel;
 
     public World(Farm farm){
@@ -38,7 +44,8 @@ public class World extends JLayeredPane {
 
 
         storePanel = new StorePanel();
-
+        //The bounds of wolrdPanel, shadowPanel and storePanel depend on the final resolution of this panel
+        //so once this resolution is set, we update the bounds of these panels with the method updateBounds.
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -51,13 +58,14 @@ public class World extends JLayeredPane {
         worldPanel.setBounds(0, 0, getWidth(), getHeight());
         shadowPanel.setBounds(0, 0, getWidth(), getHeight());
         storePanel.setBounds(
-                getWidth() / 2 - 150,
-                getHeight() / 2 - 100,
-                300, 200
+                getWidth() / 2 - STORE_W/2,
+                getHeight() / 2 - STORE_H/2,
+                STORE_W, STORE_H
         );
         //showStore();
     }
     public void showStore(){
+        //this methode shows the store, by adding the shadow and the store panel to the layeredPane.
         add(shadowPanel, JLayeredPane.PALETTE_LAYER);
 
         add(storePanel, JLayeredPane.POPUP_LAYER);
@@ -69,7 +77,7 @@ public class World extends JLayeredPane {
         // Remove the shadow and store panel
         remove(shadowPanel);
         remove(storePanel);
-//        revalidate();
-//        repaint();
+        revalidate();
+        repaint();
     }
 }
