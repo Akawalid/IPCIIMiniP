@@ -31,4 +31,18 @@ public class Entity {
     public String getName(){
         return  name;
     }
+
+
+    //these methods are implemented to use HashSets of Entities
+    @Override
+    public boolean equals(Object o){
+        if (o == this) return true;
+        if (!(o instanceof Entity)) return false;
+        Entity e = (Entity) o;
+        return e.id == id;
+    }
+    @Override
+    public int hashCode(){
+        return id;
+    }
 }

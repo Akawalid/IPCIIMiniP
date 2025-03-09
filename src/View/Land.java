@@ -16,8 +16,11 @@ public class Land extends JPanel {
     //number of rows and columns of the grid ayout, it is computed once the dimensions are computed,
     //rows = width/CELL_SIZE, cols = height/CELL_SIZE
     private int rows, cols;
-    public Land(){
+    private Farm farm;
+    public Land(Farm farm){
         super();
+
+        this.farm = farm;
 
         //While creating this object, the final width is not yet computed by the layout manager,
         //But we need it to set the land, so we add a listener that executes after the layout manager has finished
@@ -43,5 +46,7 @@ public class Land extends JPanel {
                 add(cell, j, i);
             }
         }
+        repaint();
+        revalidate();
     }
 }

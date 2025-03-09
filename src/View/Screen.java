@@ -38,7 +38,7 @@ public class Screen extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 //        setLayout(null);
-        add(new World());
+        add(new World(farm));
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setLocationRelativeTo(null);
         setVisible(true);
