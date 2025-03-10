@@ -1,12 +1,11 @@
 package View;
 
 import Model.Farm;
-import Model.Shepherd;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Screen extends JFrame {
+public class Main extends JFrame {
     //This class handles the whole screen with different pages, Menu, World, GameOver, etc.
     private Farm farm;
     public static void main(String[] args){
@@ -28,9 +27,9 @@ public class Screen extends JFrame {
 
         Farm fr = new Farm();
 
-        new Screen(fr);
+        new Main(fr);
     }
-    public Screen(Farm farm){
+    public Main(Farm farm){
         super();
         this.farm = farm;
 

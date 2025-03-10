@@ -4,52 +4,50 @@ import Model.Exceptions.InvalidCoordinates;
 
 import java.awt.*;
 
-public class FarmAnimal extends Entity {
+import static Model.FarmAnimal.AgeState.*;
+
+public abstract class FarmAnimal extends Entity {
 
     @Override
-    public void move(Point direction) throws InvalidCoordinates {
-
-    }
-
-
-
+    abstract public void move(Point direction) throws InvalidCoordinates;
 
 
     private int age;       // L'âge exprimé en nombre de cycles
-    private String state;  // "Bébé", "Mature", "Vieux"
-    private static final int MATURITY_THRESHOLD = 3; // Animal Mature (au 3e cycle)
-    private static final int OLD_THRESHOLD = 7;      // Animal Vieux
-    private static final int DEATH_AGE = 10;         // Animal meurt de vieillesse
+    private AgeState state;  // "Bébé", "Mature", "Vieux"
     private boolean running; // Pour contrôler l'exécution du thread
-    // private EntityManager entitymanager; // Référence à la simulation
+    public int prix ;
+
+
+
+    public enum AgeState {
+        BABY , MATURE, OLD, DEAD;
+    }
 
     public FarmAnimal(String name) {
         super(name); // Initialiser à bébé
         this.age = 0;
-        this.state = "Bébé";
+        this.state = BABY;
         this.running = true;
 
     }
 
 
-    public void updateAge() {
+    public final void updateAge() {
         // Si l'animal est déjà mort, on ne fait rien
-        if (state.equals("Mort")) {
+        if (state == DEAD) {
             return;
         }
         age++;
-        if (age < MATURITY_THRESHOLD) {
-            state = "Bébé";
-        } else if (age < OLD_THRESHOLD) {
-            state = "Mature";
+        if (age>3) {
+            state = MATURE;
             // TODO:  Possibilité d'augmenter la production ou la reproduction à cet état
-        } else if (age < DEATH_AGE) {
-            state = "Vieux";
+        } else if (age > 7) {
+            state = OLD;
             // TODO : Réduire la production et / ou la valeur de revente, par exemple
-        } else {
+        } else if (age == 10) {
             // L'animal meurt de vieillesse
             die(); //
-            state = "Mort";
+            state = DEAD;
         }
         System.out.println("Âge : " + age + " - État : " + state);
     }
@@ -65,8 +63,18 @@ public class FarmAnimal extends Entity {
         return state;
     }
 
-    public static void main (String [] args){
-        FarmAnimal fa = new FarmAnimal("John");
-        fa.updateAge();
+    public int sell() {
+        if (this.state == BABY) {
+            return -1;
+        } else if (this.state == MATURE) {
+            return 10;
+        }
+        return 0;
     }
+
+    public int vendre(){
+        return this.prix ;
+    }
+
+
 }
