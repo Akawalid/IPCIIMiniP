@@ -41,7 +41,7 @@ public abstract class Entity {
 
     //move is an abstract methode because each entity has its own way of moving.
     //move method throws InvalidCoordinates in case if the user clicks on an invalid spot such as a tree, or a rock...
-    abstract public void move(Point direction) throws InvalidCoordinates;
+    abstract public void move() throws InvalidCoordinates;
 
 
     //these methods are implemented to use HashSets of Entities

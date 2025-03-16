@@ -1,9 +1,8 @@
 package Model;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.awt.List;
+import java.util.*;
 
 public class Farm {
     //Farm is out model, it contains the creatures and the land
@@ -53,5 +52,4 @@ public class Farm {
         //It is a good way to ensure abstraction.
         return creatures.iterator();
     }
-
 }
