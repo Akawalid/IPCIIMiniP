@@ -1,36 +1,54 @@
-package Model;
+package Model.FarmAnimals;
 
+import Model.Entity;
+import Model.AgeState;
 import Model.Exceptions.InvalidCoordinates;
+import Model.Resources.Resource;
 
 import java.awt.*;
+import java.util.ArrayList;
 
-import static Model.FarmAnimal.AgeState.*;
+import static Model.AgeState.*;
 
 public abstract class FarmAnimal extends Entity {
 
     @Override
-    abstract public void move(Point direction) throws InvalidCoordinates;
+    public void move(Point direction) throws InvalidCoordinates{
+        //TODO j'ai supposé que ce n'était pas abstract pour pas que ça fasse une erreur
+        //dans les classes filles tant que je n'avais pas de réponse sur la question suivante :
 
+        //est-ce qu'on souhaite définir move ici ?
+        //- si oui : alors on doit enlever "abstract" qu'il y avait
+        //- si non : on peut enlever la fonction car on n'a pas besoin de l'écrire si
+        // on ne la redéfinit pas
+    }
+
+    //------------------- Attributes -------------------//
+
+    // ### Age evolution ###
 
     private int age;       // L'âge exprimé en nombre de cycles
     private AgeState state;  // "Bébé", "Mature", "Vieux"
     private boolean running; // Pour contrôler l'exécution du thread
     public int prix ;
 
+    // ### Resource production ###
+    ArrayList<Resource> resourceList;
 
+    //------------------- Methods -------------------//
 
-    public enum AgeState {
-        BABY , MATURE, OLD, DEAD;
-    }
-
+    /** constructor **/
     public FarmAnimal(String name) {
+        //Age evolution
         super(name); // Initialiser à bébé
         this.age = 0;
         this.state = BABY;
         this.running = true;
-
+        //Resource production
+        resourceList = new ArrayList<>();
     }
 
+    // ### Age evolution ###
 
     public final void updateAge() {
         // Si l'animal est déjà mort, on ne fait rien
@@ -62,6 +80,14 @@ public abstract class FarmAnimal extends Entity {
     public Object getState() {
         return state;
     }
+
+    // ### Resource production ###
+
+    public ArrayList<Resource> getResources() {
+        return resourceList;
+    }
+
+    // ### Buy & Sell ###
 
     public int sell() {
         if (this.state == BABY) {

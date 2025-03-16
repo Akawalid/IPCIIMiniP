@@ -1,2 +1,12 @@
-package Model.FarmAnimals;public class Galinacea {
+package Model.FarmAnimals;
+
+public abstract class Galinacea extends FarmAnimal{
+    /**
+     * constructor
+     *
+     * @param name
+     **/
+    public Galinacea(String name) {
+        super(name);
+    }
 }

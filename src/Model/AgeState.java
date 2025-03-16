@@ -1,2 +1,5 @@
-package Model.FarmAnimals;public enum AgeState {
+package Model;
+
+public enum AgeState {
+    BABY , MATURE, OLD, DEAD;
 }

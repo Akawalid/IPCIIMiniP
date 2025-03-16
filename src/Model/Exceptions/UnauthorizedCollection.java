@@ -1,4 +1,7 @@
 package Model.Exceptions;
 
-public class UnauthorizedCollection {
+public class UnauthorizedCollection extends Exception {
+    public UnauthorizedCollection() {
+        super();
+    }
 }
