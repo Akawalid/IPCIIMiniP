@@ -10,7 +10,7 @@ public abstract class Entity {
     //It is abstract because we shouldn't have an animal of type that is strictly equal to entity (absurd).
     private static int idCounter = 0;
     protected Spot position;
-    protected final String name;
+    public final String name;
     protected final int id;
     public Entity(String name){
         //we can have entities without a position => position = null
