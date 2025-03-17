@@ -11,8 +11,12 @@ public class ResourceCooldownThread extends Thread{
     private int cooldown;
     private final int cooldown_max;
     public ResourceCooldownThread(Resource r){
+        this(r, 0);
+    }
+
+    public ResourceCooldownThread(Resource r, int init){
         resource = r;
-        cooldown = 0;
+        cooldown = init;
         cooldown_max = resource.get_cooldown_max();
     }
 

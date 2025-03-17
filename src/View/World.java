@@ -24,6 +24,8 @@ public class World extends JLayeredPane {
     //worldPanel, is the main panel that contains the land and the control panel.
     private JPanel worldPanel;
 
+    private Land land;
+
     public World(Farm farm){
         super();
 
@@ -33,7 +35,7 @@ public class World extends JLayeredPane {
         worldPanel.setLayout(new BorderLayout());
 
         // World Panel (Left Column)
-        JPanel land = new Land(farm);
+        land = new Land(farm);
         worldPanel.add(land, BorderLayout.CENTER);
 
         // Control Panel (Right Column)
@@ -83,5 +85,11 @@ public class World extends JLayeredPane {
         remove(storePanel);
         revalidate();
         repaint();
+    }
+
+    //TODO : effacer pcq c'est shlag
+    //getter pour land
+    public Land getLand() {
+        return land;
     }
 }

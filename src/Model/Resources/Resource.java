@@ -15,7 +15,10 @@ public abstract class Resource {
         //thread cooldown
         if(get_ready_on_purchase()){
             //the resource is already available
-            is_ready = true;
+            //is_ready = true;
+            cooldown_thread = new ResourceCooldownThread(this, get_cooldown_max());
+            cooldown_thread.start();
+            //TODO y revenir
         }
         else{
             start_cooldown();

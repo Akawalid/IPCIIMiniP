@@ -7,6 +7,7 @@ import Model.Resources.Resource;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static Model.AgeState.*;
 
@@ -91,8 +92,8 @@ public abstract class FarmAnimal extends Entity {
 
     // ### Resource production ###
 
-    public ArrayList<Resource> getResources() {
-        return resourceList;
+    public Iterator<Resource> getResources() {
+        return resourceList.iterator();
     }
 
     // ### Buy & Sell ###
