@@ -1,4 +1,4 @@
-package View.Shepherd;
+package Brouillon;
 
 import Model.Shepherd.Shepherd;
 

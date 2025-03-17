@@ -1,10 +1,8 @@
 package View;
 
 import Model.Farm;
-import Model.FarmAnimals.Sheep;
-import Model.Shepherd.FindPath;
-import Model.Shepherd.Shepherd;
-import Model.Shepherd.ShepherdMovementThread;
+import View.ControlPanelComponents.ControlPanel;
+import View.ControlPanelComponents.StorePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,11 +18,12 @@ public class World extends JLayeredPane {
     private Farm farm;
     //shadowPanel, is for visualisation purposes, it will be displayed when the store or the bank are displayed.
     private JPanel shadowPanel;
-    private JPanel storePanel;
+    private StorePanel storePanel;
     //worldPanel, is the main panel that contains the land and the control panel.
     private JPanel worldPanel;
 
     private Land land;
+    private ControlPanel controlPanel;
 
     public World(Farm farm){
         super();
@@ -39,7 +38,7 @@ public class World extends JLayeredPane {
         worldPanel.add(land, BorderLayout.CENTER);
 
         // Control Panel (Right Column)
-        JPanel controlPanel = new ControlPanel(farm);
+        controlPanel = new ControlPanel(farm);
         worldPanel.add(controlPanel, BorderLayout.EAST);
 
         add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer
@@ -87,9 +86,10 @@ public class World extends JLayeredPane {
         repaint();
     }
 
-    //TODO : effacer pcq c'est shlag
-    //getter pour land
-    public Land getLand() {
-        return land;
+
+    public void update(){
+        land.update();
+        storePanel.update();
+        controlPanel.update();
     }
 }

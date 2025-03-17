@@ -1,4 +1,4 @@
-package View.Shepherd;
+package Brouillon;
 
 import Controller.ReactionMoveShepherd;
 import Model.Shepherd.Shepherd;

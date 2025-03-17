@@ -2,10 +2,8 @@ package Model.FarmAnimals;
 
 import Model.Entity;
 import Model.AgeState;
-import Model.Exceptions.InvalidCoordinates;
 import Model.Resources.Resource;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 

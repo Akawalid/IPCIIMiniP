@@ -39,7 +39,7 @@ public class Main {
 
         //Gestion des déplacements
         ShepherdMovementThread thrd = new ShepherdMovementThread(shepherd);
-        Refresh refresh = new Refresh(world.getLand());
+        Refresh refresh = new Refresh(world);
 
         FindPath fp = new FindPath(farm);
 

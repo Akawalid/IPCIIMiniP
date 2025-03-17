@@ -158,7 +158,8 @@ public class Land extends JPanel {
 
         Land l = new Land(farm);
         ShepherdMovementThread thrd = new ShepherdMovementThread(s);
-        Refresh refresh = new Refresh(l);
+        //TODO : refresh doesn't work with Land anymore
+        // Refresh refresh = new Refresh(l);
 
         FindPath fp = new FindPath(farm);
 
@@ -172,6 +173,6 @@ public class Land extends JPanel {
         frame.setVisible(true);
 
         thrd.start();
-        refresh.start();
+        //TODO suite : refresh.start();
     }
 }

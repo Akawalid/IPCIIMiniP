@@ -1,12 +1,10 @@
-package View.FarmAnimal;
+package Brouillon;
 
 import Model.FarmAnimals.FarmAnimal;
 import Model.Resources.Resource;
-import Model.Shepherd.Shepherd;
-import View.ResourceBarPanel;
+import View.ControlPanelComponents.Information.ResourceBarPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.Iterator;
 
 public class FarmAnimalInformationPanel extends JPanel {
