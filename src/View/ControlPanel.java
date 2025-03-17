@@ -1,8 +1,7 @@
 package View;
 
-import Model.Entity;
 import Model.Farm;
-import Model.Shepherd;
+import Model.Shepherd.Shepherd;
 import View.Shepherd.ShepherdActionPanel;
 import View.Shepherd.ShepherdInformationPanel;
 

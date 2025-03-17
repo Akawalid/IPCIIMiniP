@@ -1,6 +1,10 @@
 package View;
 
 import Model.Farm;
+import Model.FarmAnimals.Sheep;
+import Model.Shepherd.FindPath;
+import Model.Shepherd.Shepherd;
+import Model.Shepherd.ShepherdMovementThread;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,7 +1,6 @@
 package View.Shepherd;
 
-import Model.Shepherd;
-import View.ControlPanel;
+import Model.Shepherd.Shepherd;
 
 import javax.swing.*;
 import java.awt.*;

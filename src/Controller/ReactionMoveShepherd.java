@@ -1,7 +1,6 @@
 package Controller;
 
-import Model.Shepherd;
-import View.World;
+import Model.Shepherd.Shepherd;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

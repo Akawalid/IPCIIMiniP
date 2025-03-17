@@ -12,7 +12,7 @@ import static Model.AgeState.*;
 
 public abstract class FarmAnimal extends Entity {
 
-    @Override
+    //@Override
     public void move(Point direction) throws InvalidCoordinates{
         //TODO j'ai supposé que ce n'était pas abstract pour pas que ça fasse une erreur
         //dans les classes filles tant que je n'avais pas de réponse sur la question suivante :

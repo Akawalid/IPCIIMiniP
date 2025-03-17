@@ -1,10 +1,8 @@
 package View.Shepherd;
 
 import Controller.ReactionMoveShepherd;
-import Model.Shepherd;
-import View.ControlPanel;
+import Model.Shepherd.Shepherd;
 import View.CustomButton;
-import View.World;
 
 import javax.swing.*;
 import java.awt.*;

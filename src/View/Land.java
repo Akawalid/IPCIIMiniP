@@ -2,13 +2,18 @@ package View;
 
 import Model.Entity;
 import Model.Farm;
-import Model.Shepherd;
+import Model.FarmAnimals.Sheep;
+import Model.Shepherd.FindPath;
+import Model.Shepherd.Shepherd;
+import Model.Shepherd.ShepherdMovementThread;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Iterator;
+
+import java.util.Queue;
 
 public class Land extends JPanel {
     //This class represents the grid on the screen, where the game will be played.
@@ -74,7 +79,12 @@ public class Land extends JPanel {
                 //if the cell goes out of the models scope, we disactivate it by painting it with dark gray
                 if (!farm.validCoordinates(i, cols - j - 1)) {
                     cell.setBackground(Color.gray);
-                } else {
+                }
+                else if(!farm.getSpot(i, cols - j - 1).isTraversable()){
+                    //Maybe another color...
+                    cell.setBackground(Color.gray);
+                }
+                else {
                     //make cell gray on hover
                     cell.addMouseListener(new java.awt.event.MouseAdapter() {
                         public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -98,27 +108,70 @@ public class Land extends JPanel {
     }
 
     public void update() {
-        //updates the grid, by placing the components on the right places.
-        //this methode will be called by a thread later.
+        // Update the grid by placing entities in the correct cells
         for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
             Entity e = it.next();
-            if(e instanceof Shepherd){
-                System.out.print("Shepherd");
-                Shepherd s = (Shepherd) e;
-                int r = s.getPosition().getRow();
-                int c = s.getPosition().getCol();
-                JPanel cell = (JPanel) getComponent(rowColOfModelToView(r, c));
-                cell.setBackground(Color.BLUE);
-            }
 
+            int r = e.getPosition().getRow();
+            int c = e.getPosition().getCol();
+
+            // Convert model coordinates to view index
+            int index = rowColOfModelToView(r, c);
+
+            // Check if the index is valid
+            if (index >= 0 && index < getComponentCount()) {
+                JPanel cell = (JPanel) getComponent(index);
+
+                // Set cell color based on the entity type
+                if (e instanceof Shepherd) {
+                    cell.setBackground(Color.BLUE);
+                } else if (e instanceof Sheep) {
+                    cell.setBackground(Color.RED);
+                } else {
+                    cell.setBackground(Color.GRAY);
+                }
+            }
         }
-        revalidate();
-        repaint();
     }
 
     private int rowColOfModelToView(int row, int col) {
         //convert the coordinates of the model to the coordinates of the view
         //the view is a matrix represented by an array (grid[i][j] = grid[i * cols + j])
         return row * cols + cols - col - 1;
+    }
+
+    public static void main(String [] args){
+        Farm farm = new Farm();
+        Shepherd s = new Shepherd("John");
+        Sheep shp = new Sheep("sheep1");
+
+        farm.addEntity(s);
+        farm.addEntity(shp);
+
+        s.setPosition(farm.getSpot(0, 0));
+        shp.setPosition(farm.getSpot(5, 5));
+
+        //create for me obstacles on the map
+        farm.getSpot(1, 1).setIsTraversable(false);
+        farm.getSpot(2, 2).setIsTraversable(false);
+        farm.getSpot(2, 3).setIsTraversable(false);
+
+        Land l = new Land(farm);
+        ShepherdMovementThread thrd = new ShepherdMovementThread(s);
+        Refresh refresh = new Refresh(l);
+
+        FindPath fp = new FindPath(farm);
+
+        s.setPath(fp.findPath(s.getPosition(), shp.getPosition()));
+
+        JFrame frame = new JFrame();
+        frame.setLayout(new BorderLayout());
+        frame.add(l);
+        frame.setSize(800, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        thrd.start();
+        refresh.start();
     }
 }

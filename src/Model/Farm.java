@@ -1,14 +1,14 @@
 package Model;
 
-import java.awt.*;
-import java.awt.List;
+import Model.Shepherd.Shepherd;
+
 import java.util.*;
 
 public class Farm {
     //Farm is out model, it contains the creatures and the land
-    //each creature, has a reference to the spot on which it   is standing.
+    //each creature, has a reference to the spot on which it is standing.
 
-    public static final int WIDTH = 20, HEIGHT = 15;//spots
+    public static final int WIDTH = 15, HEIGHT = 10;//spots
     private HashSet<Entity> creatures;
     private ArrayList<Spot> spots;
     private Bank bank;
@@ -20,9 +20,6 @@ public class Farm {
         bank = new Bank();
 
         initLand();
-        Shepherd s = new Shepherd("John");
-        s.setPosition(spots.get(3));
-        creatures.add(s);
     }
 
     private void initLand(){
@@ -44,7 +41,11 @@ public class Farm {
 
     public boolean validCoordinates(int row, int col){
         //this method checks if the given coordinates are valid.
-        return row >= 0 && row < HEIGHT && col >= 0 && col < WIDTH;
+        return row >= 0
+                && row < HEIGHT
+                && col >= 0
+                && col < WIDTH
+                && getSpot(row, col).isTraversable();
     }
 
     public Iterator<Entity> getEntities(){
@@ -52,4 +53,6 @@ public class Farm {
         //It is a good way to ensure abstraction.
         return creatures.iterator();
     }
+
+    public void addEntity(Entity e){creatures.add(e);}
 }

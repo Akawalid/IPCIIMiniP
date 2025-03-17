@@ -1,4 +1,4 @@
-package Model;
+package Model.Shepherd;
 
 import Model.Exceptions.InvalidCoordinates;
 
