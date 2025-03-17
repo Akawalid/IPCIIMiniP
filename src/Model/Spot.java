@@ -29,4 +29,19 @@ public class Spot {
     public Farm getFarm() {
         return farm;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public double distanceTo(Spot other) {
+        int dx = this.getX() - other.getX();
+        int dy = this.getY() - other.getY();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
 }
