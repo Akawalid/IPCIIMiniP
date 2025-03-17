@@ -12,16 +12,24 @@ import static Model.AgeState.*;
 
 public abstract class FarmAnimal extends Entity {
 
+    /*
     //@Override
     public void move(Point direction) throws InvalidCoordinates{
-        //TODO j'ai supposé que ce n'était pas abstract pour pas que ça fasse une erreur
-        //dans les classes filles tant que je n'avais pas de réponse sur la question suivante :
 
-        //est-ce qu'on souhaite définir move ici ?
-        //- si oui : alors on doit enlever "abstract" qu'il y avait
-        //- si non : on peut enlever la fonction car on n'a pas besoin de l'écrire si
-        // on ne la redéfinit pas
+    @Override
+    public void move(Point direction) throws InvalidCoordinates {
+        if (this.getPosition() == null) {
+            throw new InvalidCoordinates("Position non définie pour " + this.getName());
+        }
+        int newX = this.getPosition().getX() + direction.x;
+        int newY = this.getPosition().getY() + direction.y;
+        // Récupérer la référence au Farm depuis la position actuelle
+        Farm currentFarm = this.getPosition().getFarm();
+        // Créer un nouveau Spot avec les nouvelles coordonnées et le farm associé
+        this.setPosition(new Spot(newX, newY, currentFarm));
+        System.out.println(this.getName() + " se déplace vers (" + newX + ", " + newY + ")");
     }
+    */
 
     //------------------- Attributes -------------------//
 
