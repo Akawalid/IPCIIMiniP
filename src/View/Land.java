@@ -2,6 +2,7 @@ package View;
 
 import Model.Entity;
 import Model.Farm;
+import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
 import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
@@ -127,8 +128,17 @@ public class Land extends JPanel {
                     cell.setBackground(Color.BLUE);
                 } else if (e instanceof Sheep) {
                     cell.setBackground(Color.RED);
+                    Sheep sheep = (Sheep) e;
+                    String toolTip = "Nom : " + sheep.getName() +
+                            ", Âge : " + sheep.getAge() +
+                            ", État : " + sheep.getState();
+                    cell.setToolTipText(toolTip);
+                } else if (e instanceof Hen) {
+                    cell.setBackground(Color.YELLOW);
+
                 } else {
                     cell.setBackground(Color.GRAY);
+                    cell.setToolTipText(null);
                 }
             }
         }

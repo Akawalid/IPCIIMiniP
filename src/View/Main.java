@@ -32,7 +32,8 @@ public class Main {
         shepherd.setPosition(farm.getSpot(0, 0));
         shp.setPosition(farm.getSpot(5, 5));
 
-        //create for me obstacles on the map
+
+        //create obstacles on the map
         farm.getSpot(1, 1).setIsTraversable(false);
         farm.getSpot(2, 2).setIsTraversable(false);
         farm.getSpot(2, 3).setIsTraversable(false);
