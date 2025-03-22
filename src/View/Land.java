@@ -128,6 +128,7 @@ public class Land extends JPanel {
                     cell.setBackground(Color.BLUE);
                 } else if (e instanceof Sheep) {
                     cell.setBackground(Color.RED);
+                    // Set tooltip text for sheep
                     Sheep sheep = (Sheep) e;
                     String toolTip = "Nom : " + sheep.getName() +
                             ", Âge : " + sheep.getAge() +
@@ -135,6 +136,11 @@ public class Land extends JPanel {
                     cell.setToolTipText(toolTip);
                 } else if (e instanceof Hen) {
                     cell.setBackground(Color.YELLOW);
+                    Hen hen = (Hen) e;
+                    String toolTip = "Nom : " + hen.getName() +
+                            ", Âge : " + hen.getAge() +
+                            ", État : " + hen.getState();
+                    cell.setToolTipText(toolTip);
 
                 } else {
                     cell.setBackground(Color.GRAY);
