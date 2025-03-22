@@ -91,7 +91,6 @@ public abstract class FarmAnimal extends Entity {
         return age;
     }
 
-
     // ### Resource production ###
 
     public Iterator<Resource> getResources() {

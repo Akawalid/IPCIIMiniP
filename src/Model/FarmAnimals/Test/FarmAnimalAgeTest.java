@@ -5,57 +5,63 @@ import org.junit.jupiter.api.Test;
 import Model.FarmAnimals.Sheep;
 import Model.AgeState;
 
+/**
+ * Test class to verify the evolution of age and state of a farm animal.
+ */
 public class FarmAnimalAgeTest {
 
+    /**
+     * Test the evolution of age and state of a sheep.
+     */
     @Test
     public void testAgeEvolution() {
-        // Création d'un mouton pour le test
+        // Creation of a sheep for testing
         Sheep sheep = new Sheep("TestSheep");
 
-        // Vérification de l'état initial
-        assertEquals(0, sheep.getAge(), "L'âge initial devrait être 0");
-        assertEquals(AgeState.BABY, sheep.getState(), "L'état initial devrait être BABY");
+        // Verify the initial state: age 0 and state BABY
+        assertEquals(0, sheep.getAge(), "Initial age should be 0");
+        assertEquals(AgeState.BABY, sheep.getState(), "Initial state should be BABY");
 
-        // Appeler updateAge() trois fois : l'animal passe de 0 à 3 cycles et doit rester BABY
+        // Call updateAge() three times: the animal goes from 0 to 3 cycles and should remain BABY
         for (int i = 0; i < 3; i++) {
             sheep.updateAge();
         }
-        assertEquals(3, sheep.getAge(), "Après 3 mises à jour, l'âge devrait être 3");
-        assertEquals(AgeState.BABY, sheep.getState(), "À l'âge 3, l'état devrait rester BABY");
+        assertEquals(3, sheep.getAge(), "After 3 updates, age should be 3");
+        assertEquals(AgeState.BABY, sheep.getState(), "At age 3, state should remain BABY");
 
-        // 4ème cycle : age passe à 4 -> 4 > 3 et 4 < 7 donc état devient MATURE
+        // 4th cycle: age becomes 4 -> 4 > 3 and 4 < 7 so state becomes MATURE
         sheep.updateAge();
-        assertEquals(4, sheep.getAge(), "Après 4 mises à jour, l'âge devrait être 4");
-        assertEquals(AgeState.MATURE, sheep.getState(), "À l'âge 4, l'état devrait être MATURE");
+        assertEquals(4, sheep.getAge(), "After 4 updates, age should be 4");
+        assertEquals(AgeState.MATURE, sheep.getState(), "At age 4, state should be MATURE");
 
-        // 5ème cycle : age passe à 5 -> toujours entre 3 et 7, état reste MATURE
+        // 5th cycle: age becomes 5 -> still between 3 and 7, state remains MATURE
         sheep.updateAge();
-        assertEquals(5, sheep.getAge(), "Après 5 mises à jour, l'âge devrait être 5");
-        assertEquals(AgeState.MATURE, sheep.getState(), "À l'âge 5, l'état devrait être MATURE");
+        assertEquals(5, sheep.getAge(), "After 5 updates, age should be 5");
+        assertEquals(AgeState.MATURE, sheep.getState(), "At age 5, state should be MATURE");
 
-        // 6ème cycle : age passe à 6 -> toujours entre 3 et 7, état reste MATURE
+        // 6th cycle: age becomes 6 -> still between 3 and 7, state remains MATURE
         sheep.updateAge();
-        assertEquals(6, sheep.getAge(), "Après 6 mises à jour, l'âge devrait être 6");
-        assertEquals(AgeState.MATURE, sheep.getState(), "À l'âge 6, l'état devrait être MATURE");
+        assertEquals(6, sheep.getAge(), "After 6 updates, age should be 6");
+        assertEquals(AgeState.MATURE, sheep.getState(), "At age 6, state should be MATURE");
 
-        // 7ème cycle : age passe à 7 -> aucune condition n'est satisfaite, l'état reste celui d'avant (MATURE)
+        // 7th cycle: age becomes 7 -> no condition is met, state remains as before (MATURE)
         sheep.updateAge();
-        assertEquals(7, sheep.getAge(), "Après 7 mises à jour, l'âge devrait être 7");
-        assertEquals(AgeState.MATURE, sheep.getState(), "À l'âge 7, l'état devrait rester MATURE");
+        assertEquals(7, sheep.getAge(), "After 7 updates, age should be 7");
+        assertEquals(AgeState.MATURE, sheep.getState(), "At age 7, state should remain MATURE");
 
-        // 8ème cycle : age passe à 8 -> 8 > 7 et 8 < 10 donc état devient OLD
+        // 8th cycle: age becomes 8 -> 8 > 7 and 8 < 10 so state becomes OLD
         sheep.updateAge();
-        assertEquals(8, sheep.getAge(), "Après 8 mises à jour, l'âge devrait être 8");
-        assertEquals(AgeState.OLD, sheep.getState(), "À l'âge 8, l'état devrait être OLD");
+        assertEquals(8, sheep.getAge(), "After 8 updates, age should be 8");
+        assertEquals(AgeState.OLD, sheep.getState(), "At age 8, state should be OLD");
 
-        // 9ème cycle : age passe à 9 -> toujours entre 7 et 10, état reste OLD
+        // 9th cycle: age becomes 9 -> still between 7 and 10, state remains OLD
         sheep.updateAge();
-        assertEquals(9, sheep.getAge(), "Après 9 mises à jour, l'âge devrait être 9");
-        assertEquals(AgeState.OLD, sheep.getState(), "À l'âge 9, l'état devrait être OLD");
+        assertEquals(9, sheep.getAge(), "After 9 updates, age should be 9");
+        assertEquals(AgeState.OLD, sheep.getState(), "At age 9, state should be OLD");
 
-        // 10ème cycle : age passe à 10 -> l'animal meurt et l'état devient DEAD
+        // 10th cycle: age becomes 10 -> the animal dies and state becomes DEAD
         sheep.updateAge();
-        assertEquals(10, sheep.getAge(), "Après 10 mises à jour, l'âge devrait être 10");
-        assertEquals(AgeState.DEAD, sheep.getState(), "À l'âge 10, l'état devrait être DEAD");
+        assertEquals(10, sheep.getAge(), "After 10 updates, age should be 10");
+        assertEquals(AgeState.DEAD, sheep.getState(), "At age 10, state should be DEAD");
     }
 }

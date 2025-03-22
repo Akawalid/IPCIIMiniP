@@ -16,6 +16,7 @@ public class World extends JLayeredPane {
     private static final int STORE_W = 500, STORE_H = 400;
     //World is the page that visualizes the core of the game, it contains the land and the control panel.
     private Farm farm;
+
     //shadowPanel, is for visualisation purposes, it will be displayed when the store or the bank are displayed.
     private JPanel shadowPanel;
     private StorePanel storePanel;

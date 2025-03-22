@@ -109,9 +109,12 @@ public class Land extends JPanel {
     }
 
     public void update() {
+        // Réinitialiser toutes les cellules avant de mettre à jour les entités
+        resetCells();
+
         // Update the grid by placing entities in the correct cells
-        for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
-            Entity e = it.next();
+        for (Iterator<Entity> entity = farm.getEntities(); entity.hasNext(); ) {
+            Entity e = entity.next();
 
             int r = e.getPosition().getRow();
             int c = e.getPosition().getCol();
@@ -136,6 +139,7 @@ public class Land extends JPanel {
                     cell.setToolTipText(toolTip);
                 } else if (e instanceof Hen) {
                     cell.setBackground(Color.YELLOW);
+                    // Set tooltip text for hen
                     Hen hen = (Hen) e;
                     String toolTip = "Nom : " + hen.getName() +
                             ", Âge : " + hen.getAge() +
@@ -147,6 +151,28 @@ public class Land extends JPanel {
                     cell.setToolTipText(null);
                 }
             }
+        }
+    }
+
+    /**
+     * Réinitialise toutes les cellules du panneau en fonction des coordonnées du modèle.
+     * Pour chaque cellule, on met à jour la couleur de fond à gris (comme ca on peut ajouter au même emplacement encore du bétail) et on supprime le tooltip.
+     */
+    private void resetCells() {
+        for (int i = 0; i < getComponentCount(); i++) {
+            JPanel cell = (JPanel) getComponent(i);
+            // Calculer les coordonnées du modèle correspondant à la cellule
+            int row = i / cols;
+            int col = cols - (i % cols) - 1;
+
+            // Réinitialiser la couleur de fond selon la validité du spot et la présence d'une entité
+            if (!farm.validCoordinates(row, col)) {
+                cell.setBackground(Color.GRAY);
+            } else { // Sinon, on le remet dans son état par défaut (traversable)
+                cell.setBackground(null);
+            }
+            // Supprimer le tooltip de la cellule
+            cell.setToolTipText(null);
         }
     }
 
