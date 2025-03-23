@@ -7,18 +7,18 @@ import Model.Farm;
 import Model.Entity;
 
 /**
- * Thread de simulation qui met à jour l'état du modèle.
- * Ce thread parcourt toutes les entités de la ferme et appelle updateAge()
- * sur les objets de type FarmAnimal à intervalles réguliers.
+ * Simulation thread that updates the model's state.
+ * This thread iterates over all the entities in the farm and calls updateAge()
+ * on objects of type FarmAnimal at regular intervals.
  */
-public class SimulationUpdateAgeThread extends Thread { //TODO à documenter en anglais
-    // Délai d'update en millisecondes (5 secondes)
+public class SimulationUpdateAgeThread extends Thread {
+    // Update delay in milliseconds (5 seconds)
     public static final int UPDATE_DELAY = 5000;
     private Farm farm;
 
     /**
-     * Constructeur qui initialise le thread avec la ferme.
-     * @param farm la ferme contenant les entités à mettre à jour.
+     * Constructor that initializes the thread with the farm.
+     * @param farm the farm containing the entities to be updated.
      */
     public SimulationUpdateAgeThread(Farm farm) {
         this.farm = farm;
@@ -27,21 +27,21 @@ public class SimulationUpdateAgeThread extends Thread { //TODO à documenter en a
     @Override
     public void run() {
         while (true) {
-            // Parcours de toutes les entités et mise à jour de l'âge pour chaque animal
+            // Iterate over all entities and update the age for each farm animal
             Iterator<Entity> entity = farm.getEntities();
             while (entity.hasNext()) {
                 Entity e = entity.next();
-                // On vérifie si l'entité est un animal de ferme avant d'appeler updateAge()
+                // Check if the entity is a FarmAnimal before calling updateAge()
                 if (e instanceof FarmAnimal) {
                     ((FarmAnimal) e).updateAge();
                     if (((FarmAnimal) e).getState() == AgeState.DEAD) {
-                        e.getPosition().setIsTraversable(true);  // On libère la case
-                        entity.remove(); // Si l'animal est mort, on le supprime de la ferme
+                        e.getPosition().setIsTraversable(true);  // Free up the cell
+                        entity.remove(); // If the animal is dead, remove it from the farm
                     }
                 }
             }
             try {
-                Thread.sleep(UPDATE_DELAY); // Pause 5s avant la prochaine mise à jour
+                Thread.sleep(UPDATE_DELAY); // Pause 5s before the next update
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
