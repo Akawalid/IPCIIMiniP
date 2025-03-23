@@ -5,7 +5,9 @@ import Model.Farm;
 import Model.FarmAnimals.FarmAnimal;
 import Model.FarmAnimals.Sheep;
 import Model.Shepherd.Shepherd;
-import View.*;
+
+import Controller.Controller;
+
 import View.ControlPanelComponents.Action.ActionPanel;
 import View.ControlPanelComponents.Action.FarmAnimalActionPanel;
 import View.ControlPanelComponents.Action.ShepherdActionPanel;
@@ -48,8 +50,8 @@ public class ControlPanel extends JPanel {
         //setActiveEntity(null);
 
         //TODO, change : We add a random entity for the moment
-        //setActiveEntity(new Shepherd("John"));
-        setActiveEntity(new Sheep("Lucie"));
+        setActiveEntity(new Shepherd("John"));
+//        setActiveEntity(new Sheep("Lucie"));
     }
 
     private void reloadPanels(){
@@ -86,8 +88,13 @@ public class ControlPanel extends JPanel {
         if(informationPanel != null){
             informationPanel.update();
         }
-        if(actionPanel != null){
+        if(actionPanel != null) {
             actionPanel.update();
         }
+    }
+
+    public void connect(Controller c){
+        actionPanel.connect(c);
+
     }
 }

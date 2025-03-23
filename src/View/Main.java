@@ -5,7 +5,8 @@ import Model.FarmAnimals.Sheep;
 import Model.FarmAnimals.SimulationUpdateAgeThread;
 import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
-import Model.Shepherd.ShepherdMovementThread;
+
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +29,10 @@ public class Main {
         Sheep shp = new Sheep("sheep1");
         farm.addEntity(shp);
 
+        farm.setSelectedEntity(shepherd);
+
+        Controller controller = new Controller(farm, world);
+
         //positionner sur la grille
         //@TODO à terme le faire automatiquement
         shepherd.setPosition(farm.getSpot(0, 0));
@@ -41,16 +46,12 @@ public class Main {
         farm.getSpot(2, 3).setIsTraversable(false);
 
         //Gestion des déplacements
-        ShepherdMovementThread thrd = new ShepherdMovementThread(shepherd);
         Refresh refresh = new Refresh(world);
 
         FindPath fp = new FindPath(farm);
 
         //création d'un déplacement
         shepherd.setPath(fp.findPath(shepherd.getPosition(), shp.getPosition()));
-
-
-        //afficher les informations du mouton
 
 
         //création fenêtre fin
@@ -62,7 +63,6 @@ public class Main {
         fr.setVisible(true);
 
         //lancement des threads
-        thrd.start();
         refresh.start();
 
         // Lancement du thread de mise à jour de la simulation

@@ -1,6 +1,7 @@
 package View.ControlPanelComponents.Action;
 
 import Model.FarmAnimals.FarmAnimal;
+import Controller.Controller;
 import View.ControlPanelComponents.Action.ActionPanel;
 
 import javax.swing.*;
@@ -21,5 +22,8 @@ public class FarmAnimalActionPanel extends ActionPanel {
     @Override
     public void update() {
         //TODO
+    }
+
+    public void connect(Controller c){
     }
 }

@@ -12,6 +12,8 @@ public class Farm {
     private HashSet<Entity> creatures;
     private ArrayList<Spot> spots;
     private Bank bank;
+    //this attribute represents the active entity on the farm, the one on which we want to apply operations
+    private Entity selectedEntity;
 
     public Farm(){
         creatures = new HashSet<>();
@@ -20,6 +22,7 @@ public class Farm {
         bank = new Bank();
 
         initLand();
+        selectedEntity = null;
     }
 
     private void initLand(){
@@ -55,4 +58,6 @@ public class Farm {
     }
 
     public void addEntity(Entity e){creatures.add(e);}
+    public Entity getSelectedEntity(){return selectedEntity;}
+    public void setSelectedEntity(Entity e){selectedEntity = e;}
 }

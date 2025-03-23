@@ -3,9 +3,12 @@ package Model.Shepherd;
 import Model.Entity;
 
 public class Shepherd extends Entity {
-    // This class represents the shepherd, which extends the Entity class.
-
+    private ShepherdMovementThread thread;
     public Shepherd(String name) {
         super(name);
+        thread = new ShepherdMovementThread(this);
+    }
+    public ShepherdMovementThread getThread(int id){
+        return thread;
     }
 }

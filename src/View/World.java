@@ -1,6 +1,7 @@
 package View;
 
 import Model.Farm;
+import Controller.Controller;
 import View.ControlPanelComponents.ControlPanel;
 import View.ControlPanelComponents.StorePanel;
 
@@ -10,10 +11,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 public class World extends JLayeredPane {
-    //World is a layeredPane, the store and the bank will be displayed as pop up's on the screen that why we use a layeredPane.
-    //It is important to note that LayeredPane doesnt not support setPereferredSize, it uses a null Layout, so we have to set
-    //the bounds of each element inside manually.
-    private static final int STORE_W = 500, STORE_H = 400;
     //World is the page that visualizes the core of the game, it contains the land and the control panel.
     private Farm farm;
 
@@ -63,11 +60,11 @@ public class World extends JLayeredPane {
     public void updateBounds() {
         worldPanel.setBounds(0, 0, getWidth(), getHeight());
         shadowPanel.setBounds(0, 0, getWidth(), getHeight());
-        storePanel.setBounds(
-                getWidth() / 2 - STORE_W/2,
-                getHeight() / 2 - STORE_H/2,
-                STORE_W, STORE_H
-        );
+//        storePanel.setBounds(
+//                getWidth() / 2 - StorePanel.STORE_W/2,
+//                getHeight() / 2 - StorePanel.STORE_H/2,
+//                StorePanel.STORE_W, StorePanel.STORE_H
+//        );
         //showStore();
     }
     public void showStore(){
@@ -92,5 +89,9 @@ public class World extends JLayeredPane {
         land.update();
         storePanel.update();
         controlPanel.update();
+    }
+
+    public void connect(Controller c){
+        controlPanel.connect(c);
     }
 }

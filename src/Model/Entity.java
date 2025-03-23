@@ -15,6 +15,7 @@ public abstract class Entity {
     private Queue<Point> path; // Queue to store movements
     public final String name;
     protected final int id;
+
     public Entity(String name){
         //we can have entities without a position => position = null
         position = null;
@@ -56,20 +57,19 @@ public abstract class Entity {
             return; // No movements in the queue
         }
 
-        // Get the next direction from the queue
-        Point direction = path.poll();
+        // Get the next spot from the queue
+        Point nextSpot = path.poll();
 
         if (position == null) {
             return; // No current position
         }
 
         // Calculate the destination coordinates
-        int destRow = direction.x;
-        int destCol = direction.y;
+        int destRow = nextSpot.x;
+        int destCol = nextSpot.y;
 
         Farm farm = position.getFarm();
         setPosition(farm.getSpot(destRow, destCol)); // Move to the new position
-        System.out.println("row: " + destRow + ", col: " + destCol);
     }
     public void setPath(Queue<Point> q){
         path = q;
@@ -87,4 +87,12 @@ public abstract class Entity {
     public int hashCode(){
         return id;
     }
+
+    public Thread getThread(int id){
+        //TODO (Coxy, Izma): this method should be abstract, therefore, it should be implemented in all the subclasses.
+
+        //Each entity may have multiple threads that agitate on them, the id serves to identify the thread
+        //of a concrete entity if multiple one's exists, otherwise, it is ignored.
+        return null;
+    };
 }

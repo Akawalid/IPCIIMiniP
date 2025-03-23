@@ -182,44 +182,4 @@ public class Land extends JPanel {
         //the view is a matrix represented by an array (grid[i][j] = grid[i * cols + j])
         return row * cols + cols - col - 1;
     }
-
-    public void connect(Controller c){
-        this.addMouseListener(c.handleClickEntity());
-    }
-
-    public static void main(String [] args){
-        Farm farm = new Farm();
-        Shepherd s = new Shepherd("John");
-        Sheep shp = new Sheep("sheep1");
-
-        farm.addEntity(s);
-        farm.addEntity(shp);
-
-        s.setPosition(farm.getSpot(0, 0));
-        shp.setPosition(farm.getSpot(5, 5));
-
-        //create for me obstacles on the map
-        farm.getSpot(1, 1).setIsTraversable(false);
-        farm.getSpot(2, 2).setIsTraversable(false);
-        farm.getSpot(2, 3).setIsTraversable(false);
-
-        Land l = new Land(farm);
-        ShepherdMovementThread thrd = new ShepherdMovementThread(s);
-        //TODO : refresh doesn't work with Land anymore
-        // Refresh refresh = new Refresh(l);
-
-        FindPath fp = new FindPath(farm);
-
-        s.setPath(fp.findPath(s.getPosition(), shp.getPosition()));
-
-        JFrame frame = new JFrame();
-        frame.setLayout(new BorderLayout());
-        frame.add(l);
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-
-        thrd.start();
-        //TODO suite : refresh.start();
-    }
 }
