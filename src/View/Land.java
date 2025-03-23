@@ -6,6 +6,7 @@ import Model.FarmAnimals.Sheep;
 import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
 import Model.Shepherd.ShepherdMovementThread;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -138,6 +139,10 @@ public class Land extends JPanel {
         //convert the coordinates of the model to the coordinates of the view
         //the view is a matrix represented by an array (grid[i][j] = grid[i * cols + j])
         return row * cols + cols - col - 1;
+    }
+
+    public void connect(Controller c){
+        this.addMouseListener(c.handleClickEntity());
     }
 
     public static void main(String [] args){

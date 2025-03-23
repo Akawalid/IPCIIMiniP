@@ -8,6 +8,7 @@ import View.FarmAnimal.FarmAnimalActionPanel;
 import View.FarmAnimal.FarmAnimalInformationPanel;
 import View.Shepherd.ShepherdActionPanel;
 import View.Shepherd.ShepherdInformationPanel;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,5 +91,9 @@ public class ControlPanel extends JPanel {
         gameStatePanel.add(storeButton);
 
         add(gameStatePanel, 0);
+    }
+
+    public void connect(Controller c){
+
     }
 }

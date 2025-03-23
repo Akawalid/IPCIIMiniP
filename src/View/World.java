@@ -1,10 +1,7 @@
 package View;
 
 import Model.Farm;
-import Model.FarmAnimals.Sheep;
-import Model.Shepherd.FindPath;
-import Model.Shepherd.Shepherd;
-import Model.Shepherd.ShepherdMovementThread;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +22,7 @@ public class World extends JLayeredPane {
     private JPanel worldPanel;
 
     private Land land;
+    private ControlPanel controlPanel;
 
     public World(Farm farm){
         super();
@@ -39,7 +37,7 @@ public class World extends JLayeredPane {
         worldPanel.add(land, BorderLayout.CENTER);
 
         // Control Panel (Right Column)
-        JPanel controlPanel = new ControlPanel(farm);
+        controlPanel = new ControlPanel(farm);
         worldPanel.add(controlPanel, BorderLayout.EAST);
 
         add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer
@@ -91,5 +89,10 @@ public class World extends JLayeredPane {
     //getter pour land
     public Land getLand() {
         return land;
+    }
+
+    public void connect(Controller c){
+        land.connect(c);
+        controlPanel.connect(c);
     }
 }
