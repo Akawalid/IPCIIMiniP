@@ -1,4 +1,4 @@
-package View;
+package View.ControlPanelComponents.Information;
 
 import Model.Resources.Milk;
 import Model.Resources.Resource;
@@ -19,25 +19,43 @@ public class ResourceBarPanel extends JPanel {
 
     //création du constructeur
     public ResourceBarPanel(Resource r) {
+        resource = r;
+
+        //créer un FlowLayout avec le nom de la ressource, la barre de progression et un bouton
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        JLabel resourceLabel = new JLabel(resource.get_name());
+        add(resourceLabel);
+
         //création de la barre de progression
         progressBar = new JProgressBar();
-        resource = r;
         progressBar.setValue(resource.get_cooldown());
         progressBar.setMaximum(resource.get_cooldown_max());
-        //progressBar.setStringPainted(true);
         add(progressBar);
+
+        //ajouter un bouton qui collecte la ressource
+        JButton collectButton = new JButton("Collect");
+        //TODO en faire un listener
+        collectButton.addActionListener(e -> {
+            try {
+                resource.collect();
+            } catch (Exception ex) {
+                //rien
+            }
+        });
+        add(collectButton);
     }
 
-    //fonction qui met à jour la barre de progression avec repaint
+    /** fonction qui met à jour la barre de progression avec repaint */
     public void update() {
         progressBar.setValue(resource.get_cooldown());
         repaint();
     }
 
-    //création d'un main pour tester l'affichage :
-    // - crée une ressource de type Resource,
-    // - crée un ResourceBarPanel associé à cette Resource
-    // - affiche le ResourceBarPanel
+    /** création d'un main pour tester l'affichage :
+     * - crée une ressource de type Resource,
+     * - crée un ResourceBarPanel associé à cette Resource
+     * - affiche le ResourceBarPanel
+     */
     public static void main(String[] args) {
         Resource r = new Milk();
         ResourceBarPanel rbp = new ResourceBarPanel(r);

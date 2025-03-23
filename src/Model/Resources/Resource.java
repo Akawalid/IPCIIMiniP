@@ -3,9 +3,9 @@ package Model.Resources;
 import Model.Exceptions.UnauthorizedCollection;
 
 public abstract class Resource {
-    protected static int COOLDOWN_MAX_MILK = 30;
-    protected static int COOLDOWN_MAX_WOOL = 30;
-    protected static int COOLDOWN_MAX_EGG = 30;
+    protected static int COOLDOWN_MAX_MILK = 10;
+    protected static int COOLDOWN_MAX_WOOL = 10;
+    protected static int COOLDOWN_MAX_EGG = 10;
 
     protected boolean is_ready;
 
@@ -48,4 +48,6 @@ public abstract class Resource {
     public int get_cooldown(){
         return cooldown_thread.get_cooldown();
     }
+
+    public abstract String get_name();
 }

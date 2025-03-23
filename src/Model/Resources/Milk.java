@@ -10,4 +10,9 @@ public class Milk extends Resource{
     protected boolean get_ready_on_purchase() {
         return false;
     }
+
+    @Override
+    public String get_name() {
+        return "Milk";
+    }
 }

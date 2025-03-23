@@ -2,10 +2,8 @@ package Model.FarmAnimals;
 
 import Model.Entity;
 import Model.AgeState;
-import Model.Exceptions.InvalidCoordinates;
 import Model.Resources.Resource;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -65,14 +63,15 @@ public abstract class FarmAnimal extends Entity {
             return;
         }
         age++;
-        if (age>3) {
+        if (age>3 && age<7) {
             state = MATURE;
             // TODO:  Possibilité d'augmenter la production ou la reproduction à cet état
-        } else if (age > 7) {
+        } else if (age > 7 && age < 10) {
             state = OLD;
             // TODO : Réduire la production et / ou la valeur de revente, par exemple
         } else if (age == 10) {
             // L'animal meurt de vieillesse
+            System.out.println("L'animal est mort de vieillesse.");
             die(); //
             state = DEAD;
         }
@@ -81,13 +80,15 @@ public abstract class FarmAnimal extends Entity {
 
     // Action à réaliser lors de la mort (par exemple, retirer l'animal de la simulation)
     private void die() {
-
-        System.out.println("L'animal est mort de vieillesse.");
         running = false;  // Arrêter le thread
     }
 
     public Object getState() {
         return state;
+    }
+
+    public int getAge() {
+        return age;
     }
 
     // ### Resource production ###
@@ -110,6 +111,5 @@ public abstract class FarmAnimal extends Entity {
     public int vendre(){
         return this.prix ;
     }
-
 
 }

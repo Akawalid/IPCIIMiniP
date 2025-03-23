@@ -4,8 +4,9 @@ import javax.swing.*;
 
 public class Refresh extends Thread {
     public static final int DELAY = 100;
-    private Land toRefresh;
-    public Refresh(Land toRefresh) {
+    private World toRefresh;
+
+    public Refresh(World toRefresh) {
         this.toRefresh = toRefresh;
     }
 

@@ -2,6 +2,7 @@ package View;
 
 import Model.Farm;
 import Model.FarmAnimals.Sheep;
+import Model.FarmAnimals.SimulationUpdateAgeThread;
 import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
 import Model.Shepherd.ShepherdMovementThread;
@@ -32,14 +33,16 @@ public class Main {
         shepherd.setPosition(farm.getSpot(0, 0));
         shp.setPosition(farm.getSpot(5, 5));
 
-        //create for me obstacles on the map
+
+
+        //create obstacles on the map
         farm.getSpot(1, 1).setIsTraversable(false);
         farm.getSpot(2, 2).setIsTraversable(false);
         farm.getSpot(2, 3).setIsTraversable(false);
 
         //Gestion des déplacements
         ShepherdMovementThread thrd = new ShepherdMovementThread(shepherd);
-        Refresh refresh = new Refresh(world.getLand());
+        Refresh refresh = new Refresh(world);
 
         FindPath fp = new FindPath(farm);
 
@@ -61,5 +64,10 @@ public class Main {
         //lancement des threads
         thrd.start();
         refresh.start();
+
+        // Lancement du thread de mise à jour de la simulation
+        // Ce thread parcourt toutes les entités de la ferme et appelle updateAge() pour chaque animal.
+        SimulationUpdateAgeThread simThread = new SimulationUpdateAgeThread(farm);
+        simThread.start();
     }
 }

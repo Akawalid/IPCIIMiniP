@@ -1,7 +1,8 @@
 package View;
 
 import Model.Farm;
-import Controller.Controller;
+import View.ControlPanelComponents.ControlPanel;
+import View.ControlPanelComponents.StorePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +16,10 @@ public class World extends JLayeredPane {
     private static final int STORE_W = 500, STORE_H = 400;
     //World is the page that visualizes the core of the game, it contains the land and the control panel.
     private Farm farm;
+
     //shadowPanel, is for visualisation purposes, it will be displayed when the store or the bank are displayed.
     private JPanel shadowPanel;
-    private JPanel storePanel;
+    private StorePanel storePanel;
     //worldPanel, is the main panel that contains the land and the control panel.
     private JPanel worldPanel;
 
@@ -85,14 +87,10 @@ public class World extends JLayeredPane {
         repaint();
     }
 
-    //TODO : effacer pcq c'est shlag
-    //getter pour land
-    public Land getLand() {
-        return land;
-    }
 
-    public void connect(Controller c){
-        land.connect(c);
-        controlPanel.connect(c);
+    public void update(){
+        land.update();
+        storePanel.update();
+        controlPanel.update();
     }
 }
