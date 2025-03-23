@@ -2,6 +2,7 @@ package View.ControlPanelComponents.Information;
 
 import Model.Resources.Milk;
 import Model.Resources.Resource;
+import View.CustomButton;
 
 import javax.swing.*;
 
@@ -33,7 +34,7 @@ public class ResourceBarPanel extends JPanel {
         add(progressBar);
 
         //ajouter un bouton qui collecte la ressource
-        JButton collectButton = new JButton("Collect");
+        CustomButton collectButton = new CustomButton("Collect");
         //TODO en faire un listener
         collectButton.addActionListener(e -> {
             try {

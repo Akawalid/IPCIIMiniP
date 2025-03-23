@@ -3,6 +3,7 @@ package View.ControlPanelComponents.Action;
 import Model.FarmAnimals.FarmAnimal;
 import Controller.Controller;
 import View.ControlPanelComponents.Action.ActionPanel;
+import View.CustomButton;
 
 import javax.swing.*;
 
@@ -14,7 +15,7 @@ public class FarmAnimalActionPanel extends ActionPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         //vendre l'animal
-        JButton sellButton = new JButton("Sell");
+        CustomButton sellButton = new CustomButton("Sell");
         add(sellButton);
         //TODO implémenter listener
     }
