@@ -1,6 +1,6 @@
 package Model;
 
-import Model.Shepherd.Shepherd;
+import Model.Shepherd.*;
 
 import java.util.*;
 
@@ -11,6 +11,7 @@ public class Farm {
     public static final int WIDTH = 15, HEIGHT = 10;//spots
     private HashSet<Entity> creatures;
     private ArrayList<Spot> spots;
+    private FindPath pathFinder;
     private Bank bank;
     //this attribute represents the active entity on the farm, the one on which we want to apply operations
     private Entity selectedEntity;
@@ -23,6 +24,8 @@ public class Farm {
 
         initLand();
         selectedEntity = null;
+
+        pathFinder = new FindPath(this);
     }
 
     private void initLand(){
@@ -60,4 +63,6 @@ public class Farm {
     public void addEntity(Entity e){creatures.add(e);}
     public Entity getSelectedEntity(){return selectedEntity;}
     public void setSelectedEntity(Entity e){selectedEntity = e;}
+    //genertae a getter for pathfinder
+    public FindPath getPathFinder(){return pathFinder;}
 }

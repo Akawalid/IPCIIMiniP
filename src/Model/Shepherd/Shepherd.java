@@ -1,14 +1,15 @@
 package Model.Shepherd;
 
 import Model.Entity;
+import Model.EntityMovementThread;
 
 public class Shepherd extends Entity {
-    private ShepherdMovementThread thread;
+    private EntityMovementThread thread;
     public Shepherd(String name) {
         super(name);
-        thread = new ShepherdMovementThread(this);
+        thread = new EntityMovementThread(this);
     }
-    public ShepherdMovementThread getThread(int id){
+    public EntityMovementThread getThread(int id){
         return thread;
     }
 }

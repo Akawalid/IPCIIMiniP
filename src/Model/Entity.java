@@ -74,6 +74,7 @@ public abstract class Entity {
     public void setPath(Queue<Point> q){
         path = q;
     }
+     public Queue<Spot> getPath(){return null;}
 
     //these methods are implemented to use HashSets of Entities
     @Override

@@ -4,18 +4,13 @@ import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
-import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
-import Model.Shepherd.ShepherdMovementThread;
-import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Iterator;
-
-import java.util.Queue;
 
 public class Land extends JPanel {
     //This class represents the grid on the screen, where the game will be played.

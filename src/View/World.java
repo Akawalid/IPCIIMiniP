@@ -22,6 +22,7 @@ public class World extends JLayeredPane {
 
     private Land land;
     private ControlPanel controlPanel;
+    private boolean inMovementChoiceState;
 
     public World(Farm farm){
         super();
@@ -94,4 +95,7 @@ public class World extends JLayeredPane {
     public void connect(Controller c){
         controlPanel.connect(c);
     }
+
+    public boolean getInMovementChoiceState(){return inMovementChoiceState;}
+    public void setInMovementChoiceState(boolean state){inMovementChoiceState = state;}
 }

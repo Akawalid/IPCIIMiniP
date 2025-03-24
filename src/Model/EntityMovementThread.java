@@ -1,18 +1,19 @@
-package Model.Shepherd;
+package Model;
 
 import Model.Exceptions.InvalidCoordinates;
+import Model.Shepherd.Shepherd;
 
-public class ShepherdMovementThread extends Thread {
+public class EntityMovementThread extends Thread {
     public static final int DELAY = 1000;
-    private Shepherd s;
-    public ShepherdMovementThread(Shepherd s){
-        this.s = s;
+    private Entity e;
+    public EntityMovementThread(Entity e){
+        this.e = e;
     }
     @Override
     public void run() {
-        while (true) {
+        while (!e.getPath().isEmpty()) {
             try {
-                s.move();
+                e.move();
                 Thread.sleep(DELAY);
             } catch (InterruptedException e) {
                 e.printStackTrace();
