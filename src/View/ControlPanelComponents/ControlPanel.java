@@ -14,6 +14,7 @@ import View.ControlPanelComponents.Action.ShepherdActionPanel;
 import View.ControlPanelComponents.Information.FarmAnimalInformationPanel;
 import View.ControlPanelComponents.Information.InformationPanel;
 import View.ControlPanelComponents.Information.ShepherdInformationPanel;
+import View.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,8 +51,8 @@ public class ControlPanel extends JPanel {
         //setActiveEntity(null);
 
         //TODO, change : We add a random entity for the moment
-        setActiveEntity(new Shepherd("John"));
-//        setActiveEntity(new Sheep("Lucie"));
+        //setActiveEntity(Main.SHEPHERD_TEST_1);
+        setActiveEntity(Main.SHEEP_TEST_1);
     }
 
     private void reloadPanels(){
@@ -94,7 +95,8 @@ public class ControlPanel extends JPanel {
     }
 
     public void connect(Controller c){
-        actionPanel.connect(c);
-
+        if(actionPanel != null){
+            actionPanel.connect(c);
+        }
     }
 }

@@ -3,13 +3,11 @@ package Model;
 public class Spot {
     //this represents the units of a land, each unit has a reference to the global farm to which it belongs.
     public static final int SIZE = 1;//1 * 1 metre²
-    private Farm farm;
     private int x, y;
     private boolean isTraversable;
-    public Spot(int x, int y, Farm farm) {
+    public Spot(int x, int y) {
         this.x = x;
         this.y = y;
-        this.farm = farm;
         isTraversable = true;
     }
     public boolean isTraversable() {
@@ -26,21 +24,9 @@ public class Spot {
         return y;
     }
 
-    public Farm getFarm() {
-        return farm;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public double distanceTo(Spot other) {
-        int dx = this.getX() - other.getX();
-        int dy = this.getY() - other.getY();
+        int dx = this.getRow() - other.getRow();
+        int dy = this.getCol() - other.getCol();
         return Math.sqrt(dx * dx + dy * dy);
     }
 

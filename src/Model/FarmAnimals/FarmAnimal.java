@@ -3,6 +3,7 @@ package Model.FarmAnimals;
 import Model.Entity;
 import Model.AgeState;
 import Model.Resources.Resource;
+import Model.Spot;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,9 +46,10 @@ public abstract class FarmAnimal extends Entity {
     //------------------- Methods -------------------//
 
     /** constructor **/
-    public FarmAnimal(String name) {
+    public FarmAnimal(Spot s) {
+        super(s);
         //Age evolution
-        super(name); // Initialiser à bébé
+        // Initialiser à bébé
         this.age = 0;
         this.state = BABY;
         this.running = true;

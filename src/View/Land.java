@@ -4,18 +4,13 @@ import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
-import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
-import Model.Shepherd.ShepherdMovementThread;
-import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Iterator;
-
-import java.util.Queue;
 
 public class Land extends JPanel {
     //This class represents the grid on the screen, where the game will be played.
@@ -134,17 +129,15 @@ public class Land extends JPanel {
                     cell.setBackground(Color.RED);
                     // Set tooltip text for sheep
                     Sheep sheep = (Sheep) e;
-                    String toolTip = "Nom : " + sheep.getName() +
-                            ", Âge : " + sheep.getAge() +
-                            ", État : " + sheep.getState();
+                    String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
+                            sheep.getSpecies(), sheep.getId(), sheep.getAge(), sheep.getState());
                     cell.setToolTipText(toolTip);
                 } else if (e instanceof Hen) {
                     cell.setBackground(Color.YELLOW);
                     // Set tooltip text for hen
                     Hen hen = (Hen) e;
-                    String toolTip = "Nom : " + hen.getName() +
-                            ", Âge : " + hen.getAge() +
-                            ", État : " + hen.getState();
+                    String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
+                            hen.getSpecies(), hen.getId(), hen.getAge(), hen.getState());
                     cell.setToolTipText(toolTip);
 
                 } else {

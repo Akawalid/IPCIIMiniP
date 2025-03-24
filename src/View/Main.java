@@ -13,32 +13,30 @@ import java.awt.*;
 
 public class Main {
     //This class handles the whole screen with different pages, Menu, World, GameOver, etc.
+
+    public static Shepherd SHEPHERD_TEST_1;
+    public static Sheep SHEEP_TEST_1;
+
     public static void main(String[] args){
         //création d'une fenêtre
         JFrame fr = new JFrame();
         Farm farm = new Farm();
 
+        //@TODO à terme choisir positions automatiquement (pas valeur brute)
+        //Créer un Shepherd et placer sur la grille
+        SHEPHERD_TEST_1 = new Shepherd(farm.getSpot(0, 0));
+        farm.addEntity(SHEPHERD_TEST_1);
+        //Créer un mouton
+        SHEEP_TEST_1 = new Sheep(farm.getSpot(5, 5));
+        farm.addEntity(SHEEP_TEST_1);
+
         //Crée la grille (Land) + panneau de contrôle (ControlPanel)
         World world = new World(farm);
         fr.add(world);
 
-        //Créer un Shepherd
-        Shepherd shepherd = new Shepherd("Shepherd");
-        farm.addEntity(shepherd);
-        //Créer un mouton
-        Sheep shp = new Sheep("sheep1");
-        farm.addEntity(shp);
-
-        farm.setSelectedEntity(shepherd);
+        farm.setSelectedEntity(SHEPHERD_TEST_1);
 
         Controller controller = new Controller(farm, world);
-
-        //positionner sur la grille
-        //@TODO à terme le faire automatiquement
-        shepherd.setPosition(farm.getSpot(0, 0));
-        shp.setPosition(farm.getSpot(5, 5));
-
-
 
         //create obstacles on the map
         farm.getSpot(1, 1).setIsTraversable(false);
@@ -51,7 +49,7 @@ public class Main {
         FindPath fp = new FindPath(farm);
 
         //création d'un déplacement
-        shepherd.setPath(fp.findPath(shepherd.getPosition(), shp.getPosition()));
+        SHEPHERD_TEST_1.setPath(fp.findPath(SHEPHERD_TEST_1.getPosition(), SHEEP_TEST_1.getPosition()));
 
 
         //création fenêtre fin
