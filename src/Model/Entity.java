@@ -2,7 +2,6 @@ package Model;
 
 import Model.Exceptions.InvalidCoordinates;
 
-import java.awt.*;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -12,24 +11,17 @@ public abstract class Entity {
     //It is abstract because we shouldn't have an animal of type that is strictly equal to entity (absurd).
     private static int idCounter = 0;
     protected Spot position;
-    private Queue<Point> path; // Queue to store movements
-    public final String name;
+    private Queue<Spot> path; // Queue to store movements
     protected final int id;
 
-    public Entity(String name){
-        //we can have entities without a position => position = null
-        position = null;
-        this.name = name;
+    public Entity(Spot position){
+        assert position != null;
+        this.position = position;
+
         id = idCounter;
         idCounter++;
 
         path = new ArrayDeque<>();
-
-    }
-
-    public Entity(Spot position, String name){
-        this(name);
-        this.position = position;
     }
 
     public void setPosition(Spot position){
@@ -46,9 +38,7 @@ public abstract class Entity {
     public int getId(){
         return id;
     }
-    public String getName(){
-        return  name;
-    }
+    public abstract String getSpecies();
 
     //move is an abstract methode because each entity has its own way of moving.
     //move method throws InvalidCoordinates in case if the user clicks on an invalid spot such as a tree, or a rock...
@@ -56,22 +46,11 @@ public abstract class Entity {
         if (path.isEmpty()) {
             return; // No movements in the queue
         }
-
         // Get the next spot from the queue
-        Point nextSpot = path.poll();
-
-        if (position == null) {
-            return; // No current position
-        }
-
-        // Calculate the destination coordinates
-        int destRow = nextSpot.x;
-        int destCol = nextSpot.y;
-
-        Farm farm = position.getFarm();
-        setPosition(farm.getSpot(destRow, destCol)); // Move to the new position
+        Spot nextSpot = path.poll();
+        setPosition(nextSpot); // Move to the new position
     }
-    public void setPath(Queue<Point> q){
+    public void setPath(Queue<Spot> q){
         path = q;
     }
      public Queue<Spot> getPath(){return null;}

@@ -42,3 +42,4 @@ Les déplacements des éleveurs utilisent l'algorithme A* pour trouver un chemin
 - Le contrôleur n'est pas encore finalisé en raison de la complexité de la fonctionnalité.
 - Les tests actuels valident les déplacements des éleveurs et l'affichage de la fenêtre graphique.
 - Nous avons décidé de modifier la structure de la classe Land qui affichait la grille en utilisant un GridLayout, une approche très complexe. Nous avons opté pour dessiner le terrain de manière standard en utilisant Graphics g.
+- Les tests JUnit ont été commentés dans Model > FarmAnimal > Test > FarmAnimalAgeTest car ils ne compilaient pas pour deux d'entre nous.

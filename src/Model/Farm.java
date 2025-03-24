@@ -32,7 +32,7 @@ public class Farm {
         //this method initiates the land, (fill).
         for (int i = 0; i < HEIGHT; i++){
             for (int j = 0; j < WIDTH; j++){
-                spots.add(new Spot(i, j, this));
+                spots.add(new Spot(i, j));
             }
         }
     }
@@ -60,7 +60,11 @@ public class Farm {
         return creatures.iterator();
     }
 
-    public void addEntity(Entity e){creatures.add(e);}
+    public void addEntity(Entity e){
+        creatures.add(e);
+    }
+
+
     public Entity getSelectedEntity(){return selectedEntity;}
     public void setSelectedEntity(Entity e){selectedEntity = e;}
     //genertae a getter for pathfinder

@@ -14,7 +14,7 @@ public class FindPath {
         this.farm = farm;
     }
 
-    public Queue<Point> findPath(Spot start, Spot dest) {
+    public Queue<Spot> findPath(Spot start, Spot dest) {
         // If the destination is not traversable, find the closest traversable spot
         if (!dest.isTraversable()) {
             dest = findClosestTraversableSpot(dest);
@@ -28,31 +28,31 @@ public class FindPath {
         PriorityQueue<Node> openSet = new PriorityQueue<>(Comparator.comparingInt(n -> n.f));
 
         // Map to store the cost to reach each spot
-        Map<Point, Integer> gScore = new HashMap<>();
-        gScore.put(new Point(start.getRow(), start.getCol()), 0);
+        Map<Spot, Integer> gScore = new HashMap<>();
+        gScore.put(start, 0);
 
         // Map to store the estimated total cost from start to dest through each spot
-        Map<Point, Integer> fScore = new HashMap<>();
-        fScore.put(new Point(start.getRow(), start.getCol()), heuristic(start, dest));
+        Map<Spot, Integer> fScore = new HashMap<>();
+        fScore.put(start, heuristic(start, dest));
 
         // Map to keep track of the path
-        Map<Point, Point> cameFrom = new HashMap<>();
+        Map<Spot, Spot> cameFrom = new HashMap<>();
 
         // Add the start node to the open set
-        openSet.add(new Node(new Point(start.getRow(), start.getCol()), fScore.get(new Point(start.getRow(), start.getCol()))));
+        openSet.add(new Node(start, fScore.get(start)));
 
         while (!openSet.isEmpty()) {
             // Get the node with the lowest f score
             Node current = openSet.poll();
-            Point currentPos = current.position;
+            Spot currentPos = current.position;
 
             // If we've reached the destination, reconstruct the path
-            if (currentPos.x == dest.getRow() && currentPos.y == dest.getCol()) {
+            if (currentPos.getRow() == dest.getRow() && currentPos.getCol() == dest.getCol()) {
                 return reconstructPath(cameFrom, currentPos);
             }
 
             // Explore neighbors
-            for (Point neighbor : getNeighbors(currentPos)) {
+            for (Spot neighbor : getNeighbors(currentPos)) {
                 // Calculate tentative g score
                 int tentativeGScore = gScore.get(currentPos) + 1; // Assuming each step has a cost of 1
 
@@ -84,19 +84,19 @@ public class FindPath {
     }
 
     // Get valid neighbors for a given position
-    private List<Point> getNeighbors(Point pos) {
-        List<Point> neighbors = new ArrayList<>();
+    private List<Spot> getNeighbors(Spot pos) {
+        List<Spot> neighbors = new ArrayList<>();
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Up, Down, Left, Right
 
         for (int[] dir : directions) {
-            int newRow = pos.x + dir[0];
-            int newCol = pos.y + dir[1];
+            int newRow = pos.getRow() + dir[0];
+            int newCol = pos.getCol() + dir[1];
 
             // Check if the neighbor is within the farm boundaries and traversable
             if (farm.validCoordinates(newRow, newCol)) {
                 Spot neighborSpot = farm.getSpot(newRow, newCol);
                 if (neighborSpot.isTraversable()) { // Only add if the spot is traversable
-                    neighbors.add(new Point(newRow, newCol));
+                    neighbors.add(neighborSpot);
                 }
             }
         }
@@ -105,8 +105,8 @@ public class FindPath {
     }
 
     // Reconstruct the path from the destination to the start
-    private Queue<Point> reconstructPath(Map<Point, Point> cameFrom, Point current) {
-        Queue<Point> path = new LinkedList<>();
+    private Queue<Spot> reconstructPath(Map<Spot, Spot> cameFrom, Spot current) {
+        Queue<Spot> path = new LinkedList<>();
         while (current != null) {
             path.add(current);
             current = cameFrom.get(current);
@@ -133,8 +133,8 @@ public class FindPath {
             }
 
             // Explore neighbors
-            for (Point neighborPos : getNeighbors(new Point(current.getRow(), current.getCol()))) {
-                Spot neighbor = farm.getSpot(neighborPos.x, neighborPos.y);
+            for (Spot neighborPos : getNeighbors(current)) {
+                Spot neighbor = farm.getSpot(neighborPos.getRow(), neighborPos.getCol());
                 if (!visited.contains(neighbor)) {
                     visited.add(neighbor);
                     queue.add(neighbor);
@@ -148,10 +148,10 @@ public class FindPath {
 
     // Node class to represent a spot in the priority queue
     private static class Node {
-        Point position;
+        Spot position;
         int f; // Total cost (g + h)
 
-        Node(Point position, int f) {
+        Node(Spot position, int f) {
             this.position = position;
             this.f = f;
         }
@@ -180,11 +180,11 @@ public class FindPath {
         Spot dest = farm.getSpot(3, 3);
         dest.setIsTraversable(false); // Set destination as non-traversable for testing
 
-        Queue<Point> path = findPath.findPath(start, dest);
+        Queue<Spot> path = findPath.findPath(start, dest);
         System.out.println("Path from (" + start.getRow() + ", " + start.getCol() + ") to closest traversable spot near (" + dest.getRow() + ", " + dest.getCol() + "):");
         System.out.println("Size: " + path.size());
-        for (Point p : path) {
-            System.out.println("(" + p.x + ", " + p.y + ")");
+        for (Spot p : path) {
+            System.out.println("(" + p.getRow() + ", " + p.getCol() + ")");
         }
     }
 }

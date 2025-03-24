@@ -2,13 +2,18 @@ package Model.FarmAnimals;
 
 import Model.Resources.Resource;
 import Model.Resources.Wool;
+import Model.Spot;
 
 import java.util.ArrayList;
 
-public class
-Sheep extends Ovidae{
+public class Sheep extends Ovidae{
 
-    public Sheep(String name) {
-        super(name);
+    public Sheep(Spot s) {
+        super(s);
+    }
+
+    @Override
+    public String getSpecies() {
+        return "Sheep";
     }
 }

@@ -1,12 +1,10 @@
 package Model.FarmAnimals;
 
+import Model.Spot;
+
 public abstract class Galinacea extends FarmAnimal{
-    /**
-     * constructor
-     *
-     * @param name
-     **/
-    public Galinacea(String name) {
-        super(name);
+
+    public Galinacea(Spot s) {
+        super(s);
     }
 }
