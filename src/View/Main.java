@@ -22,6 +22,10 @@ public class Main {
         JFrame fr = new JFrame();
         Farm farm = new Farm();
 
+        //Crée la grille (Land) + panneau de contrôle (ControlPanel)
+        World world = new World(farm);
+        fr.add(world);
+
         //@TODO à terme choisir positions automatiquement (pas valeur brute)
         //Créer un Shepherd et placer sur la grille
         SHEPHERD_TEST_1 = new Shepherd(farm.getSpot(0, 0));
@@ -29,11 +33,6 @@ public class Main {
         //Créer un mouton
         SHEEP_TEST_1 = new Sheep(farm.getSpot(5, 5));
         farm.addEntity(SHEEP_TEST_1);
-
-        //Crée la grille (Land) + panneau de contrôle (ControlPanel)
-        World world = new World(farm);
-        fr.add(world);
-
         farm.setSelectedEntity(SHEPHERD_TEST_1);
 
         Controller controller = new Controller(farm, world);

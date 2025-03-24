@@ -1,6 +1,9 @@
 package Controller;
 
+import Model.Entity;
+import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
+import Model.FarmAnimals.FarmAnimal;
 import View.World;
 
 import java.awt.event.MouseAdapter;
@@ -25,6 +28,22 @@ public class Controller {
             }
         };
 
+    }
+
+    public MouseAdapter getFarmAnimalSellHandler(FarmAnimal fa){
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                System.out.print("Animal sold");
+                try {
+                    farm.getBank().deposit(fa.get_selling_price());
+                }
+                catch (UnauthorizedAction s){
+                    //TODO
+                }
+            }
+        };
     }
 
 }

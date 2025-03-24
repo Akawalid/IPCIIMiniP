@@ -1,7 +1,11 @@
 package Model.Shepherd;
 
 import Model.Entity;
+import Model.Exceptions.UnauthorizedAction;
 import Model.Spot;
+
+import static Model.AgeState.MATURE;
+import static Model.AgeState.OLD;
 
 public class Shepherd extends Entity {
     private ShepherdMovementThread thread;

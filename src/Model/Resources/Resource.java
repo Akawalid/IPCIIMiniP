@@ -1,6 +1,6 @@
 package Model.Resources;
 
-import Model.Exceptions.UnauthorizedCollection;
+import Model.Exceptions.UnauthorizedAction;
 
 public abstract class Resource {
     protected static int COOLDOWN_MAX_MILK = 10;
@@ -35,13 +35,13 @@ public abstract class Resource {
     protected void set_ready(){
         is_ready = true;
     }
-    public void collect() throws UnauthorizedCollection {
+    public void collect() throws UnauthorizedAction {
         if(is_ready){
             start_cooldown(); //creates a new cooldown
             is_ready = false;
         }
         else{
-            throw new UnauthorizedCollection();
+            throw new UnauthorizedAction("Impossible to collect this resource: timer not ready.");
         }
     }
 

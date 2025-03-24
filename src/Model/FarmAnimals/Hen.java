@@ -11,6 +11,10 @@ public class Hen extends Galinacea{
     }
 
     @Override
+    protected int get_price() {
+        return PRICE_HEN;
+    }
+    @Override
     public String getSpecies() {
         return "Hen";
     }
