@@ -15,6 +15,11 @@ public class Ewe extends Ovidae {
     }
 
     @Override
+    protected int get_price() {
+        return PRICE_EWE;
+    }
+
+    @Override
     public String getSpecies() {
         return "Ewe";
     }

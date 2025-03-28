@@ -4,6 +4,8 @@ import Model.Entity;
 import Model.EntityMovementThread;
 import Model.Farm;
 import Model.Shepherd.Shepherd;
+import Model.Exceptions.UnauthorizedAction;
+import Model.FarmAnimals.FarmAnimal;
 import View.World;
 
 import java.awt.event.MouseAdapter;
@@ -58,6 +60,22 @@ public class Controller {
         //We give to the user the possibility to apply other actions.
         world.setInMovementChoiceState(false);
         (new EntityMovementThread(farm.getSelectedEntity())).start();
+    }
+
+    public MouseAdapter getFarmAnimalSellHandler(FarmAnimal fa){
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                System.out.print("Animal sold");
+                try {
+                    farm.getBank().deposit(fa.get_selling_price());
+                }
+                catch (UnauthorizedAction s){
+                    //TODO
+                }
+            }
+        };
     }
 
 }

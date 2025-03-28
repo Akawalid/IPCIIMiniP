@@ -1,6 +1,7 @@
 package Model;
 
 import Model.Exceptions.InvalidCoordinates;
+import Model.Exceptions.UnauthorizedAction;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

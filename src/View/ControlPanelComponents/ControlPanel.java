@@ -34,6 +34,8 @@ public class ControlPanel extends JPanel {
     //second part of the panel is the action panel, on the bottom
     private ActionPanel actionPanel;
 
+    private Controller controller;
+
     public ControlPanel(Farm farm){
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -71,11 +73,11 @@ public class ControlPanel extends JPanel {
         }
         else if(e instanceof Shepherd) {
             informationPanel = new ShepherdInformationPanel((Shepherd)e);
-            actionPanel = new ShepherdActionPanel((Shepherd)e);
+            actionPanel = new ShepherdActionPanel((Shepherd)e, controller);
         }
         else if(e instanceof FarmAnimal){
             informationPanel = new FarmAnimalInformationPanel((FarmAnimal)e);
-            actionPanel = new FarmAnimalActionPanel((FarmAnimal)e);
+            actionPanel = new FarmAnimalActionPanel((FarmAnimal)e, controller);
         }
         else{
             throw new IllegalStateException("Case not supported");
@@ -95,8 +97,6 @@ public class ControlPanel extends JPanel {
     }
 
     public void connect(Controller c){
-        if(actionPanel != null){
-            actionPanel.connect(c);
-        }
+        controller = c;
     }
 }

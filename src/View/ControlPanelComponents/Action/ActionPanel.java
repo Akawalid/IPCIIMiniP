@@ -5,7 +5,6 @@ import Controller.Controller;
 
 public abstract class ActionPanel extends JPanel {
     protected static final int MARGIN = 5;
-    protected Controller controller;
 
     // Default constructor
     public ActionPanel() {
@@ -21,20 +20,13 @@ public abstract class ActionPanel extends JPanel {
     public abstract void update();
 
     /**
-     * Connects the action panel to the controller.
-     * @param c The controller to connect.
-     */
-    public void connect(Controller c) {
-        this.controller = c;
-        // Additional logic to connect the panel to the controller
-    }
-
-    /**
      * Resets the action panel.
      * This method can be used to reset the state of the panel.
      */
     public void reset() {
         removeAll();
+        //alors attention, le contenu du panel ne doit pas être enlevé,
+        //sinon il faut changer des trucs
         revalidate();
         repaint();
     }

@@ -13,6 +13,11 @@ public class Sheep extends Ovidae{
     }
 
     @Override
+    protected int get_price() {
+        return PRICE_SHEEP;
+    }
+
+    @Override
     public String getSpecies() {
         return "Sheep";
     }
