@@ -1,24 +1,31 @@
 package View.ControlPanelComponents.Action;
 
-import Model.Exceptions.UnauthorizedAction;
 import Model.FarmAnimals.FarmAnimal;
 import Controller.Controller;
-import View.ControlPanelComponents.Action.ActionPanel;
 import View.CustomButton;
 
 import javax.swing.*;
 
 public class FarmAnimalActionPanel extends ActionPanel {
 
+    private final FarmAnimal farm_animal;
+    private final CustomButton sellButton;
+
     //constructeur
-    public FarmAnimalActionPanel(FarmAnimal e, Controller c){
+    public FarmAnimalActionPanel(FarmAnimal fa){
         //créer un layout pour afficher les boutons
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        farm_animal = fa;
+
         //vendre l'animal
-        CustomButton sellButton = new CustomButton("Sell");
+        sellButton = new CustomButton("Sell");
         add(sellButton);
-        sellButton.addMouseListener(c.getFarmAnimalSellHandler(e));
+    }
+
+    @Override
+    public void connect(Controller c) {
+        sellButton.addMouseListener(c.getFarmAnimalSellHandler(farm_animal));
     }
 
     @Override

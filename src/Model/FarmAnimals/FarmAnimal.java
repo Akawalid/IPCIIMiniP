@@ -45,7 +45,6 @@ public abstract class FarmAnimal extends Entity {
     private int age;       // L'âge exprimé en nombre de cycles
     private AgeState state;  // "Bébé", "Mature", "Vieux"
     private boolean running; // Pour contrôler l'exécution du thread
-    public int prix ;
 
     // ### Resource production ###
     ArrayList<Resource> resourceList;

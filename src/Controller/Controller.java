@@ -3,26 +3,29 @@ package Controller;
 import Model.Entity;
 import Model.EntityMovementThread;
 import Model.Farm;
+import Model.Resources.Resource;
 import Model.Shepherd.Shepherd;
 import Model.Exceptions.UnauthorizedAction;
 import Model.FarmAnimals.FarmAnimal;
-import Model.Spot;
 import View.Land;
 import View.World;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class Controller {
     private Farm farm;
     private World world;
+
     public Controller(Farm farm, World world) {
         this.farm = farm;
         this.world = world;
         world.connect(this);
     }
 
-    public MouseAdapter getShepherdMoveHandler(){
+    public MouseAdapter getShepherdMoveHandler() {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -32,7 +35,7 @@ public class Controller {
         };
     }
 
-    public MouseAdapter coordinatesHandler(){
+    public MouseAdapter coordinatesHandler() {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -40,24 +43,24 @@ public class Controller {
                 int col = xOfViewToModel(e.getX());
                 int row = yOfViewToModel(e.getY());
 
-                if(world.getInMovementChoiceState()) {
+                if (world.getInMovementChoiceState()) {
                     System.out.println("zzzzzzzzzzzzzzzzz");
                     Entity entity = farm.getSelectedEntity();
-                    if (entity instanceof Shepherd && world.getInMovementChoiceState() ){
+                    if (entity instanceof Shepherd && world.getInMovementChoiceState()) {
                         launchShepherdsMovementThread(row, col);
                     } else {
                         //TODO
                     }
-                }
-                else {
+                } else {
                     Entity entity = farm.getEntityInSpot(row, col);
-                    if(farm.getSelectedEntity() == entity) return;
+                    if (farm.getSelectedEntity() == entity) return;
                     farm.setSelectedEntity(entity);
                     world.inform(World.UPDATE_ACTIVE_ENTITY);
                 }
             }
         };
     }
+
     private int xOfViewToModel(int x) {
         return Farm.WIDTH - Math.floorDiv(x, Land.CELL_SIZE) - 1;
     }
@@ -66,12 +69,12 @@ public class Controller {
         return Math.floorDiv(y, Land.CELL_SIZE);
     }
 
-    private void launchShepherdsMovementThread(int destRow, int destColum){
+    private void launchShepherdsMovementThread(int destRow, int destColum) {
 
         int sourceRow = farm.getSelectedEntity().getPosition().getRow();
         int sourceCol = farm.getSelectedEntity().getPosition().getCol();
 
-        System.out.println(sourceRow + ", " + sourceCol + ", " + destRow + ", " + destColum );
+        System.out.println(sourceRow + ", " + sourceCol + ", " + destRow + ", " + destColum);
         farm.getSelectedEntity().setPath(farm.getPathFinder().findPath(
                 farm.getSpot(sourceRow, sourceCol),
                 farm.getSpot(destRow, destColum)
@@ -82,7 +85,7 @@ public class Controller {
         (new EntityMovementThread(farm.getSelectedEntity())).start();
     }
 
-    public MouseAdapter getFarmAnimalSellHandler(FarmAnimal fa){
+    public MouseAdapter getFarmAnimalSellHandler(FarmAnimal fa) {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -90,12 +93,30 @@ public class Controller {
                 System.out.print("Animal sold");
                 try {
                     farm.getBank().deposit(fa.get_selling_price());
-                }
-                catch (UnauthorizedAction s){
+                } catch (UnauthorizedAction s) {
                     //TODO
                 }
             }
         };
+    }
+
+    public ActionListener getResourceCollectHandler(Resource r) {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.printf("Resource %s collected", r.get_name());
+                try {
+                    r.collect();
+                } catch (Exception ex) {
+                    //TODO
+                }
+            }
+        };
+    }
+
+    //TODO : est-ce que c'est bien ce genre de fonction qu'on veut créer pour commencer les threads ?
+    public void start_thread(Thread t){
+        t.start();
     }
 
 }

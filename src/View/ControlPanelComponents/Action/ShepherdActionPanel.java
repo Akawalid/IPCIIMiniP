@@ -10,7 +10,7 @@ import java.awt.*;
 public class ShepherdActionPanel extends ActionPanel {
     private CustomButton moveButton;
 
-    public ShepherdActionPanel(Shepherd s, Controller c){
+    public ShepherdActionPanel(Shepherd s){
 
         setBackground(new Color(0x03071e));
 

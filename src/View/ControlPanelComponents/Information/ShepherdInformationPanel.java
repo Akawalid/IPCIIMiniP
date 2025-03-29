@@ -18,13 +18,13 @@ public class ShepherdInformationPanel extends InformationPanel {
         add(speciesLabel, BorderLayout.NORTH);
     }
 
+    @Override
+    public void connect(Controller c){
+        //TODO
+    }
 
     @Override
     public void update() {
-        //TODO
-    }
-    @Override
-    public void connect(Controller c){
         //TODO
     }
 }

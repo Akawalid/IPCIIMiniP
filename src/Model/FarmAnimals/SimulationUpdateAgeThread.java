@@ -16,6 +16,8 @@ public class SimulationUpdateAgeThread extends Thread {
     public static final int UPDATE_DELAY = 5000;
     private Farm farm;
 
+    private boolean active = true;
+
     /**
      * Constructor that initializes the thread with the farm.
      * @param farm the farm containing the entities to be updated.
@@ -24,9 +26,13 @@ public class SimulationUpdateAgeThread extends Thread {
         this.farm = farm;
     }
 
+    public void stopThread(){
+        active = false;
+    }
+
     @Override
     public void run() {
-        while (true) {
+        while (active) {
             // Iterate over all entities and update the age for each farm animal
             Iterator<Entity> entity = farm.getEntities();
             while (entity.hasNext()) {

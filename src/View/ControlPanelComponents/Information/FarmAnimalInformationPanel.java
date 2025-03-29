@@ -1,5 +1,6 @@
 package View.ControlPanelComponents.Information;
 
+import Controller.Controller;
 import Model.FarmAnimals.FarmAnimal;
 import Model.Resources.Resource;
 import View.ControlPanelComponents.Information.InformationPanel;
@@ -27,6 +28,14 @@ public class FarmAnimalInformationPanel extends InformationPanel {
             resourcePanels.add(rbp);
             this.add(rbp);
         }
+
+    }
+
+    @Override
+    public void connect(Controller c) {
+        for(ResourceBarPanel rbp: resourcePanels){
+            rbp.connect(c);
+        };
 
     }
 

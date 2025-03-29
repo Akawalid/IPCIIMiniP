@@ -7,14 +7,10 @@ import javax.swing.*;
 
 public abstract class InformationPanel extends JPanel {
 
-    private static final int MARGIN = 5;
+    protected static final int MARGIN = 5;
 
-    private void construct(FarmAnimal fa){
+    public abstract void connect(Controller c);
 
-
-    }
-    //TODO: Abstract
-    public void connect(Controller c){};
     public abstract void update();
 
 }

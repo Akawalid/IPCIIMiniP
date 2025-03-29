@@ -3,6 +3,7 @@ package View.ControlPanelComponents.Information;
 import Model.Resources.Milk;
 import Model.Resources.Resource;
 import View.CustomButton;
+import Controller.Controller;
 
 import javax.swing.*;
 
@@ -10,6 +11,9 @@ public class ResourceBarPanel extends JPanel {
 
     //création d'une variable de type JProgressBar
     private JProgressBar progressBar;
+
+    //boutons
+    private final CustomButton collectButton;
 
     //création d'une variable Resource
     private Resource resource;
@@ -34,16 +38,12 @@ public class ResourceBarPanel extends JPanel {
         add(progressBar);
 
         //ajouter un bouton qui collecte la ressource
-        CustomButton collectButton = new CustomButton("Collect");
-        //TODO en faire un listener
-        collectButton.addActionListener(e -> {
-            try {
-                resource.collect();
-            } catch (Exception ex) {
-                //rien
-            }
-        });
+        collectButton = new CustomButton("Collect");
         add(collectButton);
+    }
+
+    public void connect(Controller c){
+        collectButton.addActionListener(c.getResourceCollectHandler(resource));
     }
 
     /** fonction qui met à jour la barre de progression avec repaint */

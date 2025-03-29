@@ -16,8 +16,7 @@ public abstract class ActionPanel extends JPanel {
     /**
      * connects te content of the panel with controller, likewise, buttons and TextLabels.
      */
-    //TODO: Abstract
-    public void connect(Controller c){};
+    public abstract void connect(Controller c);
 
     /**
      * Updates the state of the action panel.

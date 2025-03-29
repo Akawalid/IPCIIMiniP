@@ -13,32 +13,19 @@ public abstract class Resource {
 
     public Resource(){
         //thread cooldown
-        if(get_ready_on_purchase()){
-            //the resource is already available
-            //is_ready = true;
-            cooldown_thread = new ResourceCooldownThread(this, get_cooldown_max());
-            cooldown_thread.start();
-            //TODO y revenir
-        }
-        else{
-            start_cooldown();
-        }
+        cooldown_thread = new ResourceCooldownThread(this, get_ready_on_purchase());
+        cooldown_thread.start();
     }
 
     protected abstract boolean get_ready_on_purchase();
     public abstract int get_cooldown_max();
-    private void start_cooldown(){
-        cooldown_thread = new ResourceCooldownThread(this);
-        cooldown_thread.start();
-    }
 
-    protected void set_ready(){
-        is_ready = true;
+    protected void set_ready(boolean b){
+        is_ready = b;
     }
     public void collect() throws UnauthorizedAction {
         if(is_ready){
-            start_cooldown(); //creates a new cooldown
-            is_ready = false;
+            cooldown_thread.start_new_cooldown(); //creates a new cooldown
         }
         else{
             throw new UnauthorizedAction("Impossible to collect this resource: timer not ready.");

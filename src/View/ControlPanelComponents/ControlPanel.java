@@ -72,11 +72,11 @@ public class ControlPanel extends JPanel {
         else{
             if(e instanceof Shepherd) {
                 informationPanel = new ShepherdInformationPanel((Shepherd)e);
-                actionPanel = new ShepherdActionPanel((Shepherd)e, controller);
+                actionPanel = new ShepherdActionPanel((Shepherd)e);
             }
             else if(e instanceof FarmAnimal){
                 informationPanel = new FarmAnimalInformationPanel((FarmAnimal)e);
-                actionPanel = new FarmAnimalActionPanel((FarmAnimal)e, controller);
+                actionPanel = new FarmAnimalActionPanel((FarmAnimal)e);
             }
             else{
                 throw new IllegalStateException("Case not supported");
