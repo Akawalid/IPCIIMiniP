@@ -12,6 +12,7 @@ import java.awt.event.ComponentEvent;
 
 public class World extends JLayeredPane {
     //World is the page that visualizes the core of the game, it contains the land and the control panel.
+    public static final int UPDATE_ACTIVE_ENTITY = 0;
     private Farm farm;
 
     //shadowPanel, is for visualisation purposes, it will be displayed when the store or the bank are displayed.
@@ -85,15 +86,24 @@ public class World extends JLayeredPane {
         repaint();
     }
 
-
-    public void update(){
-        land.update();
-        storePanel.update();
-        controlPanel.update();
-    }
+//    @Override
+//    public void paintComponent(Graphics g){
+//        super.paintComponent(g);
+////        storePanel.update();
+////        controlPanel.update();
+//    }
 
     public void connect(Controller c){
+        land.connect(c);
         controlPanel.connect(c);
+    }
+
+    public void inform(final int MESSAGE){
+        switch(MESSAGE) {
+            case UPDATE_ACTIVE_ENTITY:
+                controlPanel.updateActiveEntity();
+                break;
+        }
     }
 
     public boolean getInMovementChoiceState(){return inMovementChoiceState;}

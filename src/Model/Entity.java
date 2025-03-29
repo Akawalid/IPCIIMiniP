@@ -11,6 +11,7 @@ public abstract class Entity {
     //They share proprieties like: move, position, name and id
     //It is abstract because we shouldn't have an animal of type that is strictly equal to entity (absurd).
     private static int idCounter = 0;
+    //We need this attribute here in order to get the position of the active entity from the controller easily
     protected Spot position;
     private Queue<Spot> path; // Queue to store movements
     protected final int id;
@@ -33,6 +34,8 @@ public abstract class Entity {
         this.position.setIsTraversable(false);
     }
     public Spot getPosition(){
+        //Invariant: position != null
+        assert(position != null);
         return position;
     }
 
@@ -59,14 +62,14 @@ public abstract class Entity {
     //these methods are implemented to use HashSets of Entities
     @Override
     public boolean equals(Object o){
-        if (o == this) return true;
-        if (!(o instanceof Entity)) return false;
-        Entity e = (Entity) o;
-        return e.id == id;
+        //we can not put multiple entities on the same spot.
+        return position.equals(o);
     }
     @Override
     public int hashCode(){
-        return id;
+        //This makes it easy for us to look for an entity by its position, it comes handy
+        // in the controller
+        return position.hashCode();
     }
 
     public Thread getThread(int id){

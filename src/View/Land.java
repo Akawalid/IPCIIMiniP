@@ -1,12 +1,17 @@
 package View;
 
+import Controller.Controller;
 import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
+import Model.FarmAnimals.SimulationUpdateAgeThread;
+import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
+import Model.Spot;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -33,146 +38,95 @@ public class Land extends JPanel {
         +---------------------------------------------------+
      */
 
-    private final int CELL_SIZE = 32; // Size of each cell in pixels
-    private int rows, cols; // Number of rows and columns in the grid
+    public static final int CELL_SIZE = 64,// Size of each cell in pixels
+            WIDTH= CELL_SIZE * Farm.WIDTH,
+            HEIGHT= CELL_SIZE * Farm.HEIGHT;
+//    private int rows, cols; // Number of rows and columns in the grid
     private Farm farm;
 
     public Land(Farm farm) {
         super();
         this.farm = farm;
-
-        //In the following, we call set methode once the width and the height of the panel are computed.
-        //Th resolution is dynamic, therefor, the width and the height are known at runtime, thats why we've added the
-        // listener bellow, (to catch the moment when the resolution is set).
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                set();
-            }
-        });
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setBackground(Color.LIGHT_GRAY);
     }
 
-    private void set() {
-        //Sometimes the layout manager tweaks the resolution multiple times before getting to the final one, sometimes
-        //these resolutions can be negative! so we should avoid this case.
-        if(getHeight() < 0 || getWidth() < 0) return;
-
-        rows = getHeight() / CELL_SIZE;
-        cols = getWidth() / CELL_SIZE;
-
-        setLayout(new GridLayout(rows, cols));
-
-        // Clear the existing cells
-        removeAll();
-
-        //we fill the grid by the cells, we paint in dark gray the cells that are out of our model
-        //the land doesnt fit exactly on the model, sometimes the model can be bigger therefor, we navigate with arrows
-        // but sometimes the model can be smaller which is our case for the moment.
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                JPanel cell = new JPanel();
-                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-
-                //if the cell goes out of the models scope, we disactivate it by painting it with dark gray
-                if (!farm.validCoordinates(i, cols - j - 1)) {
-                    cell.setBackground(Color.gray);
-                }
-                else if(!farm.getSpot(i, cols - j - 1).isTraversable()){
-                    //Maybe another color...
-                    cell.setBackground(Color.gray);
-                }
-                else {
-                    //make cell gray on hover
-                    cell.addMouseListener(new java.awt.event.MouseAdapter() {
-                        public void mouseEntered(java.awt.event.MouseEvent evt) {
-                                cell.setBackground(Color.LIGHT_GRAY);
-                        }
-
-                        public void mouseExited(java.awt.event.MouseEvent evt) {
-                            cell.setBackground(null);
-                        }
-                    });
-                }
-                add(cell);
-            }
-        }
-
-        revalidate();
-        repaint();
-
-        //it is not the right place to call this methode, i've added it for the tests.
-        update();
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        System.out.print("Refresh land \n");
+        drawGrid(g);
+        drawEnities(g);
     }
 
-    public void update() {
-        // Réinitialiser toutes les cellules avant de mettre à jour les entités
-        resetCells();
+    private void drawGrid(Graphics g){
+        Color defaultColor = getBackground();
+        g.setColor(defaultColor);
+        for (int row = 0; row < Farm.HEIGHT; row++) {
+            for (int col = 0; col < Farm.WIDTH; col++) {
+                if(!farm.getSpot(row, col).isTraversable()) g.setColor(Color.gray);
+                else g.setColor(defaultColor);
 
-        // Update the grid by placing entities in the correct cells
-        for (Iterator<Entity> entity = farm.getEntities(); entity.hasNext(); ) {
-            Entity e = entity.next();
+                g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
 
-            int r = e.getPosition().getRow();
-            int c = e.getPosition().getCol();
-
-            // Convert model coordinates to view index
-            int index = rowColOfModelToView(r, c);
-
-            // Check if the index is valid
-            if (index >= 0 && index < getComponentCount()) {
-                JPanel cell = (JPanel) getComponent(index);
-
-                // Set cell color based on the entity type
-                if (e instanceof Shepherd) {
-                    cell.setBackground(Color.BLUE);
-                } else if (e instanceof Sheep) {
-                    cell.setBackground(Color.RED);
-                    // Set tooltip text for sheep
-                    Sheep sheep = (Sheep) e;
-                    String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
-                            sheep.getSpecies(), sheep.getId(), sheep.getAge(), sheep.getState());
-                    cell.setToolTipText(toolTip);
-                } else if (e instanceof Hen) {
-                    cell.setBackground(Color.YELLOW);
-                    // Set tooltip text for hen
-                    Hen hen = (Hen) e;
-                    String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
-                            hen.getSpecies(), hen.getId(), hen.getAge(), hen.getState());
-                    cell.setToolTipText(toolTip);
-
-                } else {
-                    cell.setBackground(Color.GRAY);
-                    cell.setToolTipText(null);
-                }
+                g.setColor(Color.BLACK);
+                g.drawRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
             }
         }
     }
 
-    /**
-     * Réinitialise toutes les cellules du panneau en fonction des coordonnées du modèle.
-     * Pour chaque cellule, on met à jour la couleur de fond à gris (comme ca on peut ajouter au même emplacement encore du bétail) et on supprime le tooltip.
-     */
-    private void resetCells() {
-        for (int i = 0; i < getComponentCount(); i++) {
-            JPanel cell = (JPanel) getComponent(i);
-            // Calculer les coordonnées du modèle correspondant à la cellule
-            int row = i / cols;
-            int col = cols - (i % cols) - 1;
-
-            // Réinitialiser la couleur de fond selon la validité du spot et la présence d'une entité
-            if (!farm.validCoordinates(row, col)) {
-                cell.setBackground(Color.GRAY);
-            } else { // Sinon, on le remet dans son état par défaut (traversable)
-                cell.setBackground(null);
+    private void drawEnities(Graphics g){
+        for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
+            Entity e = it.next();
+            System.out.println("Entity :" + e.getPosition().getRow() + ", " + e.getPosition().getCol());
+            int y = rowOfModelToView(e.getPosition().getRow());
+            int x = colOfModelToView(e.getPosition().getCol());
+            // Set cell color based on the entity type
+            if (e instanceof Shepherd) {
+                g.setColor(Color.BLUE);
+            } else if (e instanceof Sheep) {
+                g.setColor(Color.RED);
+                Sheep sheep = (Sheep) e;
+                String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
+                        sheep.getSpecies(), sheep.getId(), sheep.getAge(), sheep.getState());
+//                cell.setToolTipText(toolTip);
+            } else if (e instanceof Hen) {
+                g.setColor(Color.YELLOW);
+                // Set tooltip text for hen
+                Hen hen = (Hen) e;
+                g.fillRect(hen.getPosition().getRow() * CELL_SIZE,
+                        hen.getPosition().getCol() * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
+                        hen.getSpecies(), hen.getId(), hen.getAge(), hen.getState());
+//                cell.setToolTipText(toolTip);
             }
-            // Supprimer le tooltip de la cellule
-            cell.setToolTipText(null);
+            g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
         }
+        g.setColor(null);
     }
 
-    private int rowColOfModelToView(int row, int col) {
-        //convert the coordinates of the model to the coordinates of the view
-        //the view is a matrix represented by an array (grid[i][j] = grid[i * cols + j])
-        return row * cols + cols - col - 1;
+    private int rowOfModelToView(int row){return row * CELL_SIZE;}
+    private int colOfModelToView(int col){return (Farm.WIDTH - col - 1) * CELL_SIZE;}
+    public void connect(Controller c){
+        addMouseListener(c.coordinatesHandler());
+    }
+
+
+    public static void main(String[] args){
+        //création d'une fenêtre
+        JFrame fr = new JFrame();
+        Farm farm = new Farm();
+        JPanel jp = new JPanel();
+        Land land = new Land(farm);
+        jp.add(land);
+        fr.add(jp);
+        //création fenêtre fin
+        fr.setTitle("Farm");
+        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        fr.setResizable(false);
+        fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());
+        fr.setLocationRelativeTo(null);
+        fr.setVisible(true);
+
     }
 }

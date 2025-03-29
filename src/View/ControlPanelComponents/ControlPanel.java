@@ -35,9 +35,12 @@ public class ControlPanel extends JPanel {
     private ActionPanel actionPanel;
 
     private Controller controller;
+    private Farm farm;
 
     public ControlPanel(Farm farm){
         super();
+        this.farm = farm;
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         //Etat du jeu et marché
@@ -53,50 +56,48 @@ public class ControlPanel extends JPanel {
         //setActiveEntity(null);
 
         //TODO, change : We add a random entity for the moment
-        //setActiveEntity(Main.SHEPHERD_TEST_1);
-        setActiveEntity(Main.SHEEP_TEST_1);
+//        setActiveEntity(Main.SHEPHERD_TEST_1);
+        //setActiveEntity(Main.SHEEP_TEST_1);
     }
 
-    private void reloadPanels(){
-        //remove uniquement informationPanel et actionPanel
+    public void updateActiveEntity() {
         if(informationPanel != null) remove(informationPanel);
         if(actionPanel != null) remove(actionPanel);
 
-        if(informationPanel != null) add(informationPanel);
-        add(Box.createRigidArea(new Dimension(0, MARGIN)));
-        if(actionPanel != null) add(actionPanel);
-    }
-    public void setActiveEntity(Entity e) {
+        Entity e = farm.getSelectedEntity();
         if(e == null){
             informationPanel = null;
             actionPanel = null;
         }
-        else if(e instanceof Shepherd) {
-            informationPanel = new ShepherdInformationPanel((Shepherd)e);
-            actionPanel = new ShepherdActionPanel((Shepherd)e, controller);
-        }
-        else if(e instanceof FarmAnimal){
-            informationPanel = new FarmAnimalInformationPanel((FarmAnimal)e);
-            actionPanel = new FarmAnimalActionPanel((FarmAnimal)e, controller);
-        }
         else{
-            throw new IllegalStateException("Case not supported");
-        }
-        reloadPanels();
-    }
+            if(e instanceof Shepherd) {
+                informationPanel = new ShepherdInformationPanel((Shepherd)e);
+                actionPanel = new ShepherdActionPanel((Shepherd)e, controller);
+            }
+            else if(e instanceof FarmAnimal){
+                informationPanel = new FarmAnimalInformationPanel((FarmAnimal)e);
+                actionPanel = new FarmAnimalActionPanel((FarmAnimal)e, controller);
+            }
+            else{
+                throw new IllegalStateException("Case not supported");
+            }
 
-    public void update(){
-        //rien à faire : gameStatePanel.update();
-        //rien à faire : marketPanel.update();
-        if(informationPanel != null){
-            informationPanel.update();
-        }
-        if(actionPanel != null) {
-            actionPanel.update();
+            //When we upload ControlePanel to the ui, the controller attribute is set null
+            //Therefor, the method connect, should be called for the first time by the controller
+            if(controller != null) connect(controller);
+
+            add(informationPanel);
+            add(Box.createRigidArea(new Dimension(0, MARGIN)));
+            add(actionPanel);
         }
     }
 
     public void connect(Controller c){
+        //Invariant: connect should be called for the first time by the controller
+        //We can say that by a strengthened condition as below.
+        assert(c != null);
         controller = c;
+        if(informationPanel != null) informationPanel.connect(controller);
+        if(actionPanel != null) actionPanel.connect(controller);
     }
 }

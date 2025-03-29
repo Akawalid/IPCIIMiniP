@@ -24,10 +24,26 @@ public class Spot {
         return y;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        // 1. Check if it's the exact same object
+        if (this == o) return true;
+
+        // 2. Check if null or wrong class
+        if (o == null || getClass() != o.getClass()) return false;
+
+        // 3. Cast and compare fields
+        Spot spot = (Spot) o;
+        return x == spot.x && y == spot.y;
+    }
+    @Override
+    public int hashCode(){
+        return x * Farm.WIDTH + y;
+    }
+
     public double distanceTo(Spot other) {
         int dx = this.getRow() - other.getRow();
         int dy = this.getCol() - other.getCol();
         return Math.sqrt(dx * dx + dy * dy);
     }
-
 }

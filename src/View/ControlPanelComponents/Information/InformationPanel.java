@@ -1,6 +1,7 @@
 package View.ControlPanelComponents.Information;
 
 import Model.FarmAnimals.FarmAnimal;
+import Controller.Controller;
 
 import javax.swing.*;
 
@@ -12,7 +13,8 @@ public abstract class InformationPanel extends JPanel {
 
 
     }
-
+    //TODO: Abstract
+    public void connect(Controller c){};
     public abstract void update();
 
 }

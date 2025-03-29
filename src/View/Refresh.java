@@ -4,7 +4,8 @@ import javax.swing.*;
 
 public class Refresh extends Thread {
     public static final int DELAY = 100;
-    private World toRefresh;
+    private final World toRefresh;
+    private volatile boolean running = true;
 
     public Refresh(World toRefresh) {
         this.toRefresh = toRefresh;
@@ -12,15 +13,35 @@ public class Refresh extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            toRefresh.update();
-            toRefresh.repaint();
-            toRefresh.revalidate();
+        while (running) {
+            /*
+            Swing has an invariant that has to be maintained:
+                Invariant: All Swing components must be accessed/modified only on the Event Dispatch Thread (EDT).
+             Schedule repaint on EDT
+
+             for your information, EDT is the main thread of swing, it contains a queue of events that works as
+             the following:
+                User Action->>EDT: Mouse click/keypress
+                EDT->>Your Code: Invokes listeners
+                Your Code->>EDT: Calls repaint()
+                EDT->>Component: Processes paint events
+             */
+            SwingUtilities.invokeLater(() -> {
+                toRefresh.repaint();
+                toRefresh.revalidate();
+            });
+
             try {
                 Thread.sleep(DELAY);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt(); // Restore interrupt flag
+                break;
             }
         }
+    }
+
+    public void stopRefresh() {
+        running = false;
+        this.interrupt();
     }
 }

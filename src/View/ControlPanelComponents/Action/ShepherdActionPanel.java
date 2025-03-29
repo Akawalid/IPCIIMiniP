@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ShepherdActionPanel extends ActionPanel {
+    private CustomButton moveButton;
 
     public ShepherdActionPanel(Shepherd s, Controller c){
 
@@ -15,9 +16,8 @@ public class ShepherdActionPanel extends ActionPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        CustomButton moveButton = new CustomButton("Move");
+        moveButton = new CustomButton("Move");
         add(moveButton);
-        moveButton.addMouseListener(c.getShepherdMoveHandler());
 
         add(Box.createRigidArea(new Dimension(0, MARGIN)));
 
@@ -39,5 +39,10 @@ public class ShepherdActionPanel extends ActionPanel {
     @Override
     public void update() {
         //TODO
+    }
+
+    @Override
+    public void connect(Controller c){
+        moveButton.addMouseListener(c.getShepherdMoveHandler());
     }
 }

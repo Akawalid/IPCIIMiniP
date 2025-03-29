@@ -64,7 +64,15 @@ public class Farm {
         creatures.add(e);
     }
 
-
+    public Entity getEntityInSpot(int row, int col){
+        //TODO:Shlag
+        Spot s = getSpot(row, col);
+        for(Entity e: creatures)
+            if(e.getPosition() == s) {
+                return e;
+            }
+        return null;
+    }
     public Entity getSelectedEntity(){return selectedEntity;}
     public void setSelectedEntity(Entity e){selectedEntity = e;}
     //genertae a getter for pathfinder

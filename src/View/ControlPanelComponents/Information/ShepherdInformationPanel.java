@@ -4,6 +4,7 @@ import Model.Shepherd.Shepherd;
 
 import javax.swing.*;
 import java.awt.*;
+import Controller.Controller;
 
 public class ShepherdInformationPanel extends InformationPanel {
 
@@ -20,6 +21,10 @@ public class ShepherdInformationPanel extends InformationPanel {
 
     @Override
     public void update() {
+        //TODO
+    }
+    @Override
+    public void connect(Controller c){
         //TODO
     }
 }
