@@ -98,7 +98,6 @@ public class Land extends JPanel {
     private void drawEnities(Graphics g){
         for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
             Entity e = it.next();
-            System.out.println("Entity :" + e.getPosition().getRow() + ", " + e.getPosition().getCol());
             int y = rowOfModelToView(e.getPosition().getRow());
             int x = colOfModelToView(e.getPosition().getCol());
             // Set cell color based on the entity type

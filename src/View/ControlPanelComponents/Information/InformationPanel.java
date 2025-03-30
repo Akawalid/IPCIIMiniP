@@ -14,6 +14,7 @@ public abstract class InformationPanel extends JPanel {
     protected static final int MARGIN = 5;
     protected JLabel status;
     protected EntityMetaData mtd;
+    public InformationPanel(){}
     public InformationPanel(Entity e, EntityMetaData mtd){
         this.mtd = mtd;
         JLabel speciesLabel = new JLabel(e.getSpecies() + e.getId());
@@ -23,7 +24,6 @@ public abstract class InformationPanel extends JPanel {
         status = new JLabel("Status: " + mtd.getStatus());
         status.setForeground(Color.BLACK);
         add(status, BorderLayout.NORTH);
-
     }
 
     public abstract void connect(Controller c);

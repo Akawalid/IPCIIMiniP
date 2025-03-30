@@ -92,7 +92,11 @@ public class Controller {
         //We unblock the screen for the user
         world.setInMovementChoiceState(false);
 
-        (new EntityMovementThread(farm.getSelectedEntity())).start();
+        if(farm.getSelectedEntity().getThread() == null || !farm.getSelectedEntity().getThread().isAlive()){
+            farm.getSelectedEntity().startNewThread();
+
+        }
+
     }
 
     public MouseAdapter getFarmAnimalSellHandler(FarmAnimal fa) {

@@ -13,6 +13,7 @@ public abstract class Entity implements Comparable<Entity> {
     //We need this attribute here in order to get the position of the active entity from the controller easily
     protected Spot position;
     private Queue<Spot> path; // Queue to store movements
+    private EntityMovementThread thread;
     protected final int id;
     // An entity's priority depends on its distance to the target:
     // The closer it is to the target, the higher its priority.
@@ -54,7 +55,6 @@ public abstract class Entity implements Comparable<Entity> {
         if (path.isEmpty()) {
             return; // No movements in the queue
         }
-
         //if the next spot is traversable this means that another entity just came to cross it
         //we wait until this spot becomes free, then we cross
         if(!path.peek().isTraversable()) return;
@@ -80,6 +80,11 @@ public abstract class Entity implements Comparable<Entity> {
         return Objects.hash(id); // Same field as used in equals()
     }
     public int getPathSize(){return path.size();}
+    public EntityMovementThread getThread(){return  thread;}
+    public void startNewThread(){
+        thread = new EntityMovementThread(this);
+        thread.start();
+    }
 
     @Override
     public int compareTo(Entity other) {
