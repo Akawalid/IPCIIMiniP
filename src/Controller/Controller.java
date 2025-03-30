@@ -7,6 +7,7 @@ import Model.Resources.Resource;
 import Model.Shepherd.Shepherd;
 import Model.Exceptions.UnauthorizedAction;
 import Model.FarmAnimals.FarmAnimal;
+import Model.Spot;
 import View.Land;
 import View.World;
 
@@ -14,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.InputStream;
+import java.util.Queue;
+
 
 public class Controller {
     private Farm farm;
@@ -44,10 +48,9 @@ public class Controller {
                 int row = yOfViewToModel(e.getY());
 
                 if (world.getInMovementChoiceState()) {
-                    System.out.println("zzzzzzzzzzzzzzzzz");
                     Entity entity = farm.getSelectedEntity();
                     if (entity instanceof Shepherd && world.getInMovementChoiceState()) {
-                        launchShepherdsMovementThread(row, col);
+                        launchMovementThread(row, col);
                     } else {
                         //TODO
                     }
@@ -69,19 +72,26 @@ public class Controller {
         return Math.floorDiv(y, Land.CELL_SIZE);
     }
 
-    private void launchShepherdsMovementThread(int destRow, int destColum) {
-
-        int sourceRow = farm.getSelectedEntity().getPosition().getRow();
-        int sourceCol = farm.getSelectedEntity().getPosition().getCol();
-
-        System.out.println(sourceRow + ", " + sourceCol + ", " + destRow + ", " + destColum);
-        farm.getSelectedEntity().setPath(farm.getPathFinder().findPath(
-                farm.getSpot(sourceRow, sourceCol),
+    private void launchMovementThread(int destRow, int destColum) {
+        //TODO: le prof nous a dit de réflicher en terme du modèle, donc dans ce cas
+        // Est ce qu'on doit déplacer cette méthode (ou une partie) vers le modèle?
+        Queue<Spot> queue = farm.getPathFinder().findPath(
+                farm.getSelectedEntity().getPosition(),
                 farm.getSpot(destRow, destColum)
-        ));
+        );
 
-        //We give to the user the possibility to apply other actions.
+        farm.getSelectedEntity().setPath(queue);
+
+        int order = queue.size();
+        for(Spot s: queue){
+            //Highlight the path in land
+            order--;
+            world.getLand().addSpotEntity(s, farm.getSelectedEntity(), order);
+        }
+
+        //We unblock the screen for the user
         world.setInMovementChoiceState(false);
+
         (new EntityMovementThread(farm.getSelectedEntity())).start();
     }
 

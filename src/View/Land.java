@@ -5,17 +5,12 @@ import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
-import Model.FarmAnimals.SimulationUpdateAgeThread;
-import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
 import Model.Spot;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.Iterator;
+import java.util.*;
 
 public class Land extends JPanel {
     //This class represents the grid on the screen, where the game will be played.
@@ -41,20 +36,38 @@ public class Land extends JPanel {
     public static final int CELL_SIZE = 64,// Size of each cell in pixels
             WIDTH= CELL_SIZE * Farm.WIDTH,
             HEIGHT= CELL_SIZE * Farm.HEIGHT;
-//    private int rows, cols; // Number of rows and columns in the grid
     private Farm farm;
+    // The data structure below represents the spots we are highlighting on the game map.
+    // Each spot will be highlighted using the color of the entity that will pass through it.
 
-    public Land(Farm farm) {
+    // Problem 1: Some spots may be traversed by multiple entities. How do we color them?
+    // Solution: We use the color of the first entity that will cross the spot.
+
+    // Problem 2: What if multiple entities will cross the same spot simultaneously?
+    // Solution: In this case, we use the color of the shepherd closest to its target
+    // (shepherds have priority).
+
+        // Note: We only consider shepherds here because:
+    // 1. Predators can never occupy the same spot as shepherds
+    // 2. Other entities don't move (currently)
+    // If we change movement rules later, we'll adapt the scheduling method accordingly.
+    private HashMap<Spot, HashMap<Integer, Entity>> pathHighlights;
+    //The hashmap below corresponds to the data that are held by the view but not the model
+    //For instance, the images of each entity, their color...
+    private HashMap<Entity, EntityMetaData> entitiesMetaData;
+
+    public Land(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData) {
         super();
         this.farm = farm;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.LIGHT_GRAY);
+        pathHighlights = new HashMap<>();
+        this.entitiesMetaData = entitiesMetaData;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        System.out.print("Refresh land \n");
         drawGrid(g);
         drawEnities(g);
     }
@@ -64,11 +77,18 @@ public class Land extends JPanel {
         g.setColor(defaultColor);
         for (int row = 0; row < Farm.HEIGHT; row++) {
             for (int col = 0; col < Farm.WIDTH; col++) {
-                if(!farm.getSpot(row, col).isTraversable()) g.setColor(Color.gray);
+
+                if(pathHighlights.containsKey(farm.getSpot(row, col))){
+                    Entity e = scheduler(pathHighlights.get(farm.getSpot(row, col)));
+                    if(pathHighlights.get(farm.getSpot(row, col)).isEmpty()) pathHighlights.remove(farm.getSpot(row, col));
+                    assert(e != null);
+                    assert(entitiesMetaData.get(e) != null);
+                    g.setColor(entitiesMetaData.get(e).applyOpacityForColor());
+                }
+                else if(!farm.getSpot(row, col).isTraversable()) g.setColor(Color.gray);
                 else g.setColor(defaultColor);
 
                 g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
-
                 g.setColor(Color.BLACK);
                 g.drawRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
             }
@@ -83,9 +103,10 @@ public class Land extends JPanel {
             int x = colOfModelToView(e.getPosition().getCol());
             // Set cell color based on the entity type
             if (e instanceof Shepherd) {
-                g.setColor(Color.BLUE);
+                //This doesn't make any sens for the moment, but it will be more meaningful, when we work with images
+                g.setColor(entitiesMetaData.get(e).getColor());
             } else if (e instanceof Sheep) {
-                g.setColor(Color.RED);
+                g.setColor(entitiesMetaData.get(e).getColor());
                 Sheep sheep = (Sheep) e;
                 String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
                         sheep.getSpecies(), sheep.getId(), sheep.getAge(), sheep.getState());
@@ -111,13 +132,62 @@ public class Land extends JPanel {
         addMouseListener(c.coordinatesHandler());
     }
 
+    public void addSpotEntity(Spot s, Entity e, int order){
+        assert(s != null && e != null);
 
+        HashMap<Integer, Entity> tmp = pathHighlights.get(s);
+        if(tmp != null) tmp.put(order, e);
+        else pathHighlights.put(s, new HashMap<>(Collections.singletonMap(order, e)));
+    }
+
+    private Entity scheduler(HashMap<Integer, Entity> mp) {
+        assert(mp != null);
+
+        //We assume that the priority of null is +inf
+        Entity weFollowItsColor=null;
+        //No priority is negative! by convention
+        int min = Integer.MAX_VALUE;
+        Iterator<Map.Entry<Integer, Entity>> iterator = mp.entrySet().iterator();
+        while (iterator.hasNext()) {
+            //Invariant
+            /*
+                > foreach Entity in toSortAccordingToPriority:
+                    it will pass sooner or at the same time with the previous entities
+                > for all entity previously occurred, the distance between the prior and te spot is equal or bigger than min
+            */
+            Map.Entry<Integer, Entity> entry = iterator.next();
+            Integer reverseOrderOfSpotInEntitiesPath = entry.getKey();
+            Entity entity = entry.getValue();
+            if(entity.getPathSize() - reverseOrderOfSpotInEntitiesPath <= 0) {
+                //entity.getPathSize() - reverseOrderOfSpotInEntitiesPath corresponds to the distance between
+                //entity and the spot to be colored
+                iterator.remove();
+            }
+
+            if(entity.getPathSize() - reverseOrderOfSpotInEntitiesPath < min) {
+                min = entity.getPathSize() - reverseOrderOfSpotInEntitiesPath;
+                weFollowItsColor = entity;
+            }
+            else if (entity.getPathSize() - reverseOrderOfSpotInEntitiesPath == min) {
+                //Lexicographic order
+                if(weFollowItsColor == null || weFollowItsColor.compareTo(entity) > 0)
+                    weFollowItsColor = entity;
+
+                else if(weFollowItsColor.compareTo(entity) == 0)
+                    //Invariant on the uniqueness of priorities is violated
+                    assert(false);
+
+            }
+        }
+
+        return weFollowItsColor;
+    }
     public static void main(String[] args){
         //création d'une fenêtre
         JFrame fr = new JFrame();
         Farm farm = new Farm();
         JPanel jp = new JPanel();
-        Land land = new Land(farm);
+        Land land = new Land(farm, new HashMap<>());
         jp.add(land);
         fr.add(jp);
         //création fenêtre fin
@@ -127,6 +197,5 @@ public class Land extends JPanel {
         fr.setSize(Toolkit.getDefaultToolkit().getScreenSize());
         fr.setLocationRelativeTo(null);
         fr.setVisible(true);
-
     }
 }

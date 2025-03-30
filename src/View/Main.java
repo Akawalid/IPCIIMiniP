@@ -3,7 +3,6 @@ package View;
 import Model.Farm;
 import Model.FarmAnimals.Sheep;
 import Model.FarmAnimals.SimulationUpdateAgeThread;
-import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
 
 import Controller.Controller;
@@ -33,6 +32,8 @@ public class Main {
 
         //Crée la grille (Land) + panneau de contrôle (ControlPanel)
         World world = new World(farm);
+        world.entityGenerateMetaData(SHEPHERD_TEST_1);
+        world.entityGenerateMetaData(SHEEP_TEST_1);
         fr.add(world);
 
         Controller controller = new Controller(farm, world);
@@ -46,8 +47,11 @@ public class Main {
         Refresh refresh = new Refresh(world);
 
 //        FindPath fp = new FindPath(farm);
-
-        //création d'un déplacement
+//
+//        //création d'un déplacement
+//        System.out.println("aaaaaaaaaaaaa size: "
+//                + fp.findPath(SHEPHERD_TEST_1.getPosition(), SHEEP_TEST_1.getPosition()).size());
+//
 //        SHEPHERD_TEST_1.setPath(fp.findPath(SHEPHERD_TEST_1.getPosition(), SHEEP_TEST_1.getPosition()));
 
 

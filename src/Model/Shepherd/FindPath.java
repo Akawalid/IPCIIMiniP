@@ -173,11 +173,12 @@ public class FindPath {
     public static void main(String[] args) {
         // Test the findPath method
         Farm farm = new Farm();
+        farm.getSpot(0, 0).setIsTraversable(false);
         farm.getSpot(1, 1).setIsTraversable(false);
         farm.getSpot(1, 2).setIsTraversable(false);
         FindPath findPath = new FindPath(farm);
         Spot start = farm.getSpot(0, 0);
-        Spot dest = farm.getSpot(3, 3);
+        Spot dest = farm.getSpot(5, 5);
         dest.setIsTraversable(false); // Set destination as non-traversable for testing
 
         Queue<Spot> path = findPath.findPath(start, dest);

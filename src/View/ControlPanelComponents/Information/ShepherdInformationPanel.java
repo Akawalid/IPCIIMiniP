@@ -5,17 +5,13 @@ import Model.Shepherd.Shepherd;
 import javax.swing.*;
 import java.awt.*;
 import Controller.Controller;
+import View.EntityMetaData;
 
 public class ShepherdInformationPanel extends InformationPanel {
 
-    //constructeur
-    public ShepherdInformationPanel(Shepherd s){
+    public ShepherdInformationPanel(Shepherd s, EntityMetaData mtd){
+        super(s, mtd);
         setLayout(new BorderLayout());
-
-        // Display Shepherd's name
-        JLabel speciesLabel = new JLabel(s.getSpecies() + s.getId());
-        speciesLabel.setForeground(Color.WHITE);
-        add(speciesLabel, BorderLayout.NORTH);
     }
 
     @Override
@@ -25,6 +21,6 @@ public class ShepherdInformationPanel extends InformationPanel {
 
     @Override
     public void update() {
-        //TODO
+        status.setText("Status: " + mtd.getStatus());
     }
 }

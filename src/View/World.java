@@ -1,5 +1,6 @@
 package View;
 
+import Model.Entity;
 import Model.Farm;
 import Controller.Controller;
 import View.ControlPanelComponents.ControlPanel;
@@ -9,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.HashMap;
 
 public class World extends JLayeredPane {
     //World is the page that visualizes the core of the game, it contains the land and the control panel.
@@ -24,21 +26,23 @@ public class World extends JLayeredPane {
     private Land land;
     private ControlPanel controlPanel;
     private boolean inMovementChoiceState;
+    private HashMap<Entity, EntityMetaData> entitiesMetaData;
 
     public World(Farm farm){
         super();
 
         this.farm = farm;
+        entitiesMetaData = new HashMap<>();
 
         worldPanel = new JPanel();
         worldPanel.setLayout(new BorderLayout());
 
         // World Panel (Left Column)
-        land = new Land(farm);
+        land = new Land(farm, entitiesMetaData);
         worldPanel.add(land, BorderLayout.CENTER);
 
         // Control Panel (Right Column)
-        controlPanel = new ControlPanel(farm);
+        controlPanel = new ControlPanel(farm, entitiesMetaData);
         worldPanel.add(controlPanel, BorderLayout.EAST);
 
         add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer
@@ -86,26 +90,29 @@ public class World extends JLayeredPane {
         repaint();
     }
 
-//    @Override
-//    public void paintComponent(Graphics g){
-//        super.paintComponent(g);
-////        storePanel.update();
-////        controlPanel.update();
-//    }
-
     public void connect(Controller c){
         land.connect(c);
         controlPanel.connect(c);
     }
 
     public void inform(final int MESSAGE){
+        //Observer, Observable pattern
         switch(MESSAGE) {
             case UPDATE_ACTIVE_ENTITY:
                 controlPanel.updateActiveEntity();
                 break;
+        default:
+            break;
         }
     }
 
     public boolean getInMovementChoiceState(){return inMovementChoiceState;}
     public void setInMovementChoiceState(boolean state){inMovementChoiceState = state;}
+
+    public Land getLand(){return land;}
+    public void entityGenerateMetaData(Entity e){
+        //This method should be called by the controller just after
+        //a purchase of an entity.
+        entitiesMetaData.put(e, new EntityMetaData());
+    }
 }

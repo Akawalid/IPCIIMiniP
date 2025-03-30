@@ -3,6 +3,8 @@ package Model;
 import Model.Exceptions.InvalidCoordinates;
 import Model.Shepherd.Shepherd;
 
+import java.util.Iterator;
+
 public class EntityMovementThread extends Thread {
     public static final int DELAY = 1000;
     private Entity e;
@@ -11,7 +13,7 @@ public class EntityMovementThread extends Thread {
     }
     @Override
     public void run() {
-        while (!e.getPath().isEmpty()) {
+        while(e.hasMovements()) {
             try {
                 e.move();
                 Thread.sleep(DELAY);

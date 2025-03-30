@@ -14,10 +14,12 @@ import View.ControlPanelComponents.Action.ShepherdActionPanel;
 import View.ControlPanelComponents.Information.FarmAnimalInformationPanel;
 import View.ControlPanelComponents.Information.InformationPanel;
 import View.ControlPanelComponents.Information.ShepherdInformationPanel;
+import View.EntityMetaData;
 import View.Main;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
 
 public class ControlPanel extends JPanel {
     //This class represents the panel that comes on the left side of the screen, it will contain the entities information
@@ -36,14 +38,16 @@ public class ControlPanel extends JPanel {
 
     private Controller controller;
     private Farm farm;
+    private final HashMap<Entity, EntityMetaData> entitiesMetaData;
 
-    public ControlPanel(Farm farm){
+
+    public ControlPanel(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData){
         super();
         this.farm = farm;
+        this.entitiesMetaData = entitiesMetaData;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        //Etat du jeu et marché
         gameStatePanel = new gameStatePanel(farm);
         marketPanel = new MarketPanel();
 
@@ -54,13 +58,10 @@ public class ControlPanel extends JPanel {
 
         //Paneau d'information + d'action
         //setActiveEntity(null);
-
-        //TODO, change : We add a random entity for the moment
-//        setActiveEntity(Main.SHEPHERD_TEST_1);
-        //setActiveEntity(Main.SHEEP_TEST_1);
     }
 
     public void updateActiveEntity() {
+
         if(informationPanel != null) remove(informationPanel);
         if(actionPanel != null) remove(actionPanel);
 
@@ -70,8 +71,10 @@ public class ControlPanel extends JPanel {
             actionPanel = null;
         }
         else{
+            assert(entitiesMetaData.get(e) != null);
+            EntityMetaData mtd = entitiesMetaData.get(e);
             if(e instanceof Shepherd) {
-                informationPanel = new ShepherdInformationPanel((Shepherd)e);
+                informationPanel = new ShepherdInformationPanel((Shepherd)e, mtd);
                 actionPanel = new ShepherdActionPanel((Shepherd)e);
             }
             else if(e instanceof FarmAnimal){

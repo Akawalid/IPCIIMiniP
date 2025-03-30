@@ -3,10 +3,9 @@ package Model;
 import Model.Exceptions.InvalidCoordinates;
 import Model.Exceptions.UnauthorizedAction;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.*;
 
-public abstract class Entity {
+public abstract class Entity implements Comparable<Entity> {
     //This class represents all the living creatures of the game
     //They share proprieties like: move, position, name and id
     //It is abstract because we shouldn't have an animal of type that is strictly equal to entity (absurd).
@@ -15,6 +14,10 @@ public abstract class Entity {
     protected Spot position;
     private Queue<Spot> path; // Queue to store movements
     protected final int id;
+    // An entity's priority depends on its distance to the target:
+    // The closer it is to the target, the higher its priority.
+    // Therefore, priority is determined by the remaining distance to the target.
+    // TODO: Les bêtes bougent ? Si oui, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
 
     public Entity(Spot position){
         assert position != null;
@@ -27,10 +30,11 @@ public abstract class Entity {
     }
 
     public void setPosition(Spot position){
+        assert (position != null);
+        assert (position.isTraversable());
         if(this.position != null) this.position.setIsTraversable(true);
         this.position = position;
 
-        assert this.position != null;
         this.position.setIsTraversable(false);
     }
     public Spot getPosition(){
@@ -50,33 +54,42 @@ public abstract class Entity {
         if (path.isEmpty()) {
             return; // No movements in the queue
         }
+
+        //if the next spot is traversable this means that another entity just came to cross it
+        //we wait until this spot becomes free, then we cross
+        if(!path.peek().isTraversable()) return;
+
         // Get the next spot from the queue
-        Spot nextSpot = path.poll();
-        setPosition(nextSpot); // Move to the new position
+        setPosition(path.poll()); // Move to the new position
     }
     public void setPath(Queue<Spot> q){
         path = q;
     }
-     public Queue<Spot> getPath(){return null;}
+     public boolean hasMovements(){return !path.isEmpty();}
 
     //these methods are implemented to use HashSets of Entities
     @Override
-    public boolean equals(Object o){
-        //we can not put multiple entities on the same spot.
-        return position.equals(o);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Entity entity = (Entity) o;
+        return id == entity.id; // Assuming Entity has a unique ID field
     }
     @Override
-    public int hashCode(){
-        //This makes it easy for us to look for an entity by its position, it comes handy
-        // in the controller
-        return position.hashCode();
+    public int hashCode() {
+        return Objects.hash(id); // Same field as used in equals()
     }
+    public int getPathSize(){return path.size();}
 
-    public Thread getThread(int id){
-        //TODO (Coxy, Izma): this method should be abstract, therefore, it should be implemented in all the subclasses.
+    @Override
+    public int compareTo(Entity other) {
+        //Lexicographic order (DISTANCE_TO_TARGET, ID)
+        //TODO: is it the same for all entities? it is used to decide which entity goes first if two of them
+        //intersect in the path
+        if (path.size() - other.path.size() != 0) {
+            return path.size() - other.path.size();
+        }
 
-        //Each entity may have multiple threads that agitate on them, the id serves to identify the thread
-        //of a concrete entity if multiple one's exists, otherwise, it is ignored.
-        return null;
-    };
+        return this.id - other.id;
+    }
 }
