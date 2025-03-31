@@ -6,6 +6,7 @@ import View.CustomButton;
 import Controller.Controller;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class ResourceBarPanel extends JPanel {
 
@@ -47,9 +48,10 @@ public class ResourceBarPanel extends JPanel {
     }
 
     /** fonction qui met à jour la barre de progression avec repaint */
-    public void update() {
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         progressBar.setValue(resource.get_cooldown());
-        repaint();
     }
 
     /** création d'un main pour tester l'affichage :
@@ -84,7 +86,7 @@ public class ResourceBarPanel extends JPanel {
 
         //actualiser la fenêtre
         while(true){
-            rbp.update();
+            rbp.repaint();
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {

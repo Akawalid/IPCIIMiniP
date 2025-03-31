@@ -27,9 +27,4 @@ public class FarmAnimalActionPanel extends ActionPanel {
     public void connect(Controller c) {
         sellButton.addMouseListener(c.getFarmAnimalSellHandler(farm_animal));
     }
-
-    @Override
-    public void update() {
-        //TODO
-    }
 }

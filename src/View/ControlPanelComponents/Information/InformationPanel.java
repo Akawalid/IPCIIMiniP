@@ -27,7 +27,4 @@ public abstract class InformationPanel extends JPanel {
     }
 
     public abstract void connect(Controller c);
-
-    public abstract void update();
-
 }

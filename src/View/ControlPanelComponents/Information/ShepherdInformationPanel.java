@@ -19,8 +19,9 @@ public class ShepherdInformationPanel extends InformationPanel {
         //TODO
     }
 
-    @Override
-    public void update() {
+    /*@Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         status.setText("Status: " + mtd.getStatus());
-    }
+    }*/
 }

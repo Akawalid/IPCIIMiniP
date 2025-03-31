@@ -39,10 +39,10 @@ public class FarmAnimalInformationPanel extends InformationPanel {
 
     }
 
-    @Override
+    /*@Override
     public void update() {
         for (ResourceBarPanel rbp : resourcePanels) {
             rbp.update();
         }
-    }
+    }*/
 }

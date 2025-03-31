@@ -37,11 +37,6 @@ public class ShepherdActionPanel extends ActionPanel {
     }
 
     @Override
-    public void update() {
-        //TODO
-    }
-
-    @Override
     public void connect(Controller c){
         moveButton.addMouseListener(c.getShepherdMoveHandler());
     }
