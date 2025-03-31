@@ -206,7 +206,7 @@ public class Land extends JPanel {
             return null;
         }
 
-        // Utiliser la méthode getEntityInSpot pour trouver l'entité sur cette case
+        // Use the getEntityInSpot method to find the entity on this cell
         Entity entity = farm.getEntityInSpot(row, col);
         if (entity != null) {
             if (entity instanceof Shepherd) {
@@ -226,7 +226,7 @@ public class Land extends JPanel {
                         ", Age: " + ewe.getAge() + ", State: " + ewe.getState();
             }
         }
-        // Si aucune entité n'est trouvée sur la case, pas de tooltip
+        // If no entity is found on the cell, no tooltip is displayed
         return null;
     }
 
