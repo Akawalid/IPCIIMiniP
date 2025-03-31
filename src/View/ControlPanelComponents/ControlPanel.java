@@ -14,7 +14,6 @@ import View.ControlPanelComponents.Information.FarmAnimalInformationPanel;
 import View.ControlPanelComponents.Information.InformationPanel;
 import View.ControlPanelComponents.Information.ShepherdInformationPanel;
 import View.EntityMetaData;
-import View.Main;
 import View.World;
 
 import javax.swing.*;
@@ -28,7 +27,7 @@ public class ControlPanel extends JPanel {
     //MARGIN, represents the margin between the information, actions panels and the whole ControlPanel
     public static final int W = 250, H_INFO_PANEL = 200, H_ACTION_PANEL = 200, MARGIN = 10;
 
-    private JPanel gameStatePanel;
+    private GameStatePanel gameStatePanel;
     //first part of the panel is the information panel, on top
 
     private MarketPanel marketPanel;
@@ -50,7 +49,7 @@ public class ControlPanel extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        gameStatePanel = new gameStatePanel(farm);
+        gameStatePanel = new GameStatePanel(farm);
         marketPanel = new MarketPanel(world);
 
         add(gameStatePanel);

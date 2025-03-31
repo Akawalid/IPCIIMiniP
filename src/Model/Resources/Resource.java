@@ -1,5 +1,6 @@
 package Model.Resources;
 
+import Model.Bank;
 import Model.Exceptions.UnauthorizedAction;
 
 public abstract class Resource {
@@ -37,4 +38,8 @@ public abstract class Resource {
     }
 
     public abstract String get_name();
+
+    public int get_selling_price(){
+        return Bank.get_price(this);
+    }
 }

@@ -5,6 +5,9 @@ import Model.Exceptions.UnauthorizedAction;
 
 import java.util.*;
 
+import static Model.AgeState.MATURE;
+import static Model.AgeState.OLD;
+
 public abstract class Entity implements Comparable<Entity> {
     //This class represents all the living creatures of the game
     //They share proprieties like: move, position, name and id
@@ -97,4 +100,8 @@ public abstract class Entity implements Comparable<Entity> {
 
         return this.id - other.id;
     }
+
+    // ### Buy & Sell ###
+    public abstract int get_buying_price();
+    public abstract int get_selling_price() throws UnauthorizedAction;
 }

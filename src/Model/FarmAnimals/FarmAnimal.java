@@ -75,10 +75,12 @@ public abstract class FarmAnimal extends Entity {
     }
 
     // ### Buy & Sell ###
-    protected int get_buying_price(){
+    @Override
+    public int get_buying_price(){
         return Bank.get_price(this);
     }
 
+    @Override
     public int get_selling_price() throws UnauthorizedAction {
         int price = Bank.get_price(this);
         if (this.state == MATURE) {

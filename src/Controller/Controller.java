@@ -72,6 +72,7 @@ public class Controller {
                         if (newEntity != null) {
                             farm.addEntity(newEntity);
                             spot.setIsTraversable(false); // Marquer le spot comme occupé
+                            farm.getBank().withdraw(newEntity.get_buying_price());
                             System.out.println(world.getPurchaseMode() + " placed at (" + row + ", " + col + ")");
                         }
                         // Réinitialiser le mode d'achat et redessiner la grille
@@ -133,7 +134,6 @@ public class Controller {
 
         if(farm.getSelectedEntity().getThread() == null || !farm.getSelectedEntity().getThread().isAlive()){
             farm.getSelectedEntity().startNewThread();
-
         }
 
     }
@@ -210,6 +210,7 @@ public class Controller {
                 System.out.printf("Resource %s collected", r.get_name());
                 try {
                     r.collect();
+                    farm.getBank().deposit(r.get_selling_price());
                 } catch (Exception ex) {
                     //TODO
                 }

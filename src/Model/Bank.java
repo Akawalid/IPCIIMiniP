@@ -3,6 +3,10 @@ package Model;
 import Model.FarmAnimals.Ewe;
 import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
+import Model.Resources.Egg;
+import Model.Resources.Milk;
+import Model.Resources.Resource;
+import Model.Resources.Wool;
 import Model.Shepherd.Shepherd;
 
 public class Bank {
@@ -26,9 +30,18 @@ public class Bank {
             case Sheep sheep -> PRICE_SHEEP;
             case Hen hen -> PRICE_HEN;
             case Shepherd shepherd -> SALARY_SHEPHERD;
-            case null, default -> throw new NoSuchMethodError("Method get_price for something else than ewe, sheep, hen, or shepherd is not defined.");
+            case null, default -> throw new NoSuchMethodError("Method get_price for another entity than ewe, sheep, hen, or shepherd is not defined.");
         };
         //throw new InvalidState("We can get the price of an Ewe, a Sheep, a Hen or the salary of a Sheperd only.");
+    }
+
+    public static int get_price(Resource r){
+        return switch (r) {
+            case Milk milk -> 20;
+            case Wool wool -> 20;
+            case Egg egg -> 10;
+            case null, default -> throw new NoSuchMethodError("Method get_price for another resource than wool, egg, or milk is not defined.");
+        };
     }
 
     public void deposit(int amount){
