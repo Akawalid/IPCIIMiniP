@@ -3,7 +3,6 @@ package View.ControlPanelComponents;
 import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.FarmAnimal;
-import Model.FarmAnimals.Sheep;
 import Model.Shepherd.Shepherd;
 
 import Controller.Controller;
@@ -32,7 +31,7 @@ public class ControlPanel extends JPanel {
     private JPanel gameStatePanel;
     //first part of the panel is the information panel, on top
 
-    private JPanel marketPanel;
+    private MarketPanel marketPanel;
     private InformationPanel informationPanel;
     //second part of the panel is the action panel, on the bottom
     private ActionPanel actionPanel;
@@ -77,7 +76,7 @@ public class ControlPanel extends JPanel {
             assert(entitiesMetaData.get(e) != null);
             EntityMetaData mtd = entitiesMetaData.get(e);
             if(e instanceof Shepherd) {
-                informationPanel = new ShepherdInformationPanel((Shepherd)e, mtd);
+                informationPanel = new ShepherdInformationPanel((Shepherd)e);
                 actionPanel = new ShepherdActionPanel((Shepherd)e);
             }
             else if(e instanceof FarmAnimal){
@@ -103,6 +102,8 @@ public class ControlPanel extends JPanel {
         //We can say that by a strengthened condition as below.
         assert(c != null);
         controller = c;
+
+        marketPanel.connect(controller);
         if(informationPanel != null) informationPanel.connect(controller);
         if(actionPanel != null) actionPanel.connect(controller);
     }
