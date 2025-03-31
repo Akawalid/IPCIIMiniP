@@ -44,7 +44,6 @@ public abstract class FarmAnimal extends Entity {
 
     private int age;       // L'âge exprimé en nombre de cycles
     private AgeState state;  // "Bébé", "Mature", "Vieux"
-    private boolean running; // Pour contrôler l'exécution du thread
 
     // ### Resource production ###
     ArrayList<Resource> resourceList;
@@ -58,7 +57,6 @@ public abstract class FarmAnimal extends Entity {
         // Initialiser à bébé
         this.age = 0;
         this.state = BABY;
-        this.running = true;
         //Resource production
         resourceList = new ArrayList<>();
     }
@@ -80,15 +78,10 @@ public abstract class FarmAnimal extends Entity {
         } else if (age == 10) {
             // L'animal meurt de vieillesse
             System.out.println("L'animal est mort de vieillesse.");
-            die(); //
+            //die();
             state = DEAD;
         }
         System.out.println("Âge : " + age + " - État : " + state);
-    }
-
-    // Action à réaliser lors de la mort (par exemple, retirer l'animal de la simulation)
-    private void die() {
-        running = false;  // Arrêter le thread
     }
 
     public Object getState() {

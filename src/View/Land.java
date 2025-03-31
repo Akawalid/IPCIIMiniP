@@ -3,6 +3,7 @@ package View;
 import Controller.Controller;
 import Model.Entity;
 import Model.Farm;
+import Model.FarmAnimals.Ewe;
 import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
 import Model.Shepherd.Shepherd;
@@ -10,6 +11,7 @@ import Model.Spot;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.*;
 
 public class Land extends JPanel {
@@ -63,6 +65,8 @@ public class Land extends JPanel {
         setBackground(Color.LIGHT_GRAY);
         pathHighlights = new HashMap<>();
         this.entitiesMetaData = entitiesMetaData;
+        // Active les tooltips pour ce composant
+        setToolTipText("");
     }
 
     @Override
@@ -103,22 +107,26 @@ public class Land extends JPanel {
             // Set cell color based on the entity type
             if (e instanceof Shepherd) {
                 //This doesn't make any sens for the moment, but it will be more meaningful, when we work with images
-                g.setColor(entitiesMetaData.get(e).getColor());
+                //g.setColor(entitiesMetaData.get(e).getColor());
+                g.setColor(Color.BLUE);
             } else if (e instanceof Sheep) {
-                g.setColor(entitiesMetaData.get(e).getColor());
+                //g.setColor(entitiesMetaData.get(e).getColor());
+                g.setColor(Color.RED);
                 Sheep sheep = (Sheep) e;
-                String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
-                        sheep.getSpecies(), sheep.getId(), sheep.getAge(), sheep.getState());
+                //String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
+                       // sheep.getSpecies(), sheep.getId(), sheep.getAge(), sheep.getState());
 //                cell.setToolTipText(toolTip);
             } else if (e instanceof Hen) {
                 g.setColor(Color.YELLOW);
                 // Set tooltip text for hen
-                Hen hen = (Hen) e;
-                g.fillRect(hen.getPosition().getRow() * CELL_SIZE,
-                        hen.getPosition().getCol() * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
-                        hen.getSpecies(), hen.getId(), hen.getAge(), hen.getState());
+                //Hen hen = (Hen) e;
+                //g.fillRect(hen.getPosition().getRow() * CELL_SIZE,
+                        //hen.getPosition().getCol() * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                //String toolTip = "Espèce : %s %s, Âge : %d, État : %s".formatted(
+                        //hen.getSpecies(), hen.getId(), hen.getAge(), hen.getState());
 //                cell.setToolTipText(toolTip);
+            } else if (e instanceof Ewe){
+                g.setColor(Color.PINK);
             }
             g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
         }
@@ -181,6 +189,48 @@ public class Land extends JPanel {
 
         return weFollowItsColor;
     }
+
+    @Override
+    public String getToolTipText(MouseEvent event) {
+        // Convert view coordinates to model coordinates
+        int x = event.getX();
+        int y = event.getY();
+
+        // Convert pixel coordinates to grid indices
+        // La colonne est calculée en partant de la droite de la grille
+        int col = Farm.WIDTH - Math.floorDiv(x, CELL_SIZE) - 1;
+        int row = Math.floorDiv(y, CELL_SIZE);
+
+        // Vérifier que row et col sont dans les limites valides
+        if (row < 0 || row >= Farm.HEIGHT || col < 0 || col >= Farm.WIDTH) {
+            return null;
+        }
+
+        // Utiliser la méthode getEntityInSpot pour trouver l'entité sur cette case
+        Entity entity = farm.getEntityInSpot(row, col);
+        if (entity != null) {
+            if (entity instanceof Shepherd) {
+                // TODO : afficher les informations du Shepherd
+                return "Shepherd " ;
+            } else if (entity instanceof Sheep) {
+                Sheep sheep = (Sheep) entity;
+                return "Sheep: " + sheep.getSpecies() + " " + sheep.getId() +
+                        ", Age: " + sheep.getAge() + ", State: " + sheep.getState();
+            } else if (entity instanceof Hen) {
+                Hen hen = (Hen) entity;
+                return "Hen: " + hen.getSpecies() + " " + hen.getId() +
+                        ", Age: " + hen.getAge() + ", State: " + hen.getState();
+            } else if (entity instanceof Ewe) {
+                Ewe ewe = (Ewe) entity;
+                return "Hen: " + ewe.getSpecies() + " " + ewe.getId() +
+                        ", Age: " + ewe.getAge() + ", State: " + ewe.getState();
+            }
+        }
+        // Si aucune entité n'est trouvée sur la case, pas de tooltip
+        return null;
+    }
+
+
     public static void main(String[] args){
         //création d'une fenêtre
         JFrame fr = new JFrame();

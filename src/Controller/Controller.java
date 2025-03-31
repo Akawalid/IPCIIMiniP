@@ -3,6 +3,9 @@ package Controller;
 import Model.Entity;
 import Model.EntityMovementThread;
 import Model.Farm;
+import Model.FarmAnimals.Ewe;
+import Model.FarmAnimals.Hen;
+import Model.FarmAnimals.Sheep;
 import Model.Resources.Resource;
 import Model.Shepherd.Shepherd;
 import Model.Exceptions.UnauthorizedAction;
@@ -17,6 +20,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.InputStream;
 import java.util.Queue;
+
+import static View.ControlPanelComponents.Information.PurchaseType.*;
 
 
 public class Controller {
@@ -40,21 +45,58 @@ public class Controller {
     }
 
     public MouseAdapter coordinatesHandler() {
+
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                // Conversion des coordonnées en pixels en indices de la grille du modèle
                 int col = xOfViewToModel(e.getX());
                 int row = yOfViewToModel(e.getY());
 
+                // 1. Gestion du mode d'achat (purchase mode)
+                if (world.getPurchaseMode() != null) {
+                    Spot spot = farm.getSpot(row, col);
+                    if (spot.isTraversable()) {
+                        Entity newEntity = null;
+                        switch (world.getPurchaseMode()) {
+                            case EWE:
+                                newEntity = new Ewe(spot);
+                                break;
+                            case SHEEP:
+                                newEntity = new Sheep(spot);
+                                break;
+                            case HEN:
+                                newEntity = new Hen(spot);
+                                break;
+                            default:
+                                System.out.println("Unknown purchase type.");
+                        }
+                        if (newEntity != null) {
+                            farm.addEntity(newEntity);
+                            spot.setIsTraversable(false); // Marquer le spot comme occupé
+                            System.out.println(world.getPurchaseMode() + " placed at (" + row + ", " + col + ")");
+                        }
+                        // Réinitialiser le mode d'achat et redessiner la grille
+                        world.setPurchaseMode(null);
+                        world.getLand().repaint();
+                    } else {
+                        System.out.println("This spot is not available. Please choose another one.");
+                    }
+                    return; // On termine ici pour ce clic si le mode d'achat était actif
+                }
+
+
+                // 2. Si le mode de déplacement est activé, on traite le déplacement
                 if (world.getInMovementChoiceState()) {
                     Entity entity = farm.getSelectedEntity();
-                    if (entity instanceof Shepherd && world.getInMovementChoiceState()) {
+                    if (entity instanceof Shepherd) {
                         launchMovementThread(row, col);
                     } else {
-                        //TODO
+                        // TODO: gérer le déplacement pour d'autres types d'entités si nécessaire
                     }
                 } else {
+                    // 3. Sinon, le clic est interprété comme une sélection d'entité
                     Entity entity = farm.getEntityInSpot(row, col);
                     if (farm.getSelectedEntity() == entity) return;
                     farm.setSelectedEntity(entity);
@@ -132,5 +174,6 @@ public class Controller {
     public void start_thread(Thread t){
         t.start();
     }
+
 
 }

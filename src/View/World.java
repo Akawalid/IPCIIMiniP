@@ -4,6 +4,8 @@ import Model.Entity;
 import Model.Farm;
 import Controller.Controller;
 import View.ControlPanelComponents.ControlPanel;
+//import View.ControlPanelComponents.Information.PurchaseType;
+import View.ControlPanelComponents.Information.PurchaseType;
 import View.ControlPanelComponents.StorePanel;
 
 import javax.swing.*;
@@ -27,6 +29,7 @@ public class World extends JLayeredPane {
     private ControlPanel controlPanel;
     private boolean inMovementChoiceState;
     private HashMap<Entity, EntityMetaData> entitiesMetaData;
+    private PurchaseType purchaseMode = null; // The current purchase mode.
 
     public World(Farm farm){
         super();
@@ -42,7 +45,7 @@ public class World extends JLayeredPane {
         worldPanel.add(land, BorderLayout.CENTER);
 
         // Control Panel (Right Column)
-        controlPanel = new ControlPanel(farm, entitiesMetaData);
+        controlPanel = new ControlPanel(farm, entitiesMetaData, this);
         worldPanel.add(controlPanel, BorderLayout.EAST);
 
         add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer
@@ -114,5 +117,14 @@ public class World extends JLayeredPane {
         //This method should be called by the controller just after
         //a purchase of an entity.
         entitiesMetaData.put(e, new EntityMetaData());
+    }
+
+
+    //Sets the current purchase mode.
+    public void setPurchaseMode(PurchaseType pt){
+        this.purchaseMode = pt;
+    }
+    public PurchaseType getPurchaseMode() {
+        return this.purchaseMode;
     }
 }

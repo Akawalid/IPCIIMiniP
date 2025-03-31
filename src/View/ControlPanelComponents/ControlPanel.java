@@ -16,6 +16,7 @@ import View.ControlPanelComponents.Information.InformationPanel;
 import View.ControlPanelComponents.Information.ShepherdInformationPanel;
 import View.EntityMetaData;
 import View.Main;
+import View.World;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,17 +40,19 @@ public class ControlPanel extends JPanel {
     private Controller controller;
     private Farm farm;
     private final HashMap<Entity, EntityMetaData> entitiesMetaData;
+    private World world;
 
 
-    public ControlPanel(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData){
+    public ControlPanel(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData, World world ){
         super();
         this.farm = farm;
         this.entitiesMetaData = entitiesMetaData;
+        this.world = world;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         gameStatePanel = new gameStatePanel(farm);
-        marketPanel = new MarketPanel();
+        marketPanel = new MarketPanel(world);
 
         add(gameStatePanel);
         add(Box.createRigidArea(new Dimension(0, MARGIN)));
