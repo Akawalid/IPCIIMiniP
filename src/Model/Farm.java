@@ -1,5 +1,6 @@
 package Model;
 
+import Model.FarmAnimals.FarmAnimal;
 import Model.Shepherd.*;
 
 import java.util.*;
@@ -77,4 +78,55 @@ public class Farm {
     public void setSelectedEntity(Entity e){selectedEntity = e;}
     //genertae a getter for pathfinder
     public FindPath getPathFinder(){return pathFinder;}
+
+    /**
+     * Returns an adjacent free spot (i.e., traversable) to the given spot.
+     * The search checks the eight neighbors (horizontal, vertical, and diagonal).
+     *
+     * @param s the reference spot
+     * @return a free adjacent spot if one is found, or null otherwise.
+     */
+    public Spot getAdjacentFreeSpot(Spot s) {
+        int row = s.getRow();
+        int col = s.getCol();
+
+        // Parcours des 8 voisins
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = col - 1; j <= col + 1; j++) {
+                // Ignorer le spot lui-même
+                if (i == row && j == col)
+                    continue;
+                // Vérifier que les coordonnées sont valides
+                if (i >= 0 && i < HEIGHT && j >= 0 && j < WIDTH) {
+                    Spot candidate = getSpot(i, j);
+                    if (candidate.isTraversable()) {
+                        return candidate;
+                    }
+                }
+            }
+        }
+        // Aucun spot libre trouvé
+        return null;
+    }
+
+    /**
+     * Updates the age of all farm animals and removes those that are dead.
+     * This method is synchronized to prevent concurrent modifications.
+     */
+    public synchronized void updateEntities() {
+        Iterator<Entity> it = creatures.iterator();
+        while (it.hasNext()) {
+            Entity e = it.next();
+            if (e instanceof FarmAnimal) {
+                FarmAnimal animal = (FarmAnimal) e;
+                animal.updateAge();
+                if (animal.getState() == AgeState.DEAD) {
+                    e.getPosition().setIsTraversable(true);  // Free up the cell
+                    it.remove(); // Remove the dead animal from the farm
+                }
+            }
+        }
+    }
+
+
 }
