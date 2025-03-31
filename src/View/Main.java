@@ -2,7 +2,7 @@ package View;
 
 import Model.Farm;
 import Model.FarmAnimals.Sheep;
-import Model.FarmAnimals.SimulationUpdateAgeThread;
+import Model.FarmAnimals.UpdateAgeThread;
 import Model.Shepherd.Shepherd;
 
 import Controller.Controller;
@@ -68,7 +68,7 @@ public class Main {
 
         // Lancement du thread de mise à jour de la simulation
         // Ce thread parcourt toutes les entités de la ferme et appelle updateAge() pour chaque animal.
-        SimulationUpdateAgeThread simThread = new SimulationUpdateAgeThread(farm);
+        UpdateAgeThread simThread = new UpdateAgeThread(farm);
         simThread.start();
     }
 }
