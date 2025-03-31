@@ -128,5 +128,10 @@ public class Farm {
         }
     }
 
+    //
+
+    public void removeEntity(Entity e){
+        creatures.remove(e);
+    }
 
 }
