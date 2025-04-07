@@ -1,5 +1,6 @@
 package Model.Predators;
 
+import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
 import Model.Spot;
 
@@ -20,8 +21,18 @@ public class WolfDen extends Den {
         }
     }
 
-    @Override
+    @Override //TODO
     public String getSpecies() {
         return null;
+    }
+
+    @Override //TODO
+    public int get_buying_price() {
+        return 0;
+    }
+
+    @Override
+    public int get_selling_price() throws UnauthorizedAction {
+        return 0;
     }
 }

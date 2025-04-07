@@ -1,7 +1,6 @@
 package View.ControlPanelComponents;
 import Model.Farm;
-import View.CustomButton;
-import View.World;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,5 +45,9 @@ public class GameStatePanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         balance.setText("Balance:" + farm.getBank().getBalance());
+    }
+
+    public void connect(Controller c){
+        //TODO
     }
 }

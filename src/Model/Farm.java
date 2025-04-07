@@ -95,10 +95,10 @@ public class Farm {
         // Parcours des 8 voisins
         for (int i = row - 1; i <= row + 1; i++) {
             for (int j = col - 1; j <= col + 1; j++) {
-                // Ignorer le spot lui-même
+                // Ignorer le spot lui-mï¿½me
                 if (i == row && j == col)
                     continue;
-                // Vérifier que les coordonnées sont valides
+                // Vï¿½rifier que les coordonnï¿½es sont valides
                 if (i >= 0 && i < HEIGHT && j >= 0 && j < WIDTH) {
                     Spot candidate = getSpot(i, j);
                     if (candidate.isTraversable()) {
@@ -107,7 +107,7 @@ public class Farm {
                 }
             }
         }
-        // Aucun spot libre trouvé
+        // Aucun spot libre trouvï¿½
         return null;
     }
 
@@ -130,18 +130,10 @@ public class Farm {
         }
     }
 
-
-    public void removeEntity(Entity e){
-        //this method removes an entity from the farm
-        //it is used when an entity dies or when it is removed from the farm
-        creatures.remove(e);
-        e.getPosition().setIsTraversable(true);
-    }
-
     public void generateDens() {
         Random rand = new Random();
-        int numWolfDens = rand.nextBoolean() ? 2 : 3; // génère 2 ou 3 dens de loup
-        int numFoxDens = rand.nextBoolean() ? 2 : 3;  // génère 2 ou 3 dens de renard
+        int numWolfDens = rand.nextBoolean() ? 2 : 3; // gï¿½nï¿½re 2 ou 3 dens de loup
+        int numFoxDens = rand.nextBoolean() ? 2 : 3;  // gï¿½nï¿½re 2 ou 3 dens de renard
 
         for (int i = 0; i < numWolfDens; i++) {
             Spot spot = getRandomTraversableSpot();
@@ -157,7 +149,7 @@ public class Farm {
         }
     }
 
-    // Méthode utilitaire pour obtenir une case traversable aléatoire
+    // Mï¿½thode utilitaire pour obtenir une case traversable alï¿½atoire
     private Spot getRandomTraversableSpot() {
         Random rand = new Random();
         while (true) {
@@ -176,7 +168,7 @@ public class Farm {
     }
 
     /**
-     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) de la case donnée.
+     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) de la case donnï¿½e.
      */
     public List<Spot> getAdjacentSpots(Spot s) {
         List<Spot> neighbors = new ArrayList<>();
@@ -189,6 +181,18 @@ public class Farm {
             }
         }
         return neighbors;
+    }
+
+    public void removeEntity(Entity e){
+        //this method removes an entity from the farm
+        //it is used when an entity dies or when it is removed from the farm
+        creatures.remove(e);
+        e.getPosition().setIsTraversable(true);
+
+        //TODO
+        // enlever du tableau
+        // enlever de la grille
+        // enlever de l'affichage (panel information et action)
     }
 
 }

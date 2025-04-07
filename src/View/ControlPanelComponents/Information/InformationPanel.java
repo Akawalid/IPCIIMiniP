@@ -22,8 +22,8 @@ public abstract class InformationPanel extends JPanel {
         add(speciesLabel, BorderLayout.NORTH);
 
         //status = new JLabel("Status: " + mtd.getStatus());
-        status.setForeground(Color.BLACK);
-        add(status, BorderLayout.NORTH);
+        //status.setForeground(Color.BLACK);
+        //add(status, BorderLayout.NORTH);
     }
 
     public abstract void connect(Controller c);

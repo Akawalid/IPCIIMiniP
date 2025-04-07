@@ -4,7 +4,7 @@ import Model.Bank;
 import Model.Entity;
 import Model.AgeState;
 import Model.Exceptions.UnauthorizedAction;
-import Model.Predators.FoxDen;
+//import Model.Predators.FoxDen;
 import Model.Resources.Resource;
 import Model.Spot;
 

@@ -1,6 +1,7 @@
 package Model.Predators;
 
 import Model.Entity;
+import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
 import Model.FarmAnimals.FarmAnimal;
 import Model.FarmAnimals.Ewe;
@@ -20,7 +21,7 @@ public class Wolf extends Predator {
     public void run() {
         Random rand = new Random();
         while (true) {
-            // 1. Vérifier et tuer toute proie adjacente (Ewe ou Sheep)
+            // 1. Vï¿½rifier et tuer toute proie adjacente (Ewe ou Sheep)
             checkAndKillPrey();
 
             // 2. Chercher la proie la plus proche
@@ -28,17 +29,17 @@ public class Wolf extends Predator {
             if (target != null) {
                 // Utiliser FindPath pour calculer le chemin vers la proie
                 Queue<Spot> path = farm.getPathFinder().findPath(this.getPosition(), target.getPosition());
-                this.setPath(path); // Définit le chemin dans l'entité
+                this.setPath(path); // Dï¿½finit le chemin dans l'entitï¿½
                 if (this.hasMovements()) {
                     try {
-                        // Utilise la méthode move() pour avancer d'une case
+                        // Utilise la mï¿½thode move() pour avancer d'une case
                         this.move();
                     } catch (InvalidCoordinates e) {
                         e.printStackTrace();
                     }
                 }
             } else {
-                // Si aucune proie n'est détectée, se déplacer aléatoirement
+                // Si aucune proie n'est dï¿½tectï¿½e, se dï¿½placer alï¿½atoirement
                 List<Spot> freeSpots = new ArrayList<>();
                 for (Spot neighbor : getAdjacentSpots(this.getPosition())) {
                     if (neighbor.isTraversable()) {
@@ -47,7 +48,7 @@ public class Wolf extends Predator {
                 }
                 if (!freeSpots.isEmpty()) {
                     Spot next = freeSpots.get(rand.nextInt(freeSpots.size()));
-                    // Créer un chemin d'une seule case pour le déplacement
+                    // Crï¿½er un chemin d'une seule case pour le dï¿½placement
                     Queue<Spot> singleStep = new LinkedList<>();
                     singleStep.add(next);
                     this.setPath(singleStep);
@@ -72,7 +73,7 @@ public class Wolf extends Predator {
             Entity entity = farm.getEntityInSpot(neighbor.getRow(), neighbor.getCol());
             if ( entity instanceof FarmAnimal) { // entity != null &&
                 String species = ((FarmAnimal) entity).getSpecies();
-                // Pour le wolf, la proie peut être une Ewe ou un Sheep
+                // Pour le wolf, la proie peut ï¿½tre une Ewe ou un Sheep
                 if (species.equals("Ewe") || species.equals("Sheep")) {
                     farm.removeEntity(entity);
                     entity.getPosition().setIsTraversable(true);
@@ -82,7 +83,7 @@ public class Wolf extends Predator {
     }
 
     /**
-     * Recherche la proie la plus proche (Ewe ou Sheep) parmi les entités de la ferme.
+     * Recherche la proie la plus proche (Ewe ou Sheep) parmi les entitï¿½s de la ferme.
      */
     private FarmAnimal findClosestPrey() {
         FarmAnimal closest = null;
@@ -105,7 +106,7 @@ public class Wolf extends Predator {
     }
 
     /**
-     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) à la position actuelle.
+     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) ï¿½ la position actuelle.
      */
     protected List<Spot> getAdjacentSpots(Spot s) {
         List<Spot> neighbors = new ArrayList<>();
@@ -113,7 +114,7 @@ public class Wolf extends Predator {
         for (int[] d : directions) {
             int newRow = s.getRow() + d[0];
             int newCol = s.getCol() + d[1];
-            // Vérifier que les indices sont dans les limites du terrain
+            // Vï¿½rifier que les indices sont dans les limites du terrain
             if (newRow >= 0 && newRow < Farm.HEIGHT && newCol >= 0 && newCol < Farm.WIDTH) {
                 neighbors.add(farm.getSpot(newRow, newCol));
             }
@@ -121,8 +122,17 @@ public class Wolf extends Predator {
         return neighbors;
     }
 
-    @Override
+    @Override //TODO
     public String getSpecies() {
         return null;
+    }
+    @Override //TODO
+    public int get_buying_price() {
+        return 0;
+    }
+
+    @Override
+    public int get_selling_price() throws UnauthorizedAction {
+        return 0;
     }
 }
