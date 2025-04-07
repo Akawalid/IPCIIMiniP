@@ -67,33 +67,31 @@ public class ControlPanel extends JPanel {
         if(actionPanel != null) remove(actionPanel);
 
         Entity e = farm.getSelectedEntity();
-        if(e == null){
-            informationPanel = null;
-            actionPanel = null;
+        switch (e) {
+            case null -> {
+                informationPanel = null;
+                actionPanel = null;
+                return;
+            }
+            case Shepherd s -> {
+                informationPanel = new ShepherdInformationPanel(s);
+                actionPanel = new ShepherdActionPanel(s);
+            }
+            case FarmAnimal fa -> {
+                informationPanel = new FarmAnimalInformationPanel(fa);
+                actionPanel = new FarmAnimalActionPanel(fa);
+            }
+            default -> throw new IllegalStateException("Case not supported");
         }
-        else{
-            assert(entitiesMetaData.get(e) != null);
-            EntityMetaData mtd = entitiesMetaData.get(e);
-            if(e instanceof Shepherd) {
-                informationPanel = new ShepherdInformationPanel((Shepherd)e);
-                actionPanel = new ShepherdActionPanel((Shepherd)e);
-            }
-            else if(e instanceof FarmAnimal){
-                informationPanel = new FarmAnimalInformationPanel((FarmAnimal)e);
-                actionPanel = new FarmAnimalActionPanel((FarmAnimal)e);
-            }
-            else{
-                throw new IllegalStateException("Case not supported");
-            }
 
-            //When we upload ControlePanel to the ui, the controller attribute is set null
-            //Therefor, the method connect, should be called for the first time by the controller
-            if(controller != null) connect(controller);
+        //in case e is not null
+        add(informationPanel);
+        add(Box.createRigidArea(new Dimension(0, MARGIN)));
+        add(actionPanel);
 
-            add(informationPanel);
-            add(Box.createRigidArea(new Dimension(0, MARGIN)));
-            add(actionPanel);
-        }
+        //When we upload ControlePanel to the ui, the controller attribute is set null
+        //Therefore, the method connect, should be called for the first time by the controller
+        if(controller != null) connect(controller);
     }
 
     public void connect(Controller c){
