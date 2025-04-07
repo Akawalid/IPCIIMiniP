@@ -1,2 +1,4 @@
-package Model.TimePassing;public class Time {
+package Model.TimePassing;
+
+public class Time {
 }
