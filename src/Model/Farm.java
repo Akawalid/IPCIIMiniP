@@ -116,15 +116,12 @@ public class Farm {
      * This method is synchronized to prevent concurrent modifications.
      */
     public synchronized void updateEntities() {
-        Iterator<Entity> it = creatures.iterator();
-        while (it.hasNext()) {
-            Entity e = it.next();
+        for (Entity e : creatures) {
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 animal.updateAge();
                 if (animal.getState() == AgeState.DEAD) {
-                    e.getPosition().setIsTraversable(true);  // Free up the cell
-                    it.remove(); // Remove the dead animal from the farm
+                    removeEntity(e);
                 }
             }
         }
@@ -184,15 +181,15 @@ public class Farm {
     }
 
     public void removeEntity(Entity e){
-        //this method removes an entity from the farm
-        //it is used when an entity dies or when it is removed from the farm
-        creatures.remove(e);
+        /** This method removes an entity from the farm
+         * it is used when an entity dies or when it is removed from the farm
+         */
+        //remove from Spot
         e.getPosition().setIsTraversable(true);
 
-        //TODO
-        // enlever du tableau
-        // enlever de la grille
-        // enlever de l'affichage (panel information et action)
+        //remove from Farm
+        creatures.remove(e);
+        e.getPosition().setIsTraversable(true);
     }
 
 }

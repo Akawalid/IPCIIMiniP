@@ -96,12 +96,6 @@ public abstract class FarmAnimal extends Entity {
     }
 
 
-    // Ajoutez cette méthode pour supprimer une entité de la ferme
-    /*public void removeEntity(Entity e) {
-        creatures.remove(e);
-    }*/
-
-
 
 
 

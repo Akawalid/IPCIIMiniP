@@ -146,7 +146,7 @@ public class Controller {
                 System.out.print("Animal sold");
                 try {
                     farm.getBank().deposit(fa.get_selling_price());
-                    //farm.remove(fa);
+                    farm.removeEntity(fa);
                 } catch (UnauthorizedAction s) {
                     //TODO
                 }
