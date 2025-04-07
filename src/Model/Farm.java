@@ -73,6 +73,28 @@ public class Farm {
             }
         return null;
     }
+    public void launchMovementThread(int destRow, int destCol){
+        //TODO: le prof nous a dit de réflicher en terme du modèle, donc dans ce cas
+        // Est ce qu'on doit déplacer cette méthode (ou une partie) vers le modèle?
+        Queue<Spot> queue = pathFinder.findPath(
+                selectedEntity.getPosition(),
+                getSpot(destRow, destCol)
+        );
+
+        selectedEntity.setPath(queue);
+
+        int order = queue.size();
+        for(Spot s: queue){
+            //Highlight the path in land
+            order--;
+            world.getLand().addSpotEntity(s, farm.getSelectedEntity(), order);
+        }
+
+        if(selectedEntity.getThread() == null || !selectedEntity.getThread().isAlive()){
+            selectedEntity.startNewThread();
+
+        }
+    }
     public Entity getSelectedEntity(){return selectedEntity;}
     public void setSelectedEntity(Entity e){selectedEntity = e;}
     //genertae a getter for pathfinder

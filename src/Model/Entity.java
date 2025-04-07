@@ -65,7 +65,7 @@ public abstract class Entity implements Comparable<Entity> {
     public void setPath(Queue<Spot> q){
         path = q;
     }
-     public boolean hasMovements(){return !path.isEmpty();}
+    public boolean hasMovements(){return !path.isEmpty();}
 
     //these methods are implemented to use HashSets of Entities
     @Override

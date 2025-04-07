@@ -89,12 +89,7 @@ public class Controller {
 
                 // 2. Si le mode de déplacement est activé, on traite le déplacement
                 if (world.getInMovementChoiceState()) {
-                    Entity entity = farm.getSelectedEntity();
-                    if (entity instanceof Shepherd) {
-                        launchMovementThread(row, col);
-                    } else {
-                        // TODO: gérer le déplacement pour d'autres types d'entités si nécessaire
-                    }
+                    farm.launchMovementThread(row, col);
                 } else {
                     // 3. Sinon, le clic est interprété comme une sélection d'entité
                     Entity entity = farm.getEntityInSpot(row, col);
@@ -112,33 +107,6 @@ public class Controller {
 
     private int yOfViewToModel(int y) {
         return Math.floorDiv(y, Land.CELL_SIZE);
-    }
-
-    private void launchMovementThread(int destRow, int destColum) {
-        //TODO: le prof nous a dit de réflicher en terme du modèle, donc dans ce cas
-        // Est ce qu'on doit déplacer cette méthode (ou une partie) vers le modèle?
-        Queue<Spot> queue = farm.getPathFinder().findPath(
-                farm.getSelectedEntity().getPosition(),
-                farm.getSpot(destRow, destColum)
-        );
-
-        farm.getSelectedEntity().setPath(queue);
-
-        int order = queue.size();
-        for(Spot s: queue){
-            //Highlight the path in land
-            order--;
-            world.getLand().addSpotEntity(s, farm.getSelectedEntity(), order);
-        }
-
-        //We unblock the screen for the user
-        world.setInMovementChoiceState(false);
-
-        if(farm.getSelectedEntity().getThread() == null || !farm.getSelectedEntity().getThread().isAlive()){
-            farm.getSelectedEntity().startNewThread();
-
-        }
-
     }
 
     public MouseAdapter getFarmAnimalSellHandler(FarmAnimal fa) {
