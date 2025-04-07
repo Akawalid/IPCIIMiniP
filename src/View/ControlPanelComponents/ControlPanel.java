@@ -3,6 +3,7 @@ package View.ControlPanelComponents;
 import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.FarmAnimal;
+import Model.FarmAnimals.Sheep;
 import Model.Shepherd.Shepherd;
 
 import Controller.Controller;
@@ -12,8 +13,9 @@ import View.ControlPanelComponents.Action.FarmAnimalActionPanel;
 import View.ControlPanelComponents.Action.ShepherdActionPanel;
 import View.ControlPanelComponents.Information.FarmAnimalInformationPanel;
 import View.ControlPanelComponents.Information.InformationPanel;
-import View.ControlPanelComponents.Information.ShepherdInformationPanel;
-import View.EntityMetaData;
+//import View.ControlPanelComponents.Information.ShepherdInformationPanel;
+//import View.EntityMetaData;
+import View.Main;
 import View.World;
 
 import javax.swing.*;
@@ -27,29 +29,29 @@ public class ControlPanel extends JPanel {
     //MARGIN, represents the margin between the information, actions panels and the whole ControlPanel
     public static final int W = 250, H_INFO_PANEL = 200, H_ACTION_PANEL = 200, MARGIN = 10;
 
-    private GameStatePanel gameStatePanel;
+    private JPanel gameStatePanel;
     //first part of the panel is the information panel, on top
 
-    private MarketPanel marketPanel;
+    private JPanel marketPanel;
     private InformationPanel informationPanel;
     //second part of the panel is the action panel, on the bottom
     private ActionPanel actionPanel;
 
     private Controller controller;
     private Farm farm;
-    private final HashMap<Entity, EntityMetaData> entitiesMetaData;
+    //private final HashMap<Entity, EntityMetaData> entitiesMetaData;
     private World world;
 
 
-    public ControlPanel(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData, World world ){
+    public ControlPanel(Farm farm, World world ){
         super();
         this.farm = farm;
-        this.entitiesMetaData = entitiesMetaData;
+       // this.entitiesMetaData = entitiesMetaData;
         this.world = world;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        gameStatePanel = new GameStatePanel(farm);
+        gameStatePanel = new gameStatePanel(farm);
         marketPanel = new MarketPanel(world);
 
         add(gameStatePanel);
@@ -67,31 +69,33 @@ public class ControlPanel extends JPanel {
         if(actionPanel != null) remove(actionPanel);
 
         Entity e = farm.getSelectedEntity();
-        switch (e) {
-            case null -> {
-                informationPanel = null;
-                actionPanel = null;
-                return;
-            }
-            case Shepherd s -> {
-                informationPanel = new ShepherdInformationPanel(s);
-                actionPanel = new ShepherdActionPanel(s);
-            }
-            case FarmAnimal fa -> {
-                informationPanel = new FarmAnimalInformationPanel(fa);
-                actionPanel = new FarmAnimalActionPanel(fa);
-            }
-            default -> throw new IllegalStateException("Case not supported");
+        if(e == null){
+            informationPanel = null;
+            actionPanel = null;
         }
+        else{
+            //assert(entitiesMetaData.get(e) != null);
+           // EntityMetaData mtd = entitiesMetaData.get(e);
+            if(e instanceof Shepherd) {
+                //informationPanel = new ShepherdInformationPanel((Shepherd)e);
+                actionPanel = new ShepherdActionPanel((Shepherd)e);
+            }
+            else if(e instanceof FarmAnimal){
+                informationPanel = new FarmAnimalInformationPanel((FarmAnimal)e);
+                actionPanel = new FarmAnimalActionPanel((FarmAnimal)e);
+            }
+            else{
+                throw new IllegalStateException("Case not supported");
+            }
 
-        //in case e is not null
-        add(informationPanel);
-        add(Box.createRigidArea(new Dimension(0, MARGIN)));
-        add(actionPanel);
+            //When we upload ControlePanel to the ui, the controller attribute is set null
+            //Therefor, the method connect, should be called for the first time by the controller
+            if(controller != null) connect(controller);
 
-        //When we upload ControlePanel to the ui, the controller attribute is set null
-        //Therefore, the method connect, should be called for the first time by the controller
-        if(controller != null) connect(controller);
+            add(informationPanel);
+            add(Box.createRigidArea(new Dimension(0, MARGIN)));
+            add(actionPanel);
+        }
     }
 
     public void connect(Controller c){
@@ -99,8 +103,6 @@ public class ControlPanel extends JPanel {
         //We can say that by a strengthened condition as below.
         assert(c != null);
         controller = c;
-
-        marketPanel.connect(controller);
         if(informationPanel != null) informationPanel.connect(controller);
         if(actionPanel != null) actionPanel.connect(controller);
     }

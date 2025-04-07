@@ -1,7 +1,9 @@
 package Model;
 
 import Model.FarmAnimals.FarmAnimal;
+//import Model.Predators.FoxDen;
 import Model.Shepherd.*;
+import Model.Predators.WolfDen;
 
 import java.util.*;
 
@@ -128,5 +130,65 @@ public class Farm {
         }
     }
 
+
+    public void removeEntity(Entity e){
+        //this method removes an entity from the farm
+        //it is used when an entity dies or when it is removed from the farm
+        creatures.remove(e);
+        e.getPosition().setIsTraversable(true);
+    }
+
+    public void generateDens() {
+        Random rand = new Random();
+        int numWolfDens = rand.nextBoolean() ? 2 : 3; // génère 2 ou 3 dens de loup
+        int numFoxDens = rand.nextBoolean() ? 2 : 3;  // génère 2 ou 3 dens de renard
+
+        for (int i = 0; i < numWolfDens; i++) {
+            Spot spot = getRandomTraversableSpot();
+            WolfDen wolfDen = new WolfDen(spot, this);
+            addEntity(wolfDen);
+            new Thread(wolfDen).start();
+        }
+        for (int i = 0; i < numFoxDens; i++) {
+            Spot spot = getRandomTraversableSpot();
+            //FoxDen foxDen = new FoxDen(spot, this);
+            //addEntity(foxDen);
+            //new Thread(foxDen).start();
+        }
+    }
+
+    // Méthode utilitaire pour obtenir une case traversable aléatoire
+    private Spot getRandomTraversableSpot() {
+        Random rand = new Random();
+        while (true) {
+            int row = rand.nextInt(HEIGHT);
+            int col = rand.nextInt(WIDTH);
+            Spot spot = getSpot(row, col);
+            if (spot.isTraversable()) {
+                return spot;
+            }
+        }
+    }
+
+    // Dans la classe Farm
+    public void initPredators() {
+        generateDens();
+    }
+
+    /**
+     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) de la case donnée.
+     */
+    public List<Spot> getAdjacentSpots(Spot s) {
+        List<Spot> neighbors = new ArrayList<>();
+        int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+        for (int[] d : directions) {
+            int newRow = s.getRow() + d[0];
+            int newCol = s.getCol() + d[1];
+            if (newRow >= 0 && newRow < Farm.HEIGHT && newCol >= 0 && newCol < Farm.WIDTH) {
+                neighbors.add(getSpot(newRow, newCol));
+            }
+        }
+        return neighbors;
+    }
 
 }

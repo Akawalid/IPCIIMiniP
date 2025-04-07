@@ -4,11 +4,13 @@ import Model.Bank;
 import Model.Entity;
 import Model.AgeState;
 import Model.Exceptions.UnauthorizedAction;
+import Model.Predators.FoxDen;
 import Model.Resources.Resource;
 import Model.Spot;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import static Model.AgeState.*;
 
@@ -54,7 +56,6 @@ public abstract class FarmAnimal extends Entity {
         } else if (age == 10) {
             // L'animal meurt de vieillesse
             System.out.println("L'animal est mort de vieillesse.");
-            //die();
             state = DEAD;
         }
         System.out.println("Âge : " + age + " - État : " + state);
@@ -93,5 +94,17 @@ public abstract class FarmAnimal extends Entity {
             //ou dead théoriquement
         }
     }
+
+
+    // Ajoutez cette méthode pour supprimer une entité de la ferme
+    /*public void removeEntity(Entity e) {
+        creatures.remove(e);
+    }*/
+
+
+
+
+
+
 
 }

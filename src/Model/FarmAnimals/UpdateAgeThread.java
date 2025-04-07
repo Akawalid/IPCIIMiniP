@@ -42,4 +42,11 @@ public class UpdateAgeThread extends Thread {
             }
         }
     }
+
+
+    public void Asupprimer () {
+        return 0 ;
+    }
 }
+
+//Commentaire

@@ -1,31 +1,124 @@
-//// Fichier : Model/Predators/Wolf.java
-/*package Model.Predators;
+package Model.Predators;
 
+import Model.Entity;
+import Model.Farm;
+import Model.FarmAnimals.FarmAnimal;
+import Model.FarmAnimals.Ewe;
 import Model.FarmAnimals.Sheep;
-import Model.Exceptions.InvalidCoordinates;
 import Model.Spot;
-import java.awt.*;
+import Model.Exceptions.InvalidCoordinates;
+
+import java.util.*;
 
 public class Wolf extends Predator {
 
-    public Wolf(String name) {
-        super(name);
-        this.aggressivity = 5; // Valeur d'exemple
-        this.patience = 10;
-        this.speed = aggressivity * 2;
-    }
-
-    public Wolf(Spot position, String name) {
-        super(position, name);
-        this.aggressivity = 5;
-        this.patience = 10;
-        this.speed = aggressivity * 2;
+    public Wolf(Spot s, Farm farm) {
+        super(s, farm);
     }
 
     @Override
-    public Class getTargetPreyClass() {
-        // Les loups chassent les brebis/moutons
-        return Sheep.class;
+    public void run() {
+        Random rand = new Random();
+        while (true) {
+            // 1. Vérifier et tuer toute proie adjacente (Ewe ou Sheep)
+            checkAndKillPrey();
+
+            // 2. Chercher la proie la plus proche
+            FarmAnimal target = findClosestPrey();
+            if (target != null) {
+                // Utiliser FindPath pour calculer le chemin vers la proie
+                Queue<Spot> path = farm.getPathFinder().findPath(this.getPosition(), target.getPosition());
+                this.setPath(path); // Définit le chemin dans l'entité
+                if (this.hasMovements()) {
+                    try {
+                        // Utilise la méthode move() pour avancer d'une case
+                        this.move();
+                    } catch (InvalidCoordinates e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                // Si aucune proie n'est détectée, se déplacer aléatoirement
+                List<Spot> freeSpots = new ArrayList<>();
+                for (Spot neighbor : getAdjacentSpots(this.getPosition())) {
+                    if (neighbor.isTraversable()) {
+                        freeSpots.add(neighbor);
+                    }
+                }
+                if (!freeSpots.isEmpty()) {
+                    Spot next = freeSpots.get(rand.nextInt(freeSpots.size()));
+                    // Créer un chemin d'une seule case pour le déplacement
+                    Queue<Spot> singleStep = new LinkedList<>();
+                    singleStep.add(next);
+                    this.setPath(singleStep);
+                    try {
+                        this.move();
+                    } catch (InvalidCoordinates e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            try {
+                Thread.sleep(1000); // Pause d'une seconde entre chaque cycle
+            } catch (InterruptedException e) {
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void checkAndKillPrey() {
+        for (Spot neighbor : getAdjacentSpots(this.getPosition())) {
+            Entity entity = farm.getEntityInSpot(neighbor.getRow(), neighbor.getCol());
+            if ( entity instanceof FarmAnimal) { // entity != null &&
+                String species = ((FarmAnimal) entity).getSpecies();
+                // Pour le wolf, la proie peut être une Ewe ou un Sheep
+                if (species.equals("Ewe") || species.equals("Sheep")) {
+                    farm.removeEntity(entity);
+                    entity.getPosition().setIsTraversable(true);
+                }
+            }
+        }
+    }
+
+    /**
+     * Recherche la proie la plus proche (Ewe ou Sheep) parmi les entités de la ferme.
+     */
+    private FarmAnimal findClosestPrey() {
+        FarmAnimal closest = null;
+        double minDistance = Double.MAX_VALUE;
+        for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
+            Entity e = it.next();
+            if (e instanceof FarmAnimal) {
+                FarmAnimal animal = (FarmAnimal) e;
+                String species = animal.getSpecies();
+                if (species.equals("Ewe") || species.equals("Sheep")) {
+                    double distance = this.getPosition().distanceTo(animal.getPosition());
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closest = animal;
+                    }
+                }
+            }
+        }
+        return closest;
+    }
+
+    /**
+     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) à la position actuelle.
+     */
+    protected List<Spot> getAdjacentSpots(Spot s) {
+        List<Spot> neighbors = new ArrayList<>();
+        int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+        for (int[] d : directions) {
+            int newRow = s.getRow() + d[0];
+            int newCol = s.getCol() + d[1];
+            // Vérifier que les indices sont dans les limites du terrain
+            if (newRow >= 0 && newRow < Farm.HEIGHT && newCol >= 0 && newCol < Farm.WIDTH) {
+                neighbors.add(farm.getSpot(newRow, newCol));
+            }
+        }
+        return neighbors;
     }
 
     @Override
@@ -33,4 +126,3 @@ public class Wolf extends Predator {
         return null;
     }
 }
-*/

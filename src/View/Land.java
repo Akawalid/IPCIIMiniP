@@ -56,15 +56,15 @@ public class Land extends JPanel {
     private HashMap<Spot, HashMap<Integer, Entity>> pathHighlights;
     //The hashmap below corresponds to the data that are held by the view but not the model
     //For instance, the images of each entity, their color...
-    private HashMap<Entity, EntityMetaData> entitiesMetaData;
+    //private HashMap<Entity, EntityMetaData> entitiesMetaData;
 
-    public Land(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData) {
+    public Land(Farm farm) {
         super();
         this.farm = farm;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.LIGHT_GRAY);
         pathHighlights = new HashMap<>();
-        this.entitiesMetaData = entitiesMetaData;
+        //this.entitiesMetaData = entitiesMetaData;
         // Active les tooltips pour ce composant
         setToolTipText("");
     }
@@ -86,8 +86,8 @@ public class Land extends JPanel {
                     Entity e = scheduler(pathHighlights.get(farm.getSpot(row, col)));
                     if(pathHighlights.get(farm.getSpot(row, col)).isEmpty()) pathHighlights.remove(farm.getSpot(row, col));
                     assert(e != null);
-                    assert(entitiesMetaData.get(e) != null);
-                    g.setColor(entitiesMetaData.get(e).applyOpacityForColor());
+                    //assert(entitiesMetaData.get(e) != null);
+                    //g.setColor(entitiesMetaData.get(e).applyOpacityForColor());
                 }
                 else if(!farm.getSpot(row, col).isTraversable()) g.setColor(Color.gray);
                 else g.setColor(defaultColor);
@@ -236,7 +236,7 @@ public class Land extends JPanel {
         JFrame fr = new JFrame();
         Farm farm = new Farm();
         JPanel jp = new JPanel();
-        Land land = new Land(farm, new HashMap<>());
+        Land land = new Land(farm);
         jp.add(land);
         fr.add(jp);
         //création fenêtre fin
