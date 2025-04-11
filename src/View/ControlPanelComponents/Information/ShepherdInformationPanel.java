@@ -5,7 +5,7 @@ import Model.Shepherd.Shepherd;
 import javax.swing.*;
 import java.awt.*;
 import Controller.Controller;
-import View.EntityMetaData;
+//import View.EntityMetaData;
 
 public class ShepherdInformationPanel extends InformationPanel {
 

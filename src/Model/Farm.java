@@ -124,16 +124,22 @@ public class Farm {
      * This method is synchronized to prevent concurrent modifications.
      */
     public synchronized void updateEntities() {
-        for (Entity e : creatures) {
+        Iterator<Entity> it = creatures.iterator();
+        while (it.hasNext()) {
+            Entity e = it.next();
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 animal.updateAge();
                 if (animal.getState() == AgeState.DEAD) {
-                    removeEntity(e);
+                    // Rendre la case traversable avant de supprimer l'entité
+                    e.getPosition().setIsTraversable(true);
+                    // Supprime en toute sécurité l'élément actuellement itéré
+                    it.remove();
                 }
             }
         }
     }
+
 
     public void generateDens() {
         Random rand = new Random();
@@ -199,5 +205,4 @@ public class Farm {
         creatures.remove(e);
         e.getPosition().setIsTraversable(true);
     }
-
 }
