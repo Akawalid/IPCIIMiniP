@@ -9,8 +9,8 @@ import View.EntityMetaData;
 
 public class ShepherdInformationPanel extends InformationPanel {
 
-    public ShepherdInformationPanel(Shepherd s, EntityMetaData mtd){
-        super(s, mtd);
+    public ShepherdInformationPanel(Shepherd s){
+        super(s);
         setLayout(new BorderLayout());
     }
 
@@ -19,8 +19,9 @@ public class ShepherdInformationPanel extends InformationPanel {
         //TODO
     }
 
-    @Override
-    public void update() {
+    /*@Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         status.setText("Status: " + mtd.getStatus());
-    }
+    }*/
 }

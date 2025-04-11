@@ -1,42 +1,20 @@
 package Model.FarmAnimals;
 
+import Model.Bank;
 import Model.Entity;
 import Model.AgeState;
 import Model.Exceptions.UnauthorizedAction;
+//import Model.Predators.FoxDen;
 import Model.Resources.Resource;
 import Model.Spot;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 import static Model.AgeState.*;
 
 public abstract class FarmAnimal extends Entity {
-
-    // ### Resource Selling ### //
-    protected final static int PRICE_EWE = 10;
-    protected final static int PRICE_SHEEP = 10;
-    protected final static int PRICE_HEN = 10;
-
-
-    /*
-    //@Override
-    public void move(Point direction) throws InvalidCoordinates{
-
-    @Override
-    public void move(Point direction) throws InvalidCoordinates {
-        if (this.getPosition() == null) {
-            throw new InvalidCoordinates("Position non définie pour " + this.getName());
-        }
-        int newX = this.getPosition().getX() + direction.x;
-        int newY = this.getPosition().getY() + direction.y;
-        // Récupérer la référence au Farm depuis la position actuelle
-        Farm currentFarm = this.getPosition().getFarm();
-        // Créer un nouveau Spot avec les nouvelles coordonnées et le farm associé
-        this.setPosition(new Spot(newX, newY, currentFarm));
-        System.out.println(this.getName() + " se déplace vers (" + newX + ", " + newY + ")");
-    }
-    */
 
     //------------------- Attributes -------------------//
 
@@ -78,7 +56,6 @@ public abstract class FarmAnimal extends Entity {
         } else if (age == 10) {
             // L'animal meurt de vieillesse
             System.out.println("L'animal est mort de vieillesse.");
-            //die();
             state = DEAD;
         }
         System.out.println("Âge : " + age + " - État : " + state);
@@ -99,29 +76,29 @@ public abstract class FarmAnimal extends Entity {
     }
 
     // ### Buy & Sell ###
-
-    protected abstract int get_price();
-    protected int get_buying_price(){
-        return get_price();
-    }
-    protected int get_mature_selling_price(){
-        return get_price()/2;
+    @Override
+    public int get_buying_price(){
+        return Bank.get_price(this);
     }
 
-    protected int get_old_selling_price(){
-        return get_price()/10;
-    }
-
+    @Override
     public int get_selling_price() throws UnauthorizedAction {
+        int price = Bank.get_price(this);
         if (this.state == MATURE) {
-            return get_mature_selling_price();
+            return price/2;
         } else if (this.state == OLD) {
-            return get_old_selling_price();
+            return price/10;
         }
         else {
             throw new UnauthorizedAction("Impossible to sell a BABY farm animal.");
             //ou dead théoriquement
         }
     }
+
+
+
+
+
+
 
 }

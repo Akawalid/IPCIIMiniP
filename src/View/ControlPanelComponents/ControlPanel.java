@@ -3,7 +3,6 @@ package View.ControlPanelComponents;
 import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.FarmAnimal;
-import Model.FarmAnimals.Sheep;
 import Model.Shepherd.Shepherd;
 
 import Controller.Controller;
@@ -14,13 +13,10 @@ import View.ControlPanelComponents.Action.ShepherdActionPanel;
 import View.ControlPanelComponents.Information.FarmAnimalInformationPanel;
 import View.ControlPanelComponents.Information.InformationPanel;
 import View.ControlPanelComponents.Information.ShepherdInformationPanel;
-import View.EntityMetaData;
-import View.Main;
 import View.World;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
 
 public class ControlPanel extends JPanel {
     //This class represents the panel that comes on the left side of the screen, it will contain the entities information
@@ -28,45 +24,47 @@ public class ControlPanel extends JPanel {
 
     //MARGIN, represents the margin between the information, actions panels and the whole ControlPanel
     public static final int W = 250, H_INFO_PANEL = 200, H_ACTION_PANEL = 200, MARGIN = 10;
+    private static final Component MARGE = Box.createRigidArea(new Dimension(0, MARGIN));
 
-    private JPanel gameStatePanel;
+    private GameStatePanel gameStatePanel;
     //first part of the panel is the information panel, on top
 
-    private JPanel marketPanel;
+    private MarketPanel marketPanel;
     private InformationPanel informationPanel;
     //second part of the panel is the action panel, on the bottom
     private ActionPanel actionPanel;
 
     private Controller controller;
     private Farm farm;
-    private final HashMap<Entity, EntityMetaData> entitiesMetaData;
+    //private final HashMap<Entity, EntityMetaData> entitiesMetaData;
     private World world;
 
 
-    public ControlPanel(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData, World world ){
+    public ControlPanel(Farm farm, World world ){
         super();
         this.farm = farm;
-        this.entitiesMetaData = entitiesMetaData;
         this.world = world;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        gameStatePanel = new gameStatePanel(farm);
+        gameStatePanel = new GameStatePanel(farm);
         marketPanel = new MarketPanel(world);
 
         add(gameStatePanel);
         add(Box.createRigidArea(new Dimension(0, MARGIN)));
         add(marketPanel);
         add(Box.createRigidArea(new Dimension(0, MARGIN)));
-
-        //Paneau d'information + d'action
-        //setActiveEntity(null);
     }
 
     public void updateActiveEntity() {
 
-        if(informationPanel != null) remove(informationPanel);
-        if(actionPanel != null) remove(actionPanel);
+        if(informationPanel != null){
+            remove(informationPanel);
+        }
+        if(actionPanel != null){
+            remove(actionPanel);
+            remove(MARGE);
+        }
 
         Entity e = farm.getSelectedEntity();
         if(e == null){
@@ -74,10 +72,8 @@ public class ControlPanel extends JPanel {
             actionPanel = null;
         }
         else{
-            assert(entitiesMetaData.get(e) != null);
-            EntityMetaData mtd = entitiesMetaData.get(e);
             if(e instanceof Shepherd) {
-                informationPanel = new ShepherdInformationPanel((Shepherd)e, mtd);
+                informationPanel = new ShepherdInformationPanel((Shepherd)e);
                 actionPanel = new ShepherdActionPanel((Shepherd)e);
             }
             else if(e instanceof FarmAnimal){
@@ -92,8 +88,9 @@ public class ControlPanel extends JPanel {
             //Therefor, the method connect, should be called for the first time by the controller
             if(controller != null) connect(controller);
 
+            //in case e is not null
             add(informationPanel);
-            add(Box.createRigidArea(new Dimension(0, MARGIN)));
+            add(MARGE);
             add(actionPanel);
         }
     }
@@ -103,6 +100,10 @@ public class ControlPanel extends JPanel {
         //We can say that by a strengthened condition as below.
         assert(c != null);
         controller = c;
+
+        marketPanel.connect(c);
+        gameStatePanel.connect(c);
+
         if(informationPanel != null) informationPanel.connect(controller);
         if(actionPanel != null) actionPanel.connect(controller);
     }

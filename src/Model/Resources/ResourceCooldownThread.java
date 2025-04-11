@@ -58,11 +58,8 @@ public class ResourceCooldownThread extends Thread{
                 //increment cooldown
                 cooldown += CD_INCREMENT;
             }
-            else if(! is_ready){
+            if(cooldown >= cooldown_max && !is_ready){
                 this.set_ready();
-            }
-            else{
-                //attente active
             }
         }
 

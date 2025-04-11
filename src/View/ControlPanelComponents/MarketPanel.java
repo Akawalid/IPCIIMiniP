@@ -4,6 +4,7 @@ package View.ControlPanelComponents;
 import View.ControlPanelComponents.Information.PurchaseType;
 import View.CustomButton;
 import View.World;
+import Controller.Controller;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,8 +12,11 @@ import java.awt.event.ActionListener;
 
 public class MarketPanel extends JPanel {
     private World world;
-    // Create a constructor
 
+    private CustomButton buySheepButton;
+    private CustomButton buyEweButton;
+    private CustomButton buyHenButton;
+    private CustomButton hireShepherdButton;
 
     public MarketPanel(World world) {
         this.world = world;
@@ -23,58 +27,27 @@ public class MarketPanel extends JPanel {
         JLabel marketLabel = new JLabel("Market");
         add(marketLabel);
 
-        // Buy a sheep
-        CustomButton buySheepButton = new CustomButton("Buy a sheep");
-        buySheepButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the "Buy a sheep" button is clicked
-                System.out.println("A sheep has been bought.");
-                // Set the purchase mode to SHEEP
-                world.setPurchaseMode(PurchaseType.SHEEP);
-            }
-        });
-        add(buySheepButton);
-
         // Buy an ewe
-        CustomButton buyEweButton = new CustomButton("Buy an ewe");
-        buyEweButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the "Buy an ewe" button is clicked
-                System.out.println("An ewe has been bought.");
-                // Set the purchase mode to EWE
-                world.setPurchaseMode(PurchaseType.EWE);
-
-            }
-        });
+        buyEweButton = new CustomButton("Buy an ewe");
         add(buyEweButton);
 
-        // Buy a hen
+        // Buy a sheep
+        buySheepButton = new CustomButton("Buy a sheep");
+        add(buySheepButton);
 
-        CustomButton buyHenButton = new CustomButton("Buy a hen");
-        buyHenButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the "Buy a hen" button is clicked
-                System.out.println("A hen has been bought.");
-                // Set the purchase mode to HEN
-                world.setPurchaseMode(PurchaseType.HEN);
-            }
-        });
+        // Buy a hen
+        buyHenButton = new CustomButton("Buy a hen");
         add(buyHenButton);
 
         // Hire a shepherd
-        CustomButton hireShepherdButton = new CustomButton("Hire a shepherd");
-        hireShepherdButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Action to perform when the "Hire a shepherd" button is clicked
-                System.out.println("A shepherd has been hired.");
-                // Set the purchase mode to SHEPHERD
-                world.setPurchaseMode(PurchaseType.SHEPHERD);
-            }
-        });
+        hireShepherdButton = new CustomButton("Hire a shepherd");
         add(hireShepherdButton);
+    }
+
+    public void connect(Controller c){
+        buyEweButton.addActionListener(c.getEweBuyHandler());
+        buySheepButton.addActionListener(c.getSheepBuyHandler());
+        buyHenButton.addActionListener(c.getHenBuyHandler());
+        hireShepherdButton.addActionListener(c.getShepherdHireHandler());
     }
 }

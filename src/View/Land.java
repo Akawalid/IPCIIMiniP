@@ -35,7 +35,7 @@ public class Land extends JPanel {
         +---------------------------------------------------+
      */
 
-    public static final int CELL_SIZE = 64,// Size of each cell in pixels
+    public static final int CELL_SIZE = 32,// Size of each cell in pixels
             WIDTH= CELL_SIZE * Farm.WIDTH,
             HEIGHT= CELL_SIZE * Farm.HEIGHT;
     private Farm farm;
@@ -49,22 +49,13 @@ public class Land extends JPanel {
     // Solution: In this case, we use the color of the shepherd closest to its target
     // (shepherds have priority).
 
-        // Note: We only consider shepherds here because:
-    // 1. Predators can never occupy the same spot as shepherds
-    // 2. Other entities don't move (currently)
-    // If we change movement rules later, we'll adapt the scheduling method accordingly.
-    private HashMap<Spot, HashMap<Integer, Entity>> pathHighlights;
-    //The hashmap below corresponds to the data that are held by the view but not the model
-    //For instance, the images of each entity, their color...
-    private HashMap<Entity, EntityMetaData> entitiesMetaData;
 
-    public Land(Farm farm, HashMap<Entity, EntityMetaData> entitiesMetaData) {
+    public Land(Farm farm) {
         super();
         this.farm = farm;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.LIGHT_GRAY);
-        pathHighlights = new HashMap<>();
-        this.entitiesMetaData = entitiesMetaData;
+        //this.entitiesMetaData = entitiesMetaData;
         // Active les tooltips pour ce composant
         setToolTipText("");
     }
@@ -81,15 +72,7 @@ public class Land extends JPanel {
         g.setColor(defaultColor);
         for (int row = 0; row < Farm.HEIGHT; row++) {
             for (int col = 0; col < Farm.WIDTH; col++) {
-
-                if(pathHighlights.containsKey(farm.getSpot(row, col))){
-                    Entity e = scheduler(pathHighlights.get(farm.getSpot(row, col)));
-                    if(pathHighlights.get(farm.getSpot(row, col)).isEmpty()) pathHighlights.remove(farm.getSpot(row, col));
-                    assert(e != null);
-                    assert(entitiesMetaData.get(e) != null);
-                    g.setColor(entitiesMetaData.get(e).applyOpacityForColor());
-                }
-                else if(!farm.getSpot(row, col).isTraversable()) g.setColor(Color.gray);
+                if(!farm.getSpot(row, col).isTraversable()) g.setColor(Color.gray);
                 else g.setColor(defaultColor);
 
                 g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
@@ -139,57 +122,6 @@ public class Land extends JPanel {
         addMouseListener(c.coordinatesHandler());
     }
 
-    public void addSpotEntity(Spot s, Entity e, int order){
-        assert(s != null && e != null);
-
-        HashMap<Integer, Entity> tmp = pathHighlights.get(s);
-        if(tmp != null) tmp.put(order, e);
-        else pathHighlights.put(s, new HashMap<>(Collections.singletonMap(order, e)));
-    }
-
-    private Entity scheduler(HashMap<Integer, Entity> mp) {
-        assert(mp != null);
-
-        //We assume that the priority of null is +inf
-        Entity weFollowItsColor=null;
-        //No priority is negative! by convention
-        int min = Integer.MAX_VALUE;
-        Iterator<Map.Entry<Integer, Entity>> iterator = mp.entrySet().iterator();
-        while (iterator.hasNext()) {
-            //Invariant
-            /*
-                > foreach Entity in toSortAccordingToPriority:
-                    it will pass sooner or at the same time with the previous entities
-                > for all entity previously occurred, the distance between the prior and te spot is equal or bigger than min
-            */
-            Map.Entry<Integer, Entity> entry = iterator.next();
-            Integer reverseOrderOfSpotInEntitiesPath = entry.getKey();
-            Entity entity = entry.getValue();
-            if(entity.getPathSize() - reverseOrderOfSpotInEntitiesPath <= 0) {
-                //entity.getPathSize() - reverseOrderOfSpotInEntitiesPath corresponds to the distance between
-                //entity and the spot to be colored
-                iterator.remove();
-            }
-
-            if(entity.getPathSize() - reverseOrderOfSpotInEntitiesPath < min) {
-                min = entity.getPathSize() - reverseOrderOfSpotInEntitiesPath;
-                weFollowItsColor = entity;
-            }
-            else if (entity.getPathSize() - reverseOrderOfSpotInEntitiesPath == min) {
-                //Lexicographic order
-                if(weFollowItsColor == null || weFollowItsColor.compareTo(entity) > 0)
-                    weFollowItsColor = entity;
-
-                else if(weFollowItsColor.compareTo(entity) == 0)
-                    //Invariant on the uniqueness of priorities is violated
-                    assert(false);
-
-            }
-        }
-
-        return weFollowItsColor;
-    }
-
     @Override
     public String getToolTipText(MouseEvent event) {
         // Convert view coordinates to model coordinates
@@ -236,7 +168,7 @@ public class Land extends JPanel {
         JFrame fr = new JFrame();
         Farm farm = new Farm();
         JPanel jp = new JPanel();
-        Land land = new Land(farm, new HashMap<>());
+        Land land = new Land(farm);
         jp.add(land);
         fr.add(jp);
         //création fenêtre fin

@@ -47,7 +47,7 @@
 //        Sheep sheep = new Sheep("TestSheep");
 //        sheep.setPosition(farm.getSpot(2, 2));
 //
-//        // D�finition d'une direction de d�placement
+//        // Définition d'une direction de d�placement
 //        Point moveDirection = new Point(3, 4);
 //        sheep.move(moveDirection);
 //

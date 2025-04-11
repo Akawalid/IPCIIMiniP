@@ -1,6 +1,9 @@
 package Model;
 
+import Model.FarmAnimals.FarmAnimal;
+//import Model.Predators.FoxDen;
 import Model.Shepherd.*;
+import Model.Predators.WolfDen;
 
 import java.util.*;
 
@@ -8,15 +11,15 @@ public class Farm {
     //Farm is out model, it contains the creatures and the land
     //each creature, has a reference to the spot on which it is standing.
 
-    public static final int WIDTH = 15, HEIGHT = 10;//spots
+    public static final int WIDTH = 35, HEIGHT = 20;//spots
     private HashSet<Entity> creatures;
     private ArrayList<Spot> spots;
-    private FindPath pathFinder;
     private Bank bank;
     //this attribute represents the active entity on the farm, the one on which we want to apply operations
     private Entity selectedEntity;
 
     public Farm(){
+        FindPath.farm = this;
         creatures = new HashSet<>();
         spots = new ArrayList<>();
 
@@ -24,8 +27,6 @@ public class Farm {
 
         initLand();
         selectedEntity = null;
-
-        pathFinder = new FindPath(this);
     }
 
     private void initLand(){
@@ -74,29 +75,129 @@ public class Farm {
         return null;
     }
     public void launchMovementThread(int destRow, int destCol){
-        //TODO: le prof nous a dit de réflicher en terme du modèle, donc dans ce cas
-        // Est ce qu'on doit déplacer cette méthode (ou une partie) vers le modèle?
-        Queue<Spot> queue = pathFinder.findPath(
+        ArrayDeque<Spot> queue = FindPath.findPath(
                 selectedEntity.getPosition(),
                 getSpot(destRow, destCol)
         );
 
         selectedEntity.setPath(queue);
 
-        int order = queue.size();
-        for(Spot s: queue){
-            //Highlight the path in land
-            order--;
-            world.getLand().addSpotEntity(s, farm.getSelectedEntity(), order);
-        }
-
         if(selectedEntity.getThread() == null || !selectedEntity.getThread().isAlive()){
             selectedEntity.startNewThread();
-
         }
     }
     public Entity getSelectedEntity(){return selectedEntity;}
     public void setSelectedEntity(Entity e){selectedEntity = e;}
-    //genertae a getter for pathfinder
-    public FindPath getPathFinder(){return pathFinder;}
+
+    /**
+     * Returns an adjacent free spot (i.e., traversable) to the given spot.
+     * The search checks the eight neighbors (horizontal, vertical, and diagonal).
+     *
+     * @param s the reference spot
+     * @return a free adjacent spot if one is found, or null otherwise.
+     */
+    public Spot getAdjacentFreeSpot(Spot s) {
+        int row = s.getRow();
+        int col = s.getCol();
+
+        // Parcours des 8 voisins
+        for (int i = row - 1; i <= row + 1; i++) {
+            for (int j = col - 1; j <= col + 1; j++) {
+                // Ignorer le spot lui-m�me
+                if (i == row && j == col)
+                    continue;
+                // V�rifier que les coordonn�es sont valides
+                if (i >= 0 && i < HEIGHT && j >= 0 && j < WIDTH) {
+                    Spot candidate = getSpot(i, j);
+                    if (candidate.isTraversable()) {
+                        return candidate;
+                    }
+                }
+            }
+        }
+        // Aucun spot libre trouv�
+        return null;
+    }
+
+    /**
+     * Updates the age of all farm animals and removes those that are dead.
+     * This method is synchronized to prevent concurrent modifications.
+     */
+    public synchronized void updateEntities() {
+        for (Entity e : creatures) {
+            if (e instanceof FarmAnimal) {
+                FarmAnimal animal = (FarmAnimal) e;
+                animal.updateAge();
+                if (animal.getState() == AgeState.DEAD) {
+                    removeEntity(e);
+                }
+            }
+        }
+    }
+
+    public void generateDens() {
+        Random rand = new Random();
+        int numWolfDens = rand.nextBoolean() ? 2 : 3; // g�n�re 2 ou 3 dens de loup
+        int numFoxDens = rand.nextBoolean() ? 2 : 3;  // g�n�re 2 ou 3 dens de renard
+
+        for (int i = 0; i < numWolfDens; i++) {
+            Spot spot = getRandomTraversableSpot();
+            WolfDen wolfDen = new WolfDen(spot, this);
+            addEntity(wolfDen);
+            new Thread(wolfDen).start();
+        }
+        for (int i = 0; i < numFoxDens; i++) {
+            Spot spot = getRandomTraversableSpot();
+            //FoxDen foxDen = new FoxDen(spot, this);
+            //addEntity(foxDen);
+            //new Thread(foxDen).start();
+        }
+    }
+
+    // M�thode utilitaire pour obtenir une case traversable al�atoire
+    private Spot getRandomTraversableSpot() {
+        Random rand = new Random();
+        while (true) {
+            int row = rand.nextInt(HEIGHT);
+            int col = rand.nextInt(WIDTH);
+            Spot spot = getSpot(row, col);
+            if (spot.isTraversable()) {
+                return spot;
+            }
+        }
+    }
+
+    // Dans la classe Farm
+    public void initPredators() {
+        generateDens();
+    }
+
+    /**
+     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) de la case donn�e.
+     */
+    public List<Spot> getAdjacentSpots(Spot s) {
+        List<Spot> neighbors = new ArrayList<>();
+        int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
+        for (int[] d : directions) {
+            int newRow = s.getRow() + d[0];
+            int newCol = s.getCol() + d[1];
+            if (newRow >= 0 && newRow < Farm.HEIGHT && newCol >= 0 && newCol < Farm.WIDTH) {
+                neighbors.add(getSpot(newRow, newCol));
+            }
+        }
+        return neighbors;
+    }
+
+    public void removeEntity(Entity e){
+        /** This method removes an entity from the farm
+         * it is used when an entity dies or when it is removed from the farm
+         */
+        //remove from Spot
+        e.getPosition().setIsTraversable(true);
+
+        //remove from Farm
+        creatures.remove(e);
+        e.getPosition().setIsTraversable(true);
+    }
+
 }

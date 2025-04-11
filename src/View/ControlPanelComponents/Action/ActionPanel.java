@@ -17,22 +17,4 @@ public abstract class ActionPanel extends JPanel {
      * connects te content of the panel with controller, likewise, buttons and TextLabels.
      */
     public abstract void connect(Controller c);
-
-    /**
-     * Updates the state of the action panel.
-     * This method must be implemented by derived classes.
-     */
-    public abstract void update();
-
-    /**
-     * Resets the action panel.
-     * This method can be used to reset the state of the panel.
-     */
-    public void reset() {
-        removeAll();
-        //alors attention, le contenu du panel ne doit pas être enlevé,
-        //sinon il faut changer des trucs
-        revalidate();
-        repaint();
-    }
 }

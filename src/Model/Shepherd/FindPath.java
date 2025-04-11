@@ -8,19 +8,15 @@ import java.util.*;
 import java.util.List;
 
 public class FindPath {
-    private Farm farm;
+    public static Farm farm;
 
-    public FindPath(Farm farm) {
-        this.farm = farm;
-    }
-
-    public Queue<Spot> findPath(Spot start, Spot dest) {
+    public static ArrayDeque<Spot> findPath(Spot start, Spot dest) {
         // If the destination is not traversable, find the closest traversable spot
         if (!dest.isTraversable()) {
             dest = findClosestTraversableSpot(dest);
             if (dest == null) {
                 // No traversable spot found near the destination
-                return new LinkedList<>();
+                return new ArrayDeque<>();
             }
         }
 
@@ -48,7 +44,9 @@ public class FindPath {
 
             // If we've reached the destination, reconstruct the path
             if (currentPos.getRow() == dest.getRow() && currentPos.getCol() == dest.getCol()) {
-                return reconstructPath(cameFrom, currentPos);
+                ArrayDeque<Spot> res = reconstructPath(cameFrom, currentPos);
+                res.poll();
+                return res;
             }
 
             // Explore neighbors
@@ -71,20 +69,20 @@ public class FindPath {
         }
 
         // If no path is found, return an empty queue
-        return new LinkedList<>();
+        return new ArrayDeque<>();
     }
 
     // Heuristic function (Manhattan distance)
-    private int heuristic(Spot a, Spot b) {
+    private static int heuristic(Spot a, Spot b) {
         return Math.abs(a.getRow() - b.getRow()) + Math.abs(a.getCol() - b.getCol());
     }
 
-    private int heuristic(Point a, Spot b) {
+    private static int heuristic(Point a, Spot b) {
         return Math.abs(a.x - b.getRow()) + Math.abs(a.y - b.getCol());
     }
 
     // Get valid neighbors for a given position
-    private List<Spot> getNeighbors(Spot pos) {
+    private static List<Spot> getNeighbors( Spot pos) {
         List<Spot> neighbors = new ArrayList<>();
         int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}}; // Up, Down, Left, Right
 
@@ -105,19 +103,17 @@ public class FindPath {
     }
 
     // Reconstruct the path from the destination to the start
-    private Queue<Spot> reconstructPath(Map<Spot, Spot> cameFrom, Spot current) {
-        Queue<Spot> path = new LinkedList<>();
+    private static ArrayDeque<Spot> reconstructPath(Map<Spot, Spot> cameFrom, Spot current) {
+        ArrayDeque<Spot> path = new ArrayDeque<>();
         while (current != null) {
-            path.add(current);
+            path.push(current);
             current = cameFrom.get(current);
         }
-        // Reverse the path to get it from start to destination
-        Collections.reverse((List<?>) path);
         return path;
     }
 
     // Find the closest traversable spot to the destination using BFS
-    private Spot findClosestTraversableSpot(Spot dest) {
+    private static Spot findClosestTraversableSpot( Spot dest) {
         Queue<Spot> queue = new LinkedList<>();
         Set<Spot> visited = new HashSet<>();
 
@@ -176,12 +172,11 @@ public class FindPath {
         farm.getSpot(0, 0).setIsTraversable(false);
         farm.getSpot(1, 1).setIsTraversable(false);
         farm.getSpot(1, 2).setIsTraversable(false);
-        FindPath findPath = new FindPath(farm);
         Spot start = farm.getSpot(0, 0);
         Spot dest = farm.getSpot(5, 5);
         dest.setIsTraversable(false); // Set destination as non-traversable for testing
 
-        Queue<Spot> path = findPath.findPath(start, dest);
+        Queue<Spot> path = FindPath.findPath(start, dest);
         System.out.println("Path from (" + start.getRow() + ", " + start.getCol() + ") to closest traversable spot near (" + dest.getRow() + ", " + dest.getCol() + "):");
         System.out.println("Size: " + path.size());
         for (Spot p : path) {

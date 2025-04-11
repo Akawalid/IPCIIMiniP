@@ -17,6 +17,7 @@ public class FarmAnimalInformationPanel extends InformationPanel {
 
     //constructeur
     public FarmAnimalInformationPanel(FarmAnimal fa) {
+        super(fa);
         animal = fa;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -37,12 +38,5 @@ public class FarmAnimalInformationPanel extends InformationPanel {
             rbp.connect(c);
         };
 
-    }
-
-    @Override
-    public void update() {
-        for (ResourceBarPanel rbp : resourcePanels) {
-            rbp.update();
-        }
     }
 }

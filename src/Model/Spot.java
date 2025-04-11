@@ -5,10 +5,12 @@ public class Spot {
     public static final int SIZE = 1;//1 * 1 metre²
     private int x, y;
     private boolean isTraversable;
+    private Entity entity;
     public Spot(int x, int y) {
         this.x = x;
         this.y = y;
         isTraversable = true;
+        entity = null;
     }
     public boolean isTraversable() {
         return isTraversable;
@@ -45,5 +47,12 @@ public class Spot {
         int dx = this.getRow() - other.getRow();
         int dy = this.getCol() - other.getCol();
         return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public void setEntity(Entity entity) {
+        this.entity = entity;
+    }
+    public Entity getEntity() {
+        return entity;
     }
 }

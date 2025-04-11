@@ -6,9 +6,10 @@ import Model.Shepherd.Shepherd;
 import java.util.Iterator;
 
 public class EntityMovementThread extends Thread {
-    public static final int DELAY = 1000;
+    public static final int DELAY = 100;
     private Entity e;
     public EntityMovementThread(Entity e){
+
         this.e = e;
     }
     @Override

@@ -2,8 +2,12 @@ package Model;
 
 import Model.Exceptions.InvalidCoordinates;
 import Model.Exceptions.UnauthorizedAction;
+import Model.Shepherd.FindPath;
 
 import java.util.*;
+
+import static Model.AgeState.MATURE;
+import static Model.AgeState.OLD;
 
 public abstract class Entity implements Comparable<Entity> {
     //This class represents all the living creatures of the game
@@ -12,7 +16,7 @@ public abstract class Entity implements Comparable<Entity> {
     private static int idCounter = 0;
     //We need this attribute here in order to get the position of the active entity from the controller easily
     protected Spot position;
-    private Queue<Spot> path; // Queue to store movements
+    private ArrayDeque<Spot> path; // Queue to store movements
     private EntityMovementThread thread;
     protected final int id;
     // An entity's priority depends on its distance to the target:
@@ -21,8 +25,8 @@ public abstract class Entity implements Comparable<Entity> {
     // TODO: Les bêtes bougent ? Si oui, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
 
     public Entity(Spot position){
-        assert position != null;
-        this.position = position;
+        assert (position != null);
+        setPosition(position);
 
         id = idCounter;
         idCounter++;
@@ -33,9 +37,15 @@ public abstract class Entity implements Comparable<Entity> {
     public void setPosition(Spot position){
         assert (position != null);
         assert (position.isTraversable());
-        if(this.position != null) this.position.setIsTraversable(true);
-        this.position = position;
 
+        if(this.position != null){
+            //this.position is null only while creating the instance
+            this.position.setIsTraversable(true);
+            this.position.setEntity(null);
+        }
+
+        this.position = position;
+        this.position.setEntity(this);
         this.position.setIsTraversable(false);
     }
     public Spot getPosition(){
@@ -57,12 +67,51 @@ public abstract class Entity implements Comparable<Entity> {
         }
         //if the next spot is traversable this means that another entity just came to cross it
         //we wait until this spot becomes free, then we cross
-        if(!path.peek().isTraversable()) return;
+        if(!path.peek().isTraversable()) {
+            //In conflict case, we return false
+            handleConflict();
+        };
 
         // Get the next spot from the queue
+        assert(!path.isEmpty());
         setPosition(path.poll()); // Move to the new position
     }
-    public void setPath(Queue<Spot> q){
+    private void handleConflict(){
+        /*
+            We have two cases:
+                Recalculate path: in blockage case, when two entities move in opposite directions, or a new
+                    entities is put in the middle of the path.
+                Wait
+        */
+        //Blockage case
+
+        assert (path.peek().getEntity()!= null);
+        if(path.peek().getEntity().path.isEmpty()){
+            //recalculate path
+            Spot destination = path.pop();
+            FindPath.findPath(this.position, destination);
+            return;
+        }
+        if (path.peek().getEntity().path.peek() == this.position) {
+            //the greater one calculates the path by convention
+            if(compareTo(path.peek().getEntity()) > 0){
+                Spot destination = path.pop();
+                setPath(
+                        FindPath.findPath(this.position, destination)
+                );
+            } else {
+                //the other one waits
+                Spot destination = path.peek().getEntity().path.pop();
+                path.peek().getEntity().setPath(
+                        FindPath.findPath(this.position, destination)
+                );
+            }
+        }
+        //here we wait;
+        //No code is needed
+
+    }
+    public void setPath(ArrayDeque<Spot> q){
         path = q;
     }
     public boolean hasMovements(){return !path.isEmpty();}
@@ -82,6 +131,8 @@ public abstract class Entity implements Comparable<Entity> {
     public int getPathSize(){return path.size();}
     public EntityMovementThread getThread(){return  thread;}
     public void startNewThread(){
+        // We store a thread in a attribute to avoid getting unexpected errors when the user changes the path
+        //of a shepherd in the middle of its movement.
         thread = new EntityMovementThread(this);
         thread.start();
     }
@@ -97,4 +148,9 @@ public abstract class Entity implements Comparable<Entity> {
 
         return this.id - other.id;
     }
+
+    // ### Buy & Sell ###
+    public abstract int get_buying_price();
+    public abstract int get_selling_price() throws UnauthorizedAction;
+
 }

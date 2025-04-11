@@ -28,24 +28,24 @@ public class World extends JLayeredPane {
     private Land land;
     private ControlPanel controlPanel;
     private boolean inMovementChoiceState;
-    private HashMap<Entity, EntityMetaData> entitiesMetaData;
-    private PurchaseType purchaseMode = null; // The current purchase mode.
+    private PurchaseType purchaseMode = null; /// The current purchase mode.
+   // private HashMap<Entity, EntityMetaData> entitiesMetaData;
 
     public World(Farm farm){
         super();
 
         this.farm = farm;
-        entitiesMetaData = new HashMap<>();
+        //entitiesMetaData = new HashMap<>();
 
         worldPanel = new JPanel();
         worldPanel.setLayout(new BorderLayout());
 
         // World Panel (Left Column)
-        land = new Land(farm, entitiesMetaData);
+        land = new Land(farm);
         worldPanel.add(land, BorderLayout.CENTER);
 
         // Control Panel (Right Column)
-        controlPanel = new ControlPanel(farm, entitiesMetaData, this);
+        controlPanel = new ControlPanel(farm, this);
         worldPanel.add(controlPanel, BorderLayout.EAST);
 
         add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer
@@ -116,9 +116,8 @@ public class World extends JLayeredPane {
     public void entityGenerateMetaData(Entity e){
         //This method should be called by the controller just after
         //a purchase of an entity.
-        entitiesMetaData.put(e, new EntityMetaData());
+        //entitiesMetaData.put(e, new EntityMetaData());
     }
-
 
     //Sets the current purchase mode.
     public void setPurchaseMode(PurchaseType pt){

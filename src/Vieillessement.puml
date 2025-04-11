@@ -1,0 +1,126 @@
+@startuml
+
+' Définition de l’énumération pour l’âge
+enum AgeState {
+    BABY
+    MATURE
+    OLD
+    DEAD
+}
+
+' Classe de base Entity (dont le code complet n'est pas montré)
+abstract class Entity {
+    - Spot position
+    + getPosition() : Spot
+    + setPosition(Spot)
+}
+
+' Classe représentant un emplacement dans la ferme
+class Spot {
+    + getRow() : int
+    + getCol() : int
+    + getFarm() : Farm
+    + setIsTraversable(boolean)
+    + isTraversable() : boolean
+}
+
+' Classe représentant la ferme
+class Farm {
+    + addEntity(Entity)
+    + getEntities() : Iterator<Entity>
+    + getSpot(int, int) : Spot
+    + validCoordinates(int, int) : boolean
+    + setSelectedEntity(Entity)
+}
+
+' Classe Resource utilisée par FarmAnimal
+class Resource
+
+' -------------------- Package Model.FarmAnimals --------------------
+package "Model.FarmAnimals" {
+
+    ' Classe abstraite FarmAnimal qui hérite de Entity
+    abstract class FarmAnimal {
+        - int age
+        - AgeState state
+        - boolean running
+        - int prix
+        - ArrayList<Resource> resourceList
+        + updateAge()
+        + move(Point)
+        + getAge() : int
+        + getState() : AgeState
+        + sell() : int
+        + vendre() : int
+        + setAge(int)
+    }
+
+    ' Sous-classes de FarmAnimal
+    class Sheep
+    class Hen
+
+    ' Thread de mise à jour de l’âge des animaux
+    class SimulationUpdateAgeThread {
+        - Farm farm
+        + run()
+    }
+
+    FarmAnimal <|-- Sheep
+    FarmAnimal <|-- Hen
+    SimulationUpdateAgeThread --> Farm
+    FarmAnimal ..> AgeState
+    FarmAnimal --> Resource : uses
+}
+
+' -------------------- Package Model.Exceptions --------------------
+package "Model.Exceptions" {
+    class InvalidCoordinates
+}
+
+' -------------------- Package Model.Shepherd --------------------
+package "Model.Shepherd" {
+    class Shepherd
+    class FindPath
+    class ShepherdMovementThread
+
+    Shepherd ..|> Entity
+    FindPath --> Farm
+    ShepherdMovementThread --> Shepherd
+}
+
+' -------------------- Package Controller --------------------
+package Controller {
+    class Controller {
+        + Controller(Farm, World)
+    }
+}
+
+' -------------------- Package View --------------------
+package View {
+    class World
+    class Land {
+        + update()
+        + resetCells()
+        + rowColOfModelToView(int, int) : int
+    }
+    class Main {
+        + main(String[])
+    }
+    class Refresh
+
+    ' Relations de dépendance dans la vue
+    World --> Farm
+    Land --> Farm
+    Main --> Farm
+    Main --> World
+    Main --> Shepherd
+    Main --> Sheep
+    Main --> Refresh
+}
+
+' Relations globales
+Entity --> Spot
+Spot --> Farm
+Farm --> Entity
+
+@enduml

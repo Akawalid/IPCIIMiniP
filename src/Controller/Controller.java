@@ -1,7 +1,6 @@
 package Controller;
 
 import Model.Entity;
-import Model.EntityMovementThread;
 import Model.Farm;
 import Model.FarmAnimals.Ewe;
 import Model.FarmAnimals.Hen;
@@ -11,6 +10,7 @@ import Model.Shepherd.Shepherd;
 import Model.Exceptions.UnauthorizedAction;
 import Model.FarmAnimals.FarmAnimal;
 import Model.Spot;
+import View.ControlPanelComponents.Information.PurchaseType;
 import View.Land;
 import View.World;
 
@@ -18,15 +18,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.InputStream;
 import java.util.Queue;
-
-import static View.ControlPanelComponents.Information.PurchaseType.*;
 
 
 public class Controller {
-    private Farm farm;
-    private World world;
+    private final Farm farm;
+    private final World world;
 
     public Controller(Farm farm, World world) {
         this.farm = farm;
@@ -75,6 +72,7 @@ public class Controller {
                         if (newEntity != null) {
                             farm.addEntity(newEntity);
                             spot.setIsTraversable(false); // Marquer le spot comme occupé
+                            farm.getBank().withdraw(newEntity.get_buying_price());
                             System.out.println(world.getPurchaseMode() + " placed at (" + row + ", " + col + ")");
                         }
                         // Réinitialiser le mode d'achat et redessiner la grille
@@ -89,7 +87,12 @@ public class Controller {
 
                 // 2. Si le mode de déplacement est activé, on traite le déplacement
                 if (world.getInMovementChoiceState()) {
-                    farm.launchMovementThread(row, col);
+                    Entity entity = farm.getSelectedEntity();
+                    if (entity instanceof Shepherd) {
+                        launchMovementThread(row, col);
+                    } else {
+                        // TODO: gérer le déplacement pour d'autres types d'entités si nécessaire
+                    }
                 } else {
                     // 3. Sinon, le clic est interprété comme une sélection d'entité
                     Entity entity = farm.getEntityInSpot(row, col);
@@ -109,6 +112,32 @@ public class Controller {
         return Math.floorDiv(y, Land.CELL_SIZE);
     }
 
+    private void launchMovementThread(int destRow, int destColum) {
+        //TODO: le prof nous a dit de réflicher en terme du modèle, donc dans ce cas
+        // Est ce qu'on doit déplacer cette méthode (ou une partie) vers le modèle?
+        Queue<Spot> queue = farm.getPathFinder().findPath(
+                farm.getSelectedEntity().getPosition(),
+                farm.getSpot(destRow, destColum)
+        );
+
+        farm.getSelectedEntity().setPath(queue);
+
+        int order = queue.size();
+        for(Spot s: queue){
+            //Highlight the path in land
+            order--;
+            world.getLand().addSpotEntity(s, farm.getSelectedEntity(), order);
+        }
+
+        //We unblock the screen for the user
+        world.setInMovementChoiceState(false);
+
+        if(farm.getSelectedEntity().getThread() == null || !farm.getSelectedEntity().getThread().isAlive()){
+            farm.getSelectedEntity().startNewThread();
+        }
+
+    }
+
     public MouseAdapter getFarmAnimalSellHandler(FarmAnimal fa) {
         return new MouseAdapter() {
             @Override
@@ -117,9 +146,59 @@ public class Controller {
                 System.out.print("Animal sold");
                 try {
                     farm.getBank().deposit(fa.get_selling_price());
+                    farm.removeEntity(fa);
                 } catch (UnauthorizedAction s) {
                     //TODO
                 }
+            }
+        };
+    }
+
+    public ActionListener getEweBuyHandler() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action to perform when the "Buy an ewe" button is clicked
+                System.out.println("An ewe has been bought.");
+                // Set the purchase mode to EWE
+                world.setPurchaseMode(PurchaseType.EWE);
+
+            }
+        };
+    }
+
+    public ActionListener getSheepBuyHandler() {
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action to perform when the "Buy a sheep" button is clicked
+                System.out.println("A sheep has been bought.");
+                // Set the purchase mode to SHEEP
+                world.setPurchaseMode(PurchaseType.SHEEP);
+            }
+        };
+    }
+
+    public ActionListener getHenBuyHandler(){
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action to perform when the "Buy a hen" button is clicked
+                System.out.println("A hen has been bought.");
+                // Set the purchase mode to HEN
+                world.setPurchaseMode(PurchaseType.HEN);
+            }
+        };
+    }
+
+    public ActionListener getShepherdHireHandler(){
+        return new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action to perform when the "Hire a shepherd" button is clicked
+                System.out.println("A shepherd has been hired.");
+                // Set the purchase mode to SHEPHERD
+                world.setPurchaseMode(PurchaseType.SHEPHERD);
             }
         };
     }
@@ -131,16 +210,12 @@ public class Controller {
                 System.out.printf("Resource %s collected", r.get_name());
                 try {
                     r.collect();
+                    farm.getBank().deposit(r.get_selling_price());
                 } catch (Exception ex) {
                     //TODO
                 }
             }
         };
-    }
-
-    //TODO : est-ce que c'est bien ce genre de fonction qu'on veut créer pour commencer les threads ?
-    public void start_thread(Thread t){
-        t.start();
     }
 
 
