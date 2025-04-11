@@ -21,12 +21,13 @@ public class WolfDen extends Den {
         }
     }
 
-    @Override //TODO
+
+    @Override
     public String getSpecies() {
         return null;
     }
 
-    @Override //TODO
+    @Override
     public int get_buying_price() {
         return 0;
     }

@@ -31,6 +31,10 @@ public class Main {
         farm.addEntity(SHEEP_TEST_1);
 //        farm.setSelectedEntity(SHEPHERD_TEST_1);
 
+
+        // Initialiser les dens de prédateurs (Génère des dens de loups et de renards qui spawneront leurs prédateurs)
+        farm.initPredators();
+
         //Crée la grille (Land) + panneau de contrôle (ControlPanel)
         World world = new World(farm);
         world.entityGenerateMetaData(SHEPHERD_TEST_1);

@@ -24,25 +24,33 @@ public class Bank {
     public Bank(){
         balance = INITIAL_BALANCE;
     }
-    public static int get_price(Entity e) { //throws InvalidState {
-        return switch (e) {
-            case Ewe ewe -> PRICE_EWE;
-            case Sheep sheep -> PRICE_SHEEP;
-            case Hen hen -> PRICE_HEN;
-            case Shepherd shepherd -> SALARY_SHEPHERD;
-            case null, default -> throw new NoSuchMethodError("Method get_price for another entity than ewe, sheep, hen, or shepherd is not defined.");
-        };
-        //throw new InvalidState("We can get the price of an Ewe, a Sheep, a Hen or the salary of a Sheperd only.");
+    public static int get_price(Entity e) {
+        if (e instanceof Ewe) {
+            return PRICE_EWE;
+        } else if (e instanceof Sheep) {
+            return PRICE_SHEEP;
+        } else if (e instanceof Hen) {
+            return PRICE_HEN;
+        } else if (e instanceof Shepherd) {
+            return SALARY_SHEPHERD;
+        } else {
+            throw new NoSuchMethodError("Method get_price for another entity than ewe, sheep, hen, or shepherd is not defined.");
+        }
     }
 
-    public static int get_price(Resource r){
-        return switch (r) {
-            case Milk milk -> 20;
-            case Wool wool -> 20;
-            case Egg egg -> 10;
-            case null, default -> throw new NoSuchMethodError("Method get_price for another resource than wool, egg, or milk is not defined.");
-        };
+    public static int get_price(Resource r) {
+        if (r instanceof Milk) {
+            return 20;
+        } else if (r instanceof Wool) {
+            return 20;
+        } else if (r instanceof Egg) {
+            return 10;
+        } else {
+            throw new NoSuchMethodError("Method get_price for another resource than wool, egg, or milk is not defined.");
+        }
     }
+
+
 
     public void deposit(int amount){
         balance += amount;
@@ -53,4 +61,5 @@ public class Bank {
     public int getBalance(){
         return balance;
     }
+
 }

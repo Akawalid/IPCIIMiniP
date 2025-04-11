@@ -34,4 +34,5 @@ public class TestWolfPropagation {
 
         System.out.println("Test terminé.");
     }
+
 }
