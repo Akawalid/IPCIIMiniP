@@ -1,10 +1,6 @@
 package Model.FarmAnimals;
 
-import java.util.Iterator;
-
-import Model.AgeState;
 import Model.Farm;
-import Model.Entity;
 
 /**
  * Simulation thread that updates the model's state.

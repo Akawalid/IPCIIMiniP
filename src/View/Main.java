@@ -3,7 +3,6 @@ package View;
 import Model.Farm;
 import Model.FarmAnimals.Sheep;
 import Model.FarmAnimals.UpdateAgeThread;
-import Model.Shepherd.FindPath;
 import Model.Shepherd.Shepherd;
 
 import Controller.Controller;

@@ -36,7 +36,7 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
 
     //move is an abstract methode because each entity has its own way of moving.
     //move method throws InvalidCoordinates in case if the user clicks on an invalid spot such as a tree, or a rock...
-    public void move() throws InvalidCoordinates {
+    public synchronized void move() throws InvalidCoordinates {
         if (path.isEmpty()) {
             return; // No movements in the queue
         }
@@ -128,5 +128,9 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
     // ### Buy & Sell ###
     public abstract int get_buying_price() throws UnauthorizedAction;
     public abstract int get_selling_price() throws UnauthorizedAction;
+    public void reactToAreaChange() {
+        // This method is called when the spot where the entity is positioned becomes protected or unproteted
+        //it is redefined in predators
+    }
 
 }

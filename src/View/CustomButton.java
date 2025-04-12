@@ -49,9 +49,7 @@ public class CustomButton extends JButton {
     }
 
     private void playClickSound() {
-        System.out.println("aaaaaaaaaaaaaaa");
         if (clickSound != null) {
-            System.out.println("bbbbbbbbbb");
             clickSound.setFramePosition(0); // Rewind to start
             clickSound.start();
         }

@@ -22,6 +22,7 @@ public class Spot {
     }
     public void setIsProtectedArea(boolean protectedArea) {
         isProtectedArea = protectedArea;
+        if(positionnable != null) positionnable.reactToAreaChange();
     }
     public boolean isProtectedArea() {
         return isProtectedArea;

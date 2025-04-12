@@ -2,27 +2,28 @@ package Model.Predators;
 
 import Model.Entity;
 import Model.Farm;
+import Model.Positionnable;
 import Model.Spot;
 
 import java.util.Iterator;
 
-public abstract class Den implements Runnable {
+public abstract class Den extends Positionnable implements Runnable {
     private static final int MAX_WOLVES = 5;
     protected Farm farm;
-    private Spot position;
     protected boolean active;
 
     public Den(Spot s, Farm farm) {
-        this.position = s;
-        this.position.setIsTraversable(false);
-        this.position.setPositionnable(null);
+        super(s);
+
         this.farm = farm;
         this.active = true;
     }
 
-    public Spot getPosition() {
-        return position;
+    public void reactToAreaChange() {
+        active = !this.position.isProtectedArea();
     }
+
+    public boolean isActive(){return active;}
 
     /**
      * Méthode abstraite qui spawn un prédateur (Wolf ou Fox) depuis le den.

@@ -26,4 +26,6 @@ public abstract class Positionnable {
         assert(position != null);
         return position;
     }
+
+    public abstract void reactToAreaChange();
 }

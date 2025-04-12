@@ -4,8 +4,6 @@ import Model.Entity;
 import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
 import Model.FarmAnimals.FarmAnimal;
-import Model.FarmAnimals.Ewe;
-import Model.FarmAnimals.Sheep;
 import Model.Shepherd.FindPath;
 import Model.Spot;
 import Model.Exceptions.InvalidCoordinates;

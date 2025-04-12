@@ -73,7 +73,10 @@ public class Land extends JPanel {
         for (int row = 0; row < Farm.HEIGHT; row++) {
             for (int col = 0; col < Farm.WIDTH; col++) {
 
-                if(!farm.getSpot(row, col).isTraversable()) g.setColor(Color.gray);
+                if(!farm.getSpot(row, col).isTraversable()) {
+                    g.setColor(Color.MAGENTA);
+                }
+                else if(farm.getSpot(row, col).isProtectedArea()) g.setColor(new Color(200, 100, 200, 100));
                 else g.setColor(defaultColor);
 
                 g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
@@ -120,7 +123,10 @@ public class Land extends JPanel {
             Den d = it.next();
             int y = rowOfModelToView(d.getPosition().getRow());
             int x = colOfModelToView(d.getPosition().getCol());
-            g.setColor(Color.green);
+            if(d.isActive())
+                g.setColor(Color.green);
+            else
+                g.setColor(new Color(0, 255, 9, 100));
             g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
         }
         g.setColor(null);

@@ -1,6 +1,5 @@
 package Model.Predators;
 
-import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
 import Model.Spot;
 

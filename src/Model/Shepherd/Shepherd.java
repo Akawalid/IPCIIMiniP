@@ -10,8 +10,8 @@ import java.util.HashSet;
 
 public class Shepherd extends Entity {
     public static int PROTECTION_RADIUS = 3;
-    private int PRICE = 80;
-    private Farm farm;
+    private final int PRICE = 80;
+    private final Farm farm;
     public Shepherd(Spot s, Farm farm) {
         super(s);
         this.farm = farm;
@@ -41,6 +41,7 @@ public class Shepherd extends Entity {
             }
         }
         for(Spot s: chunk){
+            System.out.println("aaaaaaaaaaaa " + s.getRow() + "; " + s.getCol());
             s.setIsProtectedArea(false);
         }
     }

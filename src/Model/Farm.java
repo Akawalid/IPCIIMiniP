@@ -3,6 +3,7 @@ package Model;
 import Model.FarmAnimals.FarmAnimal;
 //import Model.Predators.FoxDen;
 import Model.Predators.Den;
+import Model.Predators.Predator;
 import Model.Shepherd.*;
 import Model.Predators.WolfDen;
 
@@ -30,6 +31,7 @@ public class Farm {
 
         initLand();
         selectedEntity = null;
+        (new CleanDeadEntitiesThread(this)).start();
     }
 
     private void initLand(){
@@ -124,6 +126,23 @@ public class Farm {
         return null;
     }
 
+    public void cleanDeadEntities(){
+        Iterator<Entity> it = creatures.iterator();
+        while (it.hasNext()) {
+            Entity e = it.next();
+            if (e instanceof FarmAnimal) {
+                FarmAnimal animal = (FarmAnimal) e;
+                if (animal.getState() == AgeState.DEAD)
+                    removeEntity(it, e);
+            } else if(e instanceof Predator){
+                Predator predator = (Predator) e;
+                if (predator.getIsDead()){
+                    removeEntity(it, e);
+                }
+            }
+        }
+    }
+
     /**
      * Updates the age of all farm animals and removes those that are dead.
      * This method is synchronized to prevent concurrent modifications.
@@ -138,7 +157,6 @@ public class Farm {
                 if (animal.getState() == AgeState.DEAD)
                     // Supprime en toute sécurité l'élément actuellement itéré
                     removeEntity(it, e);
-
             }
         }
     }
@@ -209,7 +227,12 @@ public class Farm {
         HashSet<Spot> chunk = new HashSet<>();
         for (int i = s.getRow() - radius; i <= s.getRow() + radius; i++){
             for (int j = s.getCol() - radius; j <= s.getCol() + radius; j++){
-                if(i * i + j * j > radius * radius || i < 0 || i >= HEIGHT || j < 0 || j >= WIDTH){
+                if(
+                        (i - s.getRow()) * (i - s.getRow())
+                        +
+                        (j - s.getCol()) * (j - s.getCol())
+                        > radius * radius || i < 0 || i >= HEIGHT || j < 0 || j >= WIDTH
+                ){
                     continue;
                 }
                 chunk.add(getSpot(i, j));
