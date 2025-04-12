@@ -6,17 +6,13 @@ import Model.Shepherd.FindPath;
 
 import java.util.*;
 
-import static Model.AgeState.MATURE;
-import static Model.AgeState.OLD;
-
-public abstract class Entity implements Comparable<Entity> {
+public abstract class Entity extends Positionnable implements Comparable<Entity> {
     //This class represents all the living creatures of the game
     //They share proprieties like: move, position, name and id
     //It is abstract because we shouldn't have an animal of type that is strictly equal to entity (absurd).
     private static int idCounter = 0;
     //We need this attribute here in order to get the position of the active entity from the controller easily
-    protected Spot position;
-    private ArrayDeque<Spot> path; // Queue to store movements
+    protected ArrayDeque<Spot> path; // Queue to store movements
     private EntityMovementThread thread;
     protected final int id;
     // An entity's priority depends on its distance to the target:
@@ -25,33 +21,12 @@ public abstract class Entity implements Comparable<Entity> {
     // TODO: Les bêtes bougent ? Si oui, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
 
     public Entity(Spot position){
-        assert (position != null);
-        setPosition(position);
+        super(position);
 
         id = idCounter;
         idCounter++;
 
         path = new ArrayDeque<>();
-    }
-
-    public void setPosition(Spot position){
-        assert (position != null);
-        assert (position.isTraversable());
-
-        if(this.position != null){
-            //this.position is null only while creating the instance
-            this.position.setIsTraversable(true);
-            this.position.setEntity(null);
-        }
-
-        this.position = position;
-        this.position.setEntity(this);
-        this.position.setIsTraversable(false);
-    }
-    public Spot getPosition(){
-        //Invariant: position != null
-        assert(position != null);
-        return position;
     }
 
     public int getId(){
@@ -76,7 +51,7 @@ public abstract class Entity implements Comparable<Entity> {
         assert(!path.isEmpty());
         setPosition(path.poll()); // Move to the new position
     }
-    private void handleConflict(){
+    protected void handleConflict(){
         /*
             We have two cases:
                 Recalculate path: in blockage case, when two entities move in opposite directions, or a new
@@ -84,25 +59,27 @@ public abstract class Entity implements Comparable<Entity> {
                 Wait
         */
         //Blockage case
+        assert(path.peek() != null );
+        assert (path.peek().getPositionnable()!= null);
 
-        assert (path.peek().getEntity()!= null);
-        if(path.peek().getEntity().path.isEmpty()){
+        assert(path.peek().getPositionnable() instanceof Entity);
+        if(((Entity) path.peek().getPositionnable()).path.isEmpty()){
             //recalculate path
             Spot destination = path.pop();
             FindPath.findPath(this.position, destination);
             return;
         }
-        if (path.peek().getEntity().path.peek() == this.position) {
+        if (((Entity) path.peek().getPositionnable()).path.peek() == this.position) {
             //the greater one calculates the path by convention
-            if(compareTo(path.peek().getEntity()) > 0){
+            if(compareTo(((Entity) path.peek().getPositionnable())) > 0){
                 Spot destination = path.pop();
                 setPath(
                         FindPath.findPath(this.position, destination)
                 );
             } else {
                 //the other one waits
-                Spot destination = path.peek().getEntity().path.pop();
-                path.peek().getEntity().setPath(
+                Spot destination = ((Entity) path.peek().getPositionnable()).path.pop();
+                ((Entity) path.peek().getPositionnable()).setPath(
                         FindPath.findPath(this.position, destination)
                 );
             }
@@ -128,7 +105,6 @@ public abstract class Entity implements Comparable<Entity> {
     public int hashCode() {
         return Objects.hash(id); // Same field as used in equals()
     }
-    public int getPathSize(){return path.size();}
     public EntityMovementThread getThread(){return  thread;}
     public void startNewThread(){
         // We store a thread in a attribute to avoid getting unexpected errors when the user changes the path
@@ -150,7 +126,7 @@ public abstract class Entity implements Comparable<Entity> {
     }
 
     // ### Buy & Sell ###
-    public abstract int get_buying_price();
+    public abstract int get_buying_price() throws UnauthorizedAction;
     public abstract int get_selling_price() throws UnauthorizedAction;
 
 }

@@ -42,7 +42,6 @@ public class Controller {
     }
 
     public MouseAdapter coordinatesHandler() {
-
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -72,7 +71,12 @@ public class Controller {
                         if (newEntity != null) {
                             farm.addEntity(newEntity);
                             spot.setIsTraversable(false); // Marquer le spot comme occupé
-                            farm.getBank().withdraw(newEntity.get_buying_price());
+                            try{
+                                farm.getBank().withdraw(newEntity.get_buying_price());
+                            } catch (UnauthorizedAction s) {
+                                //TODO: inform the vue to display the error
+
+                            }
                             System.out.println(world.getPurchaseMode() + " placed at (" + row + ", " + col + ")");
                         }
                         // Réinitialiser le mode d'achat et redessiner la grille

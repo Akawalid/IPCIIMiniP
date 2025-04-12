@@ -24,7 +24,7 @@ public class Main {
 
         //@TODO à terme choisir positions automatiquement (pas valeur brute)
         //Créer un Shepherd et placer sur la grille
-        SHEPHERD_TEST_1 = new Shepherd(farm.getSpot(0, 0));
+        SHEPHERD_TEST_1 = new Shepherd(farm.getSpot(0, 0), farm);
         farm.addEntity(SHEPHERD_TEST_1);
         //Créer un mouton
         SHEEP_TEST_1 = new Sheep(farm.getSpot(5, 5));

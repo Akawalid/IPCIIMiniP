@@ -7,9 +7,9 @@ import Model.Spot;
 import java.util.ArrayList;
 
 public class Sheep extends Ovidae{
-
+    private static final int PRICE = 100;
     public Sheep(Spot s) {
-        super(s);
+        super(s, PRICE);
     }
 
     @Override

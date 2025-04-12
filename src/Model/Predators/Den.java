@@ -2,53 +2,42 @@ package Model.Predators;
 
 import Model.Entity;
 import Model.Farm;
-import Model.Shepherd.Shepherd;
 import Model.Spot;
-import java.util.ArrayList;
-import java.util.List;
 
-public abstract class Den extends Entity implements Runnable {
+import java.util.Iterator;
+
+public abstract class Den implements Runnable {
+    private static final int MAX_WOLVES = 5;
     protected Farm farm;
+    private Spot position;
     protected boolean active;
 
     public Den(Spot s, Farm farm) {
-        super(s);
+        this.position = s;
+        this.position.setIsTraversable(false);
+        this.position.setPositionnable(null);
         this.farm = farm;
         this.active = true;
+    }
+
+    public Spot getPosition() {
+        return position;
     }
 
     /**
      * Méthode abstraite qui spawn un prédateur (Wolf ou Fox) depuis le den.
      */
     protected abstract void spawnPredator();
-
-    /**
-     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) à la case donnée.
-     */
-    /*protected List<Spot> getAdjacentSpots(Spot s) {
-        List<Spot> neighbors = new ArrayList<>();
-        int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
-        for (int[] d : directions) {
-            int newRow = s.getRow() + d[0];
-            int newCol = s.getCol() + d[1];
-            if (newRow >= 0 && newRow < Farm.HEIGHT && newCol >= 0 && newCol < Farm.WIDTH) {
-                neighbors.add(farm.getSpot(newRow, newCol));
+    private int numberOfLivingWolves() {
+        int count = 0;
+        for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
+            Entity entity = it.next();
+            if (entity instanceof Wolf) {
+                count++;
             }
         }
-        return neighbors;
-    }*/
-
-    /**
-     * Vérifie si un Shepherd se trouve sur une case adjacente.
-     */
-    /*protected boolean isShepherdNearby() {
-        for (Spot neighbor : farm.getAdjacentSpots(this.getPosition()) {
-            if (farm.getEntityInSpot(neighbor.getRow(), neighbor.getCol()) instanceof Shepherd) {
-                return true;
-            }
-        }
-        return false;
-    }*/
+        return count;
+    }
 
     @Override
     public void run() {
@@ -60,7 +49,7 @@ public abstract class Den extends Entity implements Runnable {
                 break;
             }*/
             // Sinon, le den spawn un prédateur
-            spawnPredator();
+            if(numberOfLivingWolves() < MAX_WOLVES) spawnPredator();
             try {
                 Thread.sleep(5000); // Délai entre chaque spawn
             } catch (InterruptedException e) {

@@ -18,10 +18,11 @@ public abstract class FarmAnimal extends Entity {
 
     //------------------- Attributes -------------------//
 
+    private final int PRICE;
     // ### Age evolution ###
 
     private int age;       // L'âge exprimé en nombre de cycles
-    private AgeState state;  // "Bébé", "Mature", "Vieux"
+    protected AgeState state;  // "Bébé", "Mature", "Vieux"
 
     // ### Resource production ###
     ArrayList<Resource> resourceList;
@@ -29,7 +30,7 @@ public abstract class FarmAnimal extends Entity {
     //------------------- Methods -------------------//
 
     /** constructor **/
-    public FarmAnimal(Spot s) {
+    public FarmAnimal(Spot s, int price) {
         super(s);
         //Age evolution
         // Initialiser à bébé
@@ -37,6 +38,7 @@ public abstract class FarmAnimal extends Entity {
         this.state = BABY;
         //Resource production
         resourceList = new ArrayList<>();
+        PRICE = price;
     }
 
     // ### Age evolution ###
@@ -74,31 +76,23 @@ public abstract class FarmAnimal extends Entity {
     public Iterator<Resource> getResources() {
         return resourceList.iterator();
     }
-
-    // ### Buy & Sell ###
     @Override
-    public int get_buying_price(){
-        return Bank.get_price(this);
+    public int get_buying_price() {
+        return PRICE;
     }
-
     @Override
     public int get_selling_price() throws UnauthorizedAction {
-        int price = Bank.get_price(this);
         if (this.state == MATURE) {
-            return price/2;
-        } else if (this.state == OLD) {
-            return price/10;
+            return PRICE/2;
         }
-        else {
+        if (this.state == OLD) {
+            return PRICE/10;
+        }
+
+        if(state == DEAD)
+            //Theoretically, it's impossible to enter this part of the code, because a dead animal disappears
+            throw new UnauthorizedAction("Impossible to sell a dead animal.");
+        else
             throw new UnauthorizedAction("Impossible to sell a BABY farm animal.");
-            //ou dead théoriquement
-        }
     }
-
-
-
-
-
-
-
 }

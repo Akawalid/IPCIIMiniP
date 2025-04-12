@@ -2,6 +2,7 @@ package Model;
 
 import Model.FarmAnimals.FarmAnimal;
 //import Model.Predators.FoxDen;
+import Model.Predators.Den;
 import Model.Shepherd.*;
 import Model.Predators.WolfDen;
 
@@ -13,6 +14,7 @@ public class Farm {
 
     public static final int WIDTH = 35, HEIGHT = 20;//spots
     private HashSet<Entity> creatures;
+    private ArrayList<Den> dens;
     private ArrayList<Spot> spots;
     private Bank bank;
     //this attribute represents the active entity on the farm, the one on which we want to apply operations
@@ -22,6 +24,7 @@ public class Farm {
         FindPath.farm = this;
         creatures = new HashSet<>();
         spots = new ArrayList<>();
+        dens = new ArrayList<>();
 
         bank = new Bank();
 
@@ -54,7 +57,9 @@ public class Farm {
                 && col < WIDTH
                 && getSpot(row, col).isTraversable();
     }
-
+    public Iterator<Den> getDens(){
+        return dens.iterator();
+    }
     public Iterator<Entity> getEntities(){
         //this method returns an iterator of the creatures,
         //It is a good way to ensure abstraction.
@@ -130,16 +135,13 @@ public class Farm {
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 animal.updateAge();
-                if (animal.getState() == AgeState.DEAD) {
-                    // Rendre la case traversable avant de supprimer l'entité
-                    e.getPosition().setIsTraversable(true);
+                if (animal.getState() == AgeState.DEAD)
                     // Supprime en toute sécurité l'élément actuellement itéré
-                    it.remove();
-                }
+                    removeEntity(it, e);
+
             }
         }
     }
-
 
     public void generateDens() {
         Random rand = new Random();
@@ -149,7 +151,7 @@ public class Farm {
         for (int i = 0; i < numWolfDens; i++) {
             Spot spot = getRandomTraversableSpot();
             WolfDen wolfDen = new WolfDen(spot, this);
-            addEntity(wolfDen);
+            dens.add(wolfDen);
             new Thread(wolfDen).start();
         }
         for (int i = 0; i < numFoxDens; i++) {
@@ -178,22 +180,6 @@ public class Farm {
         generateDens();
     }
 
-    /**
-     * Retourne la liste des cases adjacentes (haut, bas, gauche, droite) de la case donn�e.
-     */
-    public List<Spot> getAdjacentSpots(Spot s) {
-        List<Spot> neighbors = new ArrayList<>();
-        int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1} };
-        for (int[] d : directions) {
-            int newRow = s.getRow() + d[0];
-            int newCol = s.getCol() + d[1];
-            if (newRow >= 0 && newRow < Farm.HEIGHT && newCol >= 0 && newCol < Farm.WIDTH) {
-                neighbors.add(getSpot(newRow, newCol));
-            }
-        }
-        return neighbors;
-    }
-
     public void removeEntity(Entity e){
         /** This method removes an entity from the farm
          * it is used when an entity dies or when it is removed from the farm
@@ -205,4 +191,31 @@ public class Farm {
         creatures.remove(e);
         e.getPosition().setIsTraversable(true);
     }
+    public void removeEntity(Iterator<Entity> it, Entity e){
+        /** This method removes an entity from the farm
+         * it is used when an entity dies or when it is removed from the farm
+         */
+        //remove from Spot
+        e.getPosition().setIsTraversable(true);
+        e.getPosition().setPositionnable(null);
+
+        //remove from Farm
+        it.remove();
+    }
+    public HashSet<Spot> getChunk(Spot s, int radius){
+        /** This method returns a chunk of the farm
+         * it is used to get the chunk of the farm that is visible on the screen
+         */
+        HashSet<Spot> chunk = new HashSet<>();
+        for (int i = s.getRow() - radius; i <= s.getRow() + radius; i++){
+            for (int j = s.getCol() - radius; j <= s.getCol() + radius; j++){
+                if(i * i + j * j > radius * radius || i < 0 || i >= HEIGHT || j < 0 || j >= WIDTH){
+                    continue;
+                }
+                chunk.add(getSpot(i, j));
+            }
+        }
+        return chunk;
+    }
+
 }

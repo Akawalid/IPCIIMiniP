@@ -5,18 +5,26 @@ public class Spot {
     public static final int SIZE = 1;//1 * 1 metre²
     private int x, y;
     private boolean isTraversable;
-    private Entity entity;
+    private boolean isProtectedArea;
+    private Positionnable positionnable;
     public Spot(int x, int y) {
         this.x = x;
         this.y = y;
         isTraversable = true;
-        entity = null;
+        isProtectedArea = false;
+        positionnable = null;
     }
     public boolean isTraversable() {
         return isTraversable;
     }
     public void setIsTraversable(boolean traversable) {
         isTraversable = traversable;
+    }
+    public void setIsProtectedArea(boolean protectedArea) {
+        isProtectedArea = protectedArea;
+    }
+    public boolean isProtectedArea() {
+        return isProtectedArea;
     }
     public int getRow() {
         return x;
@@ -49,10 +57,10 @@ public class Spot {
         return Math.sqrt(dx * dx + dy * dy);
     }
 
-    public void setEntity(Entity entity) {
-        this.entity = entity;
+    public void setPositionnable(Positionnable positionnable) {
+        this.positionnable = positionnable;
     }
-    public Entity getEntity() {
-        return entity;
+    public Positionnable getPositionnable() {
+        return positionnable;
     }
 }

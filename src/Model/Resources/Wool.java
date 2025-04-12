@@ -1,9 +1,9 @@
 package Model.Resources;
 
 public class Wool extends Resource{
-    @Override
-    public int get_cooldown_max() {
-        return COOLDOWN_MAX_WOOL;
+    private static final int COOLDOWN_MAX_WOOL = 10, PRICE = 20;
+    public Wool() {
+        super(PRICE, COOLDOWN_MAX_WOOL);
     }
 
     @Override
