@@ -77,7 +77,6 @@ public class Farm {
     }
 
     public Entity getEntityInSpot(int row, int col){
-        //TODO:Shlag
         Spot s = getSpot(row, col);
         for(Entity e: creatures)
             if(e.getPosition() == s) {
@@ -212,7 +211,11 @@ public class Farm {
 
         //remove from Farm
         creatures.remove(e);
-        e.getPosition().setIsTraversable(true);
+
+        //if it was selected, then stop selecting it
+        if(e == selectedEntity) selectedEntity = null;
+
+        System.out.printf("%s-%d died.\n", e.getSpecies(), e.getId());
     }
     public void removeEntity(Iterator<Entity> it, Entity e){
         /** This method removes an entity from the farm

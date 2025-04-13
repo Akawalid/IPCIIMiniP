@@ -10,7 +10,6 @@ public class Bank {
         balance = INITIAL_BALANCE;
     }
 
-
     public void deposit(int amount){
         balance += amount;
     }
