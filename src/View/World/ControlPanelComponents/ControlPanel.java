@@ -1,30 +1,29 @@
-package View.ControlPanelComponents;
+package View.World.ControlPanelComponents;
 
 import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.FarmAnimal;
 import Model.Shepherd.Shepherd;
 
-import Controller.Controller;
+import Controller.WorldController;
 
-import View.ControlPanelComponents.Action.ActionPanel;
-import View.ControlPanelComponents.Action.FarmAnimalActionPanel;
-import View.ControlPanelComponents.Action.ShepherdActionPanel;
-import View.ControlPanelComponents.Information.FarmAnimalInformationPanel;
-import View.ControlPanelComponents.Information.InformationPanel;
-import View.ControlPanelComponents.Information.ShepherdInformationPanel;
-import View.World;
+import View.World.ControlPanelComponents.Action.ActionPanel;
+import View.World.ControlPanelComponents.Action.FarmAnimalActionPanel;
+import View.World.ControlPanelComponents.Action.ShepherdActionPanel;
+import View.World.ControlPanelComponents.Information.FarmAnimalInformationPanel;
+import View.World.ControlPanelComponents.Information.InformationPanel;
+import View.World.ControlPanelComponents.Information.ShepherdInformationPanel;
+import View.World.World;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ControlPanel extends JPanel {
+public class ControlPanel extends JSplitPane {
     //This class represents the panel that comes on the left side of the screen, it will contain the entities information
     // and actions.
 
     //MARGIN, represents the margin between the information, actions panels and the whole ControlPanel
-    public static final int W = 250, H_INFO_PANEL = 200, H_ACTION_PANEL = 200, MARGIN = 10;
-    private static final Component MARGE = Box.createRigidArea(new Dimension(0, MARGIN));
+    public static final int W = 250, H = 700;
 
     private GameStatePanel gameStatePanel;
     //first part of the panel is the information panel, on top
@@ -34,36 +33,41 @@ public class ControlPanel extends JPanel {
     //second part of the panel is the action panel, on the bottom
     private ActionPanel actionPanel;
 
-    private Controller controller;
+    private WorldController controller;
     private Farm farm;
-    //private final HashMap<Entity, EntityMetaData> entitiesMetaData;
     private World world;
+    private JSplitPane sp, sp2;
 
 
-    public ControlPanel(Farm farm, World world ){
-        super();
+    public ControlPanel(Farm farm, World world){
+        super(JSplitPane.VERTICAL_SPLIT);
+
         this.farm = farm;
         this.world = world;
-
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+        setPreferredSize(new Dimension(W, H));
         gameStatePanel = new GameStatePanel(farm);
+        gameStatePanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        gameStatePanel.setPreferredSize(new Dimension(W, 100));
+        gameStatePanel.setBackground(Color.red);
         marketPanel = new MarketPanel(world);
+        marketPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        marketPanel.setPreferredSize(new Dimension(W, 100));
 
-        add(gameStatePanel);
-        add(Box.createRigidArea(new Dimension(0, MARGIN)));
-        add(marketPanel);
-        add(Box.createRigidArea(new Dimension(0, MARGIN)));
+        add(gameStatePanel, JSplitPane.TOP);
+        sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        sp.setTopComponent(marketPanel);
+        add(sp, JSplitPane.BOTTOM);
+        sp2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        sp.setBottomComponent(sp2);
     }
 
     public void updateActiveEntity() {
 
         if(informationPanel != null){
-            remove(informationPanel);
+            sp2.remove(informationPanel);
         }
         if(actionPanel != null){
-            remove(actionPanel);
-            remove(MARGE);
+            sp2.remove(actionPanel);
         }
 
         Entity e = farm.getSelectedEntity();
@@ -89,13 +93,12 @@ public class ControlPanel extends JPanel {
             if(controller != null) connect(controller);
 
             //in case e is not null
-            add(informationPanel);
-            add(MARGE);
-            add(actionPanel);
+            sp2.add(informationPanel, JSplitPane.TOP);
+            sp2.add(actionPanel, JSplitPane.BOTTOM);
         }
     }
 
-    public void connect(Controller c){
+    public void connect(WorldController c){
         //Invariant: connect should be called for the first time by the controller
         //We can say that by a strengthened condition as below.
         assert(c != null);

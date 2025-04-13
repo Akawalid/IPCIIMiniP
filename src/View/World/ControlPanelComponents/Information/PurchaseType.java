@@ -1,4 +1,4 @@
-package View.ControlPanelComponents.Information;
+package View.World.ControlPanelComponents.Information;
 
 /* Enum PurchaseTyp representing the types of purchases available in the market */
 public enum PurchaseType {

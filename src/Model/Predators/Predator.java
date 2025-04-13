@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class Predator extends Entity implements Runnable {
     protected Farm farm;
-    private boolean isDead;
+    protected boolean isDead;
 
     public Predator(Spot s, Farm farm) {
         super(s);

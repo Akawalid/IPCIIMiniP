@@ -19,7 +19,7 @@ public class Wolf extends Predator {
     @Override
     public void run() {
         Random rand = new Random();
-        while (true) {
+        while (!isDead) {
             // 1. V�rifier et tuer toute proie adjacente (Ewe ou Sheep)
             checkAndKillPrey();
 

@@ -1,4 +1,4 @@
-package View.ControlPanelComponents;
+package View.World.ControlPanelComponents;
 
 import javax.swing.*;
 

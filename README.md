@@ -15,7 +15,7 @@ Les déplacements des éleveurs utilisent l'algorithme A* pour trouver un chemin
       **Remarque** : Le contrôleur n'est pas finalisé. Actuellement, on peut déplacer un éleveur d'un point A à un point B de manière statique.
 
 - **Procédure pour tester** :
-    1. Dans le constructeur de `View.ControlPanelComponents.ControlPanel`, commenter la ligne :
+    1. Dans le constructeur de `View.World.ControlPanelComponents.ControlPanel`, commenter la ligne :
        ```java
        // setActiveEntity(new Sheep("Lucie"));
        ```

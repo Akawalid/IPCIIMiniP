@@ -1,18 +1,17 @@
-package View;
+package View.World;
 
 import Model.Entity;
 import Model.Farm;
-import Controller.Controller;
-import View.ControlPanelComponents.ControlPanel;
-//import View.ControlPanelComponents.Information.PurchaseType;
-import View.ControlPanelComponents.Information.PurchaseType;
-import View.ControlPanelComponents.StorePanel;
+import Controller.WorldController;
+import View.World.ControlPanelComponents.ControlPanel;
+//import View.World.ControlPanelComponents.Information.PurchaseType;
+import View.World.ControlPanelComponents.Information.PurchaseType;
+import View.World.ControlPanelComponents.StorePanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.util.HashMap;
 
 public class World extends JLayeredPane {
     //World is the page that visualizes the core of the game, it contains the land and the control panel.
@@ -23,7 +22,7 @@ public class World extends JLayeredPane {
     private JPanel shadowPanel;
     private StorePanel storePanel;
     //worldPanel, is the main panel that contains the land and the control panel.
-    private JPanel worldPanel;
+    private JSplitPane worldPanel;
 
     private Land land;
     private ControlPanel controlPanel;
@@ -37,16 +36,15 @@ public class World extends JLayeredPane {
         this.farm = farm;
         //entitiesMetaData = new HashMap<>();
 
-        worldPanel = new JPanel();
-        worldPanel.setLayout(new BorderLayout());
+        worldPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
         // World Panel (Left Column)
         land = new Land(farm);
-        worldPanel.add(land, BorderLayout.CENTER);
+        worldPanel.add(land, JSplitPane.LEFT);
 
         // Control Panel (Right Column)
         controlPanel = new ControlPanel(farm, this);
-        worldPanel.add(controlPanel, BorderLayout.EAST);
+        worldPanel.add(controlPanel, JSplitPane.RIGHT);
 
         add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer
 
@@ -93,7 +91,7 @@ public class World extends JLayeredPane {
         repaint();
     }
 
-    public void connect(Controller c){
+    public void connect(WorldController c){
         land.connect(c);
         controlPanel.connect(c);
     }
@@ -113,11 +111,6 @@ public class World extends JLayeredPane {
     public void setInMovementChoiceState(boolean state){inMovementChoiceState = state;}
 
     public Land getLand(){return land;}
-    public void entityGenerateMetaData(Entity e){
-        //This method should be called by the controller just after
-        //a purchase of an entity.
-        //entitiesMetaData.put(e, new EntityMetaData());
-    }
 
     //Sets the current purchase mode.
     public void setPurchaseMode(PurchaseType pt){

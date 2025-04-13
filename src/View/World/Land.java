@@ -1,6 +1,6 @@
-package View;
+package View.World;
 
-import Controller.Controller;
+import Controller.WorldController;
 import Model.Entity;
 import Model.Farm;
 import Model.FarmAnimals.Ewe;
@@ -8,9 +8,7 @@ import Model.FarmAnimals.Hen;
 import Model.FarmAnimals.Sheep;
 import Model.Predators.Den;
 import Model.Predators.Wolf;
-import Model.Predators.WolfDen;
 import Model.Shepherd.Shepherd;
-import Model.Spot;
 
 import javax.swing.*;
 import java.awt.*;
@@ -134,7 +132,7 @@ public class Land extends JPanel {
 
     private int rowOfModelToView(int row){return row * CELL_SIZE;}
     private int colOfModelToView(int col){return (Farm.WIDTH - col - 1) * CELL_SIZE;}
-    public void connect(Controller c){
+    public void connect(WorldController c){
         addMouseListener(c.coordinatesHandler());
     }
 

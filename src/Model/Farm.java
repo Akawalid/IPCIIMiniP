@@ -4,6 +4,7 @@ import Model.FarmAnimals.FarmAnimal;
 //import Model.Predators.FoxDen;
 import Model.Predators.Den;
 import Model.Predators.Predator;
+import Model.Predators.Wolf;
 import Model.Shepherd.*;
 import Model.Predators.WolfDen;
 
@@ -138,6 +139,7 @@ public class Farm {
                 Predator predator = (Predator) e;
                 if (predator.getIsDead()){
                     removeEntity(it, e);
+
                 }
             }
         }

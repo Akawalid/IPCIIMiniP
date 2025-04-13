@@ -1,0 +1,103 @@
+//package View.MainMenu;
+//
+//import Controller.MainMenuController;
+//
+//import javax.swing.*;
+//import java.awt.*;
+//import java.io.IOException;
+//import java.util.Objects;
+//import javax.imageio.ImageIO;
+//
+//public class MainMenu extends JPanel {
+//    private Image backgroundImage;
+//    private JButton centerButton;
+//
+//    public MainMenu() {
+//        // Load the background image
+//        try {
+//            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/Assets/images/bg.jpg")));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            backgroundImage = null; // Fallback if image fails to load
+//        }
+//
+//        setLayout(new GridBagLayout()); // Use GridBagLayout for better positioning
+//
+//        // Create the single center button with an image
+//        centerButton = createImageButton("/Assets/images/start_butt.png"); // Change to your button image path
+//
+//        // Add the single button to the center, slightly below middle
+//        GridBagConstraints gbc = new GridBagConstraints();
+//        gbc.gridx = 0;
+//        gbc.gridy = 0;
+//        gbc.weightx = 1.0;
+//        gbc.weighty = 1.0;
+//        gbc.anchor = GridBagConstraints.CENTER;
+//        gbc.insets = new Insets(50, 0, 0, 0); // This moves the button slightly down
+//        add(centerButton, gbc);
+//    }
+//
+//    private JButton createImageButton(String imagePath) {
+//        JButton button = new JButton();
+//        try {
+//            // Chargement de l'image originale
+//            Image originalImg = ImageIO.read(Objects.requireNonNull(getClass().getResource(imagePath)));
+//
+//            // Redimensionner l'image à la taille souhaitée
+//            // Changez ces valeurs selon vos besoins
+//            int newWidth = 200;  // largeur souhaitée
+//            int newHeight = 80;  // hauteur souhaitée
+//
+//            Image scaledImg = originalImg.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+//            button.setIcon(new ImageIcon(scaledImg));
+//
+//            // Supprimer tous les styles du bouton
+//            button.setBorderPainted(false);
+//            button.setContentAreaFilled(false);
+//            button.setFocusPainted(false);
+//            button.setOpaque(false);
+//            button.setMargin(new Insets(0, 0, 0, 0));
+//
+//            // Définir la taille préférée du bouton pour qu'elle corresponde à l'image
+//            button.setPreferredSize(new Dimension(newWidth, newHeight));
+//        } catch (IOException | NullPointerException e) {
+//            e.printStackTrace();
+//            button.setText("Play"); // Solution de repli si le chargement de l'image échoue
+//        }
+//        return button;
+//    }
+//
+//    @Override
+//    protected void paintComponent(Graphics g) {
+//        super.paintComponent(g);
+//        if (backgroundImage != null) {
+//            // Draw the background image (scaled to fit the panel)
+//            double scale = (double) backgroundImage.getHeight(this) / backgroundImage.getWidth(this);
+//            g.drawImage(backgroundImage, 0, 0, getWidth(), (int) (scale * getWidth()), this);
+//        }
+//    }
+//
+//    public void connect(MainMenuController controller) {
+//        centerButton.addMouseListener(controller.getStartButtonListener());
+//    }
+//
+//    public static void main(String[] args) {
+//        // Create the main JFrame (game window)
+//        JFrame frame = new JFrame("Game Main Menu");
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setSize(1300, 700); // Set window size
+//        frame.setResizable(false); // Optional: Prevent resizing
+//
+//        // Add the MainMenu panel (with background image)
+//        MainMenu mainMenuPanel = new MainMenu();
+//        frame.add(mainMenuPanel);
+//
+//        // Center the window on screen
+//        frame.setLocationRelativeTo(null);
+//
+//        // Make the window visible
+//        frame.setVisible(true);
+//    }
+//
+//
+//}

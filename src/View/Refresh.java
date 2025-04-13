@@ -1,13 +1,15 @@
 package View;
 
+import View.World.World;
+
 import javax.swing.*;
 
 public class Refresh extends Thread {
     public static final int DELAY = 100;
-    private final World toRefresh;
+    private final PrincipalPanel toRefresh;
     private volatile boolean running = true;
 
-    public Refresh(World toRefresh) {
+    public Refresh(PrincipalPanel toRefresh) {
         this.toRefresh = toRefresh;
     }
 
