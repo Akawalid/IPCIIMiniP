@@ -1,7 +1,7 @@
-package Model.FarmAnimals;
+package Model.Entities.FarmAnimals;
 
 import Model.Resources.Egg;
-import Model.Spot;
+import Model.Position.Spot;
 
 public class Hen extends Galinacea{
     private static final int PRICE = 40;

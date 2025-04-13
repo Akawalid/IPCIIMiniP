@@ -1,14 +1,14 @@
 package View.World;
 
 import Controller.WorldController;
-import Model.Entity;
+import Model.Entities.Entity;
 import Model.Farm;
-import Model.FarmAnimals.Ewe;
-import Model.FarmAnimals.Hen;
-import Model.FarmAnimals.Sheep;
-import Model.Predators.Den;
-import Model.Predators.Wolf;
-import Model.Shepherd.Shepherd;
+import Model.Entities.FarmAnimals.Ewe;
+import Model.Entities.FarmAnimals.Hen;
+import Model.Entities.FarmAnimals.Sheep;
+import Model.Entities.Predators.Den;
+import Model.Entities.Predators.Wolf;
+import Model.Entities.Shepherd;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,10 +1,8 @@
-package Model.Predators;
+package Model.Entities.Predators;
 
-import Model.Entity;
+import Model.Entities.Entity;
 import Model.Farm;
-import Model.Spot;
-import java.util.ArrayList;
-import java.util.List;
+import Model.Position.Spot;
 
 public abstract class Predator extends Entity implements Runnable {
     protected Farm farm;

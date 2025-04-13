@@ -1,4 +1,4 @@
-package Model.FarmAnimals;
+package Model.Entities.FarmAnimals;
 
 import Model.Farm;
 

@@ -1,11 +1,11 @@
-package Model.Predators;
+package Model.Entities.Predators;
 
-import Model.Entity;
+import Model.Entities.Entity;
 import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
-import Model.FarmAnimals.FarmAnimal;
-import Model.Shepherd.FindPath;
-import Model.Spot;
+import Model.Entities.FarmAnimals.FarmAnimal;
+import Model.Position.FindPath;
+import Model.Position.Spot;
 import Model.Exceptions.InvalidCoordinates;
 
 import java.util.*;

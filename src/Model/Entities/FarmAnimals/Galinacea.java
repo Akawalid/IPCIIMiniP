@@ -1,6 +1,6 @@
-package Model.FarmAnimals;
+package Model.Entities.FarmAnimals;
 
-import Model.Spot;
+import Model.Position.Spot;
 
 public abstract class Galinacea extends FarmAnimal{
 

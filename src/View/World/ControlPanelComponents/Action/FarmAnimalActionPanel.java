@@ -1,6 +1,6 @@
 package View.World.ControlPanelComponents.Action;
 
-import Model.FarmAnimals.FarmAnimal;
+import Model.Entities.FarmAnimals.FarmAnimal;
 import Controller.WorldController;
 import View.CustomButton;
 

@@ -1,8 +1,11 @@
-package Model;
+package Model.Entities;
 
 import Model.Exceptions.InvalidCoordinates;
 import Model.Exceptions.UnauthorizedAction;
-import Model.Shepherd.FindPath;
+import Model.Position.EntityMovementThread;
+import Model.Position.Positionnable;
+import Model.Position.Spot;
+import Model.Position.FindPath;
 
 import java.util.*;
 

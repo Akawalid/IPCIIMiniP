@@ -1,12 +1,12 @@
-//package Model.Predators;
+//package Model.Entities.Predators;
 //
 //import static org.junit.Assert.*;
 //import org.junit.Test;
 //import Model.Farm;
-//import Model.AgeState;
+//import Model.Entities.FarmAnimals.AgeState;
 //import Model.Exceptions.InvalidCoordinates;
-//import Model.FarmAnimals.Sheep;
-//import Model.Predators.Wolf;
+//import Model.Entities.FarmAnimals.Sheep;
+//import Model.Entities.Predators.Wolf;
 //import java.awt.Point;
 //
 //public class MainPredateursTest {

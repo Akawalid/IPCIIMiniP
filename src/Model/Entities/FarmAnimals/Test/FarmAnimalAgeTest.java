@@ -1,10 +1,10 @@
-package Model.FarmAnimals.Test;
+package Model.Entities.FarmAnimals.Test;
 
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //import org.junit.jupiter.api.Test;
-import Model.FarmAnimals.Sheep;
-import Model.AgeState;
-import Model.Spot;
+import Model.Entities.FarmAnimals.Sheep;
+import Model.Entities.FarmAnimals.AgeState;
+import Model.Position.Spot;
 
 /**
  * Test class to verify the evolution of age and state of a farm animal.

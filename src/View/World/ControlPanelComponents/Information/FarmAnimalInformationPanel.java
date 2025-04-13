@@ -1,7 +1,7 @@
 package View.World.ControlPanelComponents.Information;
 
 import Controller.WorldController;
-import Model.FarmAnimals.FarmAnimal;
+import Model.Entities.FarmAnimals.FarmAnimal;
 import Model.Resources.Resource;
 
 import javax.swing.*;

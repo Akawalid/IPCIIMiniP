@@ -1,12 +1,9 @@
 package Controller;
 
-import Model.Farm;
-import Model.FarmAnimals.Sheep;
-import Model.FarmAnimals.UpdateAgeThread;
-import Model.Shepherd.Shepherd;
+import Model.Entities.FarmAnimals.Sheep;
+import Model.Entities.Shepherd;
 import View.MainMenu.MainMenu;
 import View.PrincipalPanel;
-import View.World.World;
 
 public class Controller {
     public static Shepherd SHEPHERD_TEST_1;
