@@ -1,7 +1,7 @@
-package Model.Predators;
+package Model.Entities.Predators;
 
 import Model.Farm;
-import Model.Spot;
+import Model.Position.Spot;
 
 public class WolfDen extends Den {
     public WolfDen(Spot s, Farm farm) {

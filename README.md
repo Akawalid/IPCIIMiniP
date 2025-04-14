@@ -7,7 +7,7 @@ Les déplacements des éleveurs utilisent l'algorithme A* pour trouver un chemin
 
 - **Tests fournis** :
     - **Test 1** :  
-      Classe : `Model.Shepherd.FindPath`  
+      Classe : `Model.Position.FindPath`  
       Objectif : Tester l'algorithme A* pour trouver un chemin.
     - **Test 2** :  
       Classe : `View.Main`  

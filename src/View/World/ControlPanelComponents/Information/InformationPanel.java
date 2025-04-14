@@ -1,6 +1,6 @@
 package View.World.ControlPanelComponents.Information;
 
-import Model.Entity;
+import Model.Entities.Entity;
 import Controller.WorldController;
 //import View.EntityMetaData;
 

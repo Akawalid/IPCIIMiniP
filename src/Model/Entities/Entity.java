@@ -2,7 +2,11 @@ package Model;
 
 import Model.Exceptions.InvalidCoordinates;
 import Model.Exceptions.UnauthorizedAction;
-import Model.Shepherd.FindPath;
+import Model.Position.EntityMovementThread;
+import Model.Position.Positionnable;
+import Model.Position.Spot;
+import Model.Position.FindPath;
+
 import java.util.*;
 
 public abstract class Entity extends Positionnable implements Comparable<Entity> {
@@ -15,6 +19,11 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
     private EntityMovementThread thread;
     private Direction direction;
     protected final int id;
+    // An entity's priority depends on its distance to the target:
+    // The closer it is to the target, the higher its priority.
+    // Therefore, priority is determined by the remaining distance to the target.
+    // TODO: Les bêtes bougent ? Si oui, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
+
     public Entity(Spot position){
         super(position);
 

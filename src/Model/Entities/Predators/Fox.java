@@ -1,10 +1,10 @@
 // Fichier : Model/Predators/Fox.java
-/*package Model.Predators;
+/*package Model.Entities.Predators;
 
-import Model.FarmAnimals.Hen;
+import Model.Entities.FarmAnimals.Hen;
 import Model.Exceptions.InvalidCoordinates;
-import Model.FarmAnimals.Hen;
-import Model.Spot;
+import Model.Entities.FarmAnimals.Hen;
+import Model.Position.Spot;
 import java.awt.*;
 
 public class Fox extends Predator {

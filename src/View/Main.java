@@ -1,13 +1,7 @@
 package View;
 
-import Model.Farm;
-import Model.FarmAnimals.Sheep;
-import Model.FarmAnimals.UpdateAgeThread;
-import Model.Shepherd.Shepherd;
-
 
 import Controller.Controller;
-import View.World.World;
 
 import javax.swing.*;
 import java.awt.*;

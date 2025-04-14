@@ -1,4 +1,4 @@
-package Model;
+package Model.Position;
 
 public abstract class Positionnable {
     protected Spot position;

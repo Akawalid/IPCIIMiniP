@@ -1,8 +1,11 @@
-package Model;
+package Model.Position;
+
+import Model.Farm;
+import Model.Position.Spot;
 
 public class TestAdjacentFreeSpot {
     public static void main(String[] args) {
-        // Créer une instance de Farm (la grille)
+        // Crï¿½er une instance de Farm (la grille)
         Farm farm = new Farm();
 
         // Choisir un spot central, par exemple (5, 5)
@@ -20,9 +23,9 @@ public class TestAdjacentFreeSpot {
         // 2. Marquer tous les spots adjacents comme non traversables
         for (int i = center.getRow() - 1; i <= center.getRow() + 1; i++) {
             for (int j = center.getCol() - 1; j <= center.getCol() + 1; j++) {
-                // Ignorer le spot central lui-même
+                // Ignorer le spot central lui-mï¿½me
                 if (i == center.getRow() && j == center.getCol()) continue;
-                // Vérifier que les coordonnées sont valides
+                // Vï¿½rifier que les coordonnï¿½es sont valides
                 if (i >= 0 && i < Farm.HEIGHT && j >= 0 && j < Farm.WIDTH) {
                     Spot candidate = farm.getSpot(i, j);
                     candidate.setIsTraversable(false);
@@ -31,7 +34,7 @@ public class TestAdjacentFreeSpot {
             }
         }
 
-        // Rechercher un spot libre après avoir marqué les voisins
+        // Rechercher un spot libre aprï¿½s avoir marquï¿½ les voisins
         Spot freeSpotAfter = farm.getAdjacentFreeSpot(center);
         if (freeSpotAfter != null) {
             System.out.println("After marking adjacent spots, free spot found: (" +

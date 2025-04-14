@@ -1,4 +1,6 @@
-package Model;
+package Model.Position;
+
+import Model.Farm;
 
 public class Spot {
     //this represents the units of a land, each unit has a reference to the global farm to which it belongs.

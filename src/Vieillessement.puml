@@ -36,8 +36,8 @@ class Farm {
 ' Classe Resource utilisée par FarmAnimal
 class Resource
 
-' -------------------- Package Model.FarmAnimals --------------------
-package "Model.FarmAnimals" {
+' -------------------- Package Model.Entities.FarmAnimals --------------------
+package "Model.Entities.FarmAnimals" {
 
     ' Classe abstraite FarmAnimal qui hérite de Entity
     abstract class FarmAnimal {
@@ -77,8 +77,8 @@ package "Model.Exceptions" {
     class InvalidCoordinates
 }
 
-' -------------------- Package Model.Shepherd --------------------
-package "Model.Shepherd" {
+' -------------------- Package Model.Entities.Shepherd --------------------
+package "Model.Entities.Shepherd" {
     class Shepherd
     class FindPath
     class ShepherdMovementThread

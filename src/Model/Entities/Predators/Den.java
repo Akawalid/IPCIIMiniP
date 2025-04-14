@@ -1,9 +1,9 @@
-package Model.Predators;
+package Model.Entities.Predators;
 
-import Model.Entity;
+import Model.Entities.Entity;
 import Model.Farm;
-import Model.Positionnable;
-import Model.Spot;
+import Model.Position.Positionnable;
+import Model.Position.Spot;
 
 import java.util.Iterator;
 
@@ -26,7 +26,7 @@ public abstract class Den extends Positionnable implements Runnable {
     public boolean isActive(){return active;}
 
     /**
-     * Méthode abstraite qui spawn un prédateur (Wolf ou Fox) depuis le den.
+     * Mï¿½thode abstraite qui spawn un prï¿½dateur (Wolf ou Fox) depuis le den.
      */
     protected abstract void spawnPredator();
     private synchronized int numberOfLivingWolves() {
@@ -43,16 +43,16 @@ public abstract class Den extends Positionnable implements Runnable {
     @Override
     public void run() {
         while (active) {
-            // Si un shepherd est à côté, le den disparaît de la simulation
+            // Si un shepherd est ï¿½ cï¿½tï¿½, le den disparaï¿½t de la simulation
             /*if (isShepherdNearby()) {
                 active = false;
                 farm.removeEntity(this);
                 break;
             }*/
-            // Sinon, le den spawn un prédateur
+            // Sinon, le den spawn un prï¿½dateur
             if(numberOfLivingWolves() < MAX_WOLVES) spawnPredator();
             try {
-                Thread.sleep(5000); // Délai entre chaque spawn
+                Thread.sleep(5000); // Dï¿½lai entre chaque spawn
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }

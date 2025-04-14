@@ -1,9 +1,7 @@
-package Model;
+package Model.Position;
 
+import Model.Entities.Entity;
 import Model.Exceptions.InvalidCoordinates;
-import Model.Shepherd.Shepherd;
-
-import java.util.Iterator;
 
 public class EntityMovementThread extends Thread {
     public static final int DELAY = 100;

@@ -1,17 +1,16 @@
-package Model.Predators;
+package Model.Entities.Predators;
 
-import Model.Entity;
+import Model.Entities.Entity;
 import Model.Farm;
-import Model.Predators.Wolf;
 
 import java.util.Iterator;
 
 public class TestWolfPropagation {
     public static void main(String[] args) {
-        // Création de la ferme et initialisation du terrain
+        // Crï¿½ation de la ferme et initialisation du terrain
         Farm farm = new Farm();
 
-        // Génère les dens (dens de loups et de renards) et démarre leur thread
+        // Gï¿½nï¿½re les dens (dens de loups et de renards) et dï¿½marre leur thread
         farm.initPredators();
 
         // Boucle d'observation : toutes les 5 secondes, on compte le nombre de wolves
@@ -29,10 +28,10 @@ public class TestWolfPropagation {
                     wolfCount++;
                 }
             }
-            System.out.println("Après " + ((i + 1) * 5) + " secondes, nombre de wolves : " + wolfCount);
+            System.out.println("Aprï¿½s " + ((i + 1) * 5) + " secondes, nombre de wolves : " + wolfCount);
         }
 
-        System.out.println("Test terminé.");
+        System.out.println("Test terminï¿½.");
     }
 
 }

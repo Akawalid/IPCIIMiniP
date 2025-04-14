@@ -1,6 +1,5 @@
 package View.World;
 
-import Model.Entity;
 import Model.Farm;
 import Controller.WorldController;
 import View.World.ControlPanelComponents.ControlPanel;

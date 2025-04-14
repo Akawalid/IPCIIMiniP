@@ -1,18 +1,15 @@
-package Model.FarmAnimals;
+package Model.Entities.FarmAnimals;
 
-import Model.Bank;
-import Model.Entity;
-import Model.AgeState;
+import Model.Entities.Entity;
 import Model.Exceptions.UnauthorizedAction;
-//import Model.Predators.FoxDen;
+//import Model.Entities.Predators.FoxDen;
 import Model.Resources.Resource;
-import Model.Spot;
+import Model.Position.Spot;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 
-import static Model.AgeState.*;
+import static Model.Entities.FarmAnimals.AgeState.*;
 
 public abstract class FarmAnimal extends Entity {
 

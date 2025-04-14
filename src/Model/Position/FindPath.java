@@ -1,7 +1,6 @@
-package Model.Shepherd;
+package Model.Position;
 
 import Model.Farm;
-import Model.Spot;
 
 import java.awt.*;
 import java.util.*;

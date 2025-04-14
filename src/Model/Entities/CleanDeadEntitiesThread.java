@@ -1,4 +1,6 @@
-package Model;
+package Model.Entities;
+
+import Model.Farm;
 
 public class CleanDeadEntitiesThread extends Thread {
     private static final int DELAY = 100;

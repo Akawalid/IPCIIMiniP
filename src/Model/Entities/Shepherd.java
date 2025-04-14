@@ -1,10 +1,9 @@
-package Model.Shepherd;
+package Model.Entities;
 
-import Model.Entity;
-import Model.Exceptions.InvalidCoordinates;
+import Model.Entities.Entity;
 import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
-import Model.Spot;
+import Model.Position.Spot;
 
 import java.util.HashSet;
 

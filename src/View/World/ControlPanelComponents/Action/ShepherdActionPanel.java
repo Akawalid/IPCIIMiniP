@@ -1,6 +1,6 @@
 package View.World.ControlPanelComponents.Action;
 
-import Model.Shepherd.Shepherd;
+import Model.Entities.Shepherd;
 import Controller.WorldController;
 import View.CustomButton;
 

@@ -1,12 +1,15 @@
 package Model;
 
-import Model.FarmAnimals.FarmAnimal;
-//import Model.Predators.FoxDen;
-import Model.Predators.Den;
-import Model.Predators.Predator;
-import Model.Predators.Wolf;
-import Model.Shepherd.*;
-import Model.Predators.WolfDen;
+import Model.Entities.CleanDeadEntitiesThread;
+import Model.Entities.Entity;
+import Model.Entities.FarmAnimals.AgeState;
+import Model.Entities.FarmAnimals.FarmAnimal;
+//import Model.Entities.Predators.FoxDen;
+import Model.Position.FindPath;
+import Model.Position.Spot;
+import Model.Entities.Predators.Den;
+import Model.Entities.Predators.Predator;
+import Model.Entities.Predators.WolfDen;
 
 import java.util.*;
 
@@ -590,7 +593,6 @@ public class Farm {
     }
 
     public Entity getEntityInSpot(int row, int col){
-        //TODO:Shlag
         Spot s = getSpot(row, col);
         for(Entity e: creatures)
             if(e.getPosition() == s) {
@@ -725,7 +727,11 @@ public class Farm {
 
         //remove from Farm
         creatures.remove(e);
-        e.getPosition().setIsTraversable(true);
+
+        //if it was selected, then stop selecting it
+        if(e == selectedEntity) selectedEntity = null;
+
+        System.out.printf("%s-%d died.\n", e.getSpecies(), e.getId());
     }
     public void removeEntity(Iterator<Entity> it, Entity e){
         /** This method removes an entity from the farm

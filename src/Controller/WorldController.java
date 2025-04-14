@@ -1,15 +1,15 @@
 package Controller;
 
-import Model.Entity;
+import Model.Entities.Entity;
 import Model.Farm;
-import Model.FarmAnimals.Ewe;
-import Model.FarmAnimals.Hen;
-import Model.FarmAnimals.Sheep;
+import Model.Entities.FarmAnimals.Ewe;
+import Model.Entities.FarmAnimals.Hen;
+import Model.Entities.FarmAnimals.Sheep;
 import Model.Resources.Resource;
-import Model.Shepherd.Shepherd;
+import Model.Entities.Shepherd;
 import Model.Exceptions.UnauthorizedAction;
-import Model.FarmAnimals.FarmAnimal;
-import Model.Spot;
+import Model.Entities.FarmAnimals.FarmAnimal;
+import Model.Position.Spot;
 import View.World.ControlPanelComponents.Information.PurchaseType;
 import View.World.Land;
 import View.World.World;

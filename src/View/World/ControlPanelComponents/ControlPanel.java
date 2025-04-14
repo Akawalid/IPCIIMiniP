@@ -1,9 +1,9 @@
 package View.World.ControlPanelComponents;
 
-import Model.Entity;
+import Model.Entities.Entity;
 import Model.Farm;
-import Model.FarmAnimals.FarmAnimal;
-import Model.Shepherd.Shepherd;
+import Model.Entities.FarmAnimals.FarmAnimal;
+import Model.Entities.Shepherd;
 
 import Controller.WorldController;
 

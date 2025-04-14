@@ -1,6 +1,6 @@
 package View.World.ControlPanelComponents.Information;
 
-import Model.Shepherd.Shepherd;
+import Model.Entities.Shepherd;
 
 import java.awt.*;
 import Controller.WorldController;
