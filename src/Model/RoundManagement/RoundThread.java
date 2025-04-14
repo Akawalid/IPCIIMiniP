@@ -14,7 +14,7 @@ public class RoundThread extends Thread {
     private static final int CD_MAX = 600;
     private static final int CD_INCREMENT = 1;
     private int cooldown;
-    private boolean wait;
+    private boolean pause = false;
     private boolean active;
 
     private Round round;
@@ -38,27 +38,30 @@ public class RoundThread extends Thread {
         this.active = false;
     }
 
-    public void initialize() {
+    protected void pauseThread() {
+        this.pause = true;
+    }
+
+    protected void resumeThread() {
         this.cooldown = 0;
-        this.wait = false;
+        this.pause = false;
     }
 
     public void run() {
         while (active) {
-
-            if (cooldown < CD_MAX) {
-                cooldown += CD_INCREMENT;
-            } else {
-                if (!wait) {
-                    wait = true;
-                    round.end_round();
-                }
-            }
-
             try {
                 Thread.sleep(DELAY);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+
+            if (cooldown < CD_MAX) {
+                cooldown += CD_INCREMENT;
+            } else {
+                if (!pause) {
+                    pause = true;
+                    round.end_round();
+                }
             }
         }
     }

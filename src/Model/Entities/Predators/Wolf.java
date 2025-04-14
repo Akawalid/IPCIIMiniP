@@ -12,8 +12,18 @@ import java.util.*;
 
 public class Wolf extends Predator {
 
+    boolean pause = false;
+
     public Wolf(Spot s, Farm farm) {
         super(s, farm);
+    }
+
+    public void pauseThread(){
+        pause = true;
+    }
+
+    public void resumeThread(){
+        pause = false;
     }
 
     @Override
@@ -92,7 +102,7 @@ public class Wolf extends Predator {
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 String species = animal.getSpecies();
-                if (species.equals("Ewe") || species.equals("Sheep")) {
+                if (species.equals("Ewe") || species.equals("Sheep") || species.equals("Hen")) {
                     double distance = this.getPosition().distanceTo(animal.getPosition());
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -123,15 +133,15 @@ public class Wolf extends Predator {
 
     @Override //TODO
     public String getSpecies() {
-        return null;
+        return "Wolf";
     }
     @Override //TODO
     public int get_buying_price() {
-        return 0;
+        throw new UnsupportedOperationException("Not supported on predator.");
     }
 
     @Override
-    public int get_selling_price() throws UnauthorizedAction {
-        return 0;
+    public int get_selling_price() {
+        throw new UnsupportedOperationException("Not supported on predator.");
     }
 }

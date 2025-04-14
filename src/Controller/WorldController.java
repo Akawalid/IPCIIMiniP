@@ -200,5 +200,25 @@ public class WorldController {
         };
     }
 
+    public MouseAdapter getNextRoundHandler() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                farm.getRound().start_round();
+            }
+        };
+    }
+
+    public MouseAdapter getEndGameHandler() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                farm.getRound().end_game();
+            }
+        };
+    }
+
 
 }

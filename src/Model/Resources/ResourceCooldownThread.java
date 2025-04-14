@@ -7,6 +7,7 @@ public class ResourceCooldownThread extends Thread{
     private static final int CD_INIT = 0;
 
     private boolean active = true;
+    private boolean pause = false;
     private boolean is_ready;
 
     private final Resource resource;
@@ -28,6 +29,14 @@ public class ResourceCooldownThread extends Thread{
 
     public void stopThread(){
         active = false;
+    }
+
+    protected void pauseThread(){
+        pause = true;
+    }
+
+    protected void resumeThread(){
+        pause = false;
     }
 
     private void set_ready(){
@@ -54,6 +63,7 @@ public class ResourceCooldownThread extends Thread{
                 e.printStackTrace();
             }
 
+            if(pause) continue;
             if(cooldown < cooldown_max){
                 //increment cooldown
                 cooldown += CD_INCREMENT;

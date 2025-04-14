@@ -13,6 +13,7 @@ public class UpdateAgeThread extends Thread {
     private Farm farm;
 
     private boolean active = true;
+    private boolean pause = false;
 
     /**
      * Constructor that initializes the thread with the farm.
@@ -27,16 +28,27 @@ public class UpdateAgeThread extends Thread {
         active = false;
     }
 
+    public void pauseThread(){
+        pause = true;
+    }
+
+    public void resumeThread(){
+        pause = false;
+    }
+
+
     @Override
     public void run() {
         while (active) {
             // Call the synchronized updateEntities method in Farm
-            farm.updateEntities();
             try {
                 Thread.sleep(UPDATE_DELAY); // Pause 5s before the next update
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
+
+            if (pause) continue; // Skip the update if paused
+            farm.updateEntities();
         }
     }
 }

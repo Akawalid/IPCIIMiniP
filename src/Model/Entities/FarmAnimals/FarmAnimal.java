@@ -94,9 +94,15 @@ public abstract class FarmAnimal extends Entity {
     }
 
     /** Fonction stopProductionThread qui met fin aux threads de production de chaque ressource */
-    public void stopProductionThread() {
+    public void pauseProductionThread() {
         for (Resource r : resourceList) {
-            r.stopProductionThread();
+            r.pauseProductionThread();
+        }
+    }
+
+    public void resumeProductionThread() {
+        for (Resource r : resourceList) {
+            r.resumeProductionThread();
         }
     }
 

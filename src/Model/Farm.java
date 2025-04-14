@@ -759,8 +759,13 @@ public class Farm {
         //remove from Farm
         creatures.remove(e);
 
+        //si instance == FarmAnimal
+        if(e instanceof FarmAnimal){
+            ((FarmAnimal) e).pauseProductionThread();
+        }
+
         //if it was selected, then stop selecting it
-        if(e == selectedEntity) selectedEntity = null;
+        if(e == getSelectedEntity()) setSelectedEntity(null);
 
         System.out.printf("%s-%d died.\n", e.getSpecies(), e.getId());
     }
@@ -800,23 +805,38 @@ public class Farm {
         updateAgeThread = t;
     }
 
-    public void end_game(){
+    public void pause_game(){ //previously called end_game
         //parcourir les entités
         // si c'est un FarmAnimal : arrêter ses threads de production de ressource
         for (Entity e : creatures) {
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
-                animal.stopProductionThread();
+                animal.pauseProductionThread();
             }
         }
 
         // arrêter la progression des manches
-        round.stopRoundThread();
+        round.pauseRoundThread();
 
         //arrêter le vieillissement des animaux
-        updateAgeThread.stopThread();
+        updateAgeThread.pauseThread();
+    }
 
+    public void resume_game(){
+        //parcourir les entités
+        // si c'est un FarmAnimal : arrêter ses threads de production de ressource
+        for (Entity e : creatures) {
+            if (e instanceof FarmAnimal) {
+                FarmAnimal animal = (FarmAnimal) e;
+                animal.resumeProductionThread();
+            }
+        }
 
+        // arrêter la progression des manches
+        round.resumeRoundThread();
+
+        //arrêter le vieillissement des animaux
+        updateAgeThread.resumeThread();
     }
 
 }

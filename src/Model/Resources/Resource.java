@@ -1,6 +1,5 @@
 package Model.Resources;
 
-import Model.Bank;
 import Model.Exceptions.UnauthorizedAction;
 
 public abstract class Resource {
@@ -43,7 +42,11 @@ public abstract class Resource {
     }
 
     /** Fonction stopProductionThread */
-    public void stopProductionThread() {
-        cooldown_thread.stopThread();
+    public void pauseProductionThread() {
+        cooldown_thread.pauseThread();
+    }
+
+    public void resumeProductionThread() {
+        cooldown_thread.resumeThread();
     }
 }

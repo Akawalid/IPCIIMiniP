@@ -36,7 +36,11 @@ public class ControlPanel extends JSplitPane {
     private WorldController controller;
     private final Farm farm;
     private final World world;
-    private JSplitPane sp, sp2;
+    private JSplitPane sp1, sp2;
+
+    private Entity lastShownEntity;
+
+    private BetweenRoundsPanel betweenRoundsPanel;
 
 
     public ControlPanel(Farm farm, World world){
@@ -57,15 +61,69 @@ public class ControlPanel extends JSplitPane {
         marketPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         marketPanel.setPreferredSize(new Dimension(W, 100));
 
-        add(gameStatePanel, JSplitPane.TOP);
-        sp = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        sp.setTopComponent(marketPanel);
-        add(sp, JSplitPane.BOTTOM);
+        //Between rounds
+        betweenRoundsPanel = new BetweenRoundsPanel(farm);
+
+        /* Structure
+        - gameStatePanel
+        - sp1 :
+            - marketPanel
+            - sp2 :
+                - informationPanel
+                - actionPanel
+         */
+        sp1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         sp2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-        sp.setBottomComponent(sp2);
+
+        // En 1er : gameStatePanel
+        this.add(gameStatePanel, JSplitPane.TOP);
+        // En 2e : sp1
+        sp1.setTopComponent(marketPanel);
+        sp1.setBottomComponent(sp2);
+        add(sp1, JSplitPane.BOTTOM);
+        // Ajout de Information- et Action- Panel plus tard
+
+        lastShownEntity = null;
+    }
+
+    /** Override paintComponent */
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        updateActiveEntity();
+    }
+
+    public void updateControlPanel(){
+
+        //créer un switch case sur GameStatus
+        switch (farm.getRound().getGameStatus()){
+            case RUNNING:
+                updateActiveEntity();
+            case BETWEEN_ROUNDS:
+                //afficher et remplacer par le panel de fin de manche
+                //remove(sp1);
+                //add(betweenRoundsPanel, JSplitPane.BOTTOM);
+                break;
+            case GAME_OVER:
+                //On est en fin de jeu
+                break;
+            default:
+                //lever une erreur unsupported case
+                throw new IllegalStateException("Unexpected value: " + farm.getRound().getGameStatus());
+        }
+
+
     }
 
     public void updateActiveEntity() {
+
+        Entity e = farm.getSelectedEntity();
+
+        if(e == lastShownEntity){
+            //Nothing to do, the entity is the same
+            return;
+        }
+        lastShownEntity = e;
 
         if(informationPanel != null){
             sp2.remove(informationPanel);
@@ -74,7 +132,6 @@ public class ControlPanel extends JSplitPane {
             sp2.remove(actionPanel);
         }
 
-        Entity e = farm.getSelectedEntity();
         if(e == null){
             informationPanel = null;
             actionPanel = null;
@@ -93,7 +150,7 @@ public class ControlPanel extends JSplitPane {
             }
 
             //When we upload ControlePanel to the ui, the controller attribute is set null
-            //Therefor, the method connect, should be called for the first time by the controller
+            //Therefore, the method connect, should be called for the first time by the controller
             if(controller != null) connect(controller);
 
             //in case e is not null
@@ -113,5 +170,7 @@ public class ControlPanel extends JSplitPane {
 
         if(informationPanel != null) informationPanel.connect(controller);
         if(actionPanel != null) actionPanel.connect(controller);
+
+        if(betweenRoundsPanel != null) betweenRoundsPanel.connect(controller);
     }
 }

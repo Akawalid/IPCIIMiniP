@@ -11,13 +11,11 @@ public class Round {
 
     /* Ecrire les attributs suivants
      * int num_round : numéro de la manche actuelle
-     * boolean condition_fin : vaut vrai si la partie est terminée
      * RoundThread thread : thread de manche
      * Farm farm : la ferme du jeu
      */
 
     private int num_round;
-    private boolean condition_fin;
     private RoundThread thread;
     private Farm farm;
 
@@ -44,11 +42,12 @@ public class Round {
     private int salaire_shepherd; //salaire pour une manche d’un shepherd
     private int loyer; //montant du loyer mensuel
 
+    private int total_payment; //total à payer pour la manche
+
 
     public Round(Farm farm) {
         this.farm = farm;
         this.num_round = 0;
-        this.condition_fin = false;
         this.thread = new RoundThread(this);
 
         //paiement
@@ -56,6 +55,12 @@ public class Round {
         prix_nourriture = PRIX_NOURRITURE_INIT;
         salaire_shepherd = SALAIRE_SHEPHERD_INIT;
         loyer = LOYER_INIT;
+        total_payment = 0;
+    }
+
+    /** getter getGameStatus */
+    public GameStatus getGameStatus() {
+        return gameStatus;
     }
 
     /** getter getNbRound de num_round */
@@ -118,41 +123,46 @@ public class Round {
      * 1. Incrémente le numéro de manche
      * 2. Ré-initialise le thread
      */
-    private void start_round() {
+    public void start_round() {
         //gestion de la manche
         num_round++;
         System.out.println("Round " + num_round + " started.");
-        thread.initialize();
+
+        farm.getBank().withdraw(total_payment);
+        farm.resume_game(); //relance les threads de la ferme
+
         // Augmentation des prix
         prix_nourriture += (int) (prix_nourriture * INFLATION);
         salaire_shepherd += (int) (salaire_shepherd * INFLATION / 2);
         loyer += (int) (loyer * INFLATION);
         rbsmt_pret += (int) (rbsmt_pret * TAUX_PRET);
 
-        //gestion des prédateurs
+        //ajout de prédateurs
         //TODO : Izma c'est ici :)
     }
 
     /** Fonction end_round qui met fin au round */
     protected void end_round() {
         gameStatus = BETWEEN_ROUNDS;
+        farm.pause_game(); //met les threads en pause
+
         System.out.println("Round " + num_round + " ended.");
-        //TODO fin de manche
 
-        if (condition_fin) {
-            end_running();
-        } else {
-            start_round();
-        }
+        //total à payer
+        total_payment = getTotalPayment(farm.getNbAnimalsAndShepherds());
+        if(farm.getBank().getBalance() < total_payment) gameStatus = GAME_OVER;
     }
 
-    private void end_running() {
-        gameStatus = GAME_OVER;
-        farm.end_game();
+    public void end_game() {
+        farm.pause_game();
     }
 
-    public void stopRoundThread(){
-        thread.stopThread();
+    public void pauseRoundThread(){
+        thread.pauseThread();
+    }
+
+    public void resumeRoundThread(){
+        thread.resumeThread();
     }
 
 }
