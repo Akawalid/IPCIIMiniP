@@ -42,6 +42,13 @@ public class BetweenRoundsPanel extends JPanel {
         JLabel separatorLabel = new JLabel("-------------");
         remainingLabel = new JLabel();
 
+        //ajouter les labels de sorte à ce que le texte soit centré
+        titleLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        balanceLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        toPayLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        separatorLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+        remainingLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
         //ajouter les labels
         add(titleLabel);
         add(balanceLabel);
@@ -51,8 +58,10 @@ public class BetweenRoundsPanel extends JPanel {
 
         //Bouton pour passer à la manche suivante
         nextRoundButton = new CustomButton("Next round");
+        nextRoundButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         add(nextRoundButton);
         endGameButton = new CustomButton("End game");
+        endGameButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         //ne pas l'ajouter
 
         //mettre à jour le texte

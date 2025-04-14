@@ -12,24 +12,21 @@ import java.util.*;
 
 public class Wolf extends Predator {
 
-    boolean pause = false;
-
     public Wolf(Spot s, Farm farm) {
         super(s, farm);
-    }
-
-    public void pauseThread(){
-        pause = true;
-    }
-
-    public void resumeThread(){
-        pause = false;
     }
 
     @Override
     public void run() {
         Random rand = new Random();
         while (!isDead) {
+            try {
+                Thread.sleep(1000); // Pause d'une seconde entre chaque cycle
+            } catch (InterruptedException e) {
+                break;
+            }
+
+            if(pause) continue;
             // 1. V�rifier et tuer toute proie adjacente (Ewe ou Sheep)
             checkAndKillPrey();
 
@@ -67,11 +64,6 @@ public class Wolf extends Predator {
                         e.printStackTrace();
                     }
                 }
-            }
-            try {
-                Thread.sleep(1000); // Pause d'une seconde entre chaque cycle
-            } catch (InterruptedException e) {
-                break;
             }
         }
     }

@@ -39,8 +39,10 @@ public class ControlPanel extends JSplitPane {
     private JSplitPane sp1, sp2;
 
     private Entity lastShownEntity;
+    private boolean popup; //indique si une popup est actuellement affichée
 
     private BetweenRoundsPanel betweenRoundsPanel;
+    private JDialog dialog;
 
 
     public ControlPanel(Farm farm, World world){
@@ -63,6 +65,16 @@ public class ControlPanel extends JSplitPane {
 
         //Between rounds
         betweenRoundsPanel = new BetweenRoundsPanel(farm);
+        dialog = new JDialog(
+                SwingUtilities.getWindowAncestor(this),
+                "Fin de manche",
+                Dialog.ModalityType.APPLICATION_MODAL
+        );
+        dialog.setContentPane(betweenRoundsPanel);
+        dialog.setSize(400, 200);
+        //dialog.setLocationRelativeTo(this);
+
+        popup = false; //est-ce qu'une popup est actuellement affichée
 
         /* Structure
         - gameStatePanel
@@ -90,29 +102,30 @@ public class ControlPanel extends JSplitPane {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        updateActiveEntity();
-    }
 
-    public void updateControlPanel(){
-
-        //créer un switch case sur GameStatus
         switch (farm.getRound().getGameStatus()){
             case RUNNING:
+                popup = false;
+                dialog.setVisible(false);
                 updateActiveEntity();
-            case BETWEEN_ROUNDS:
-                //afficher et remplacer par le panel de fin de manche
-                //remove(sp1);
-                //add(betweenRoundsPanel, JSplitPane.BOTTOM);
                 break;
-            case GAME_OVER:
-                //On est en fin de jeu
+            case BETWEEN_ROUNDS: case GAME_OVER:
+                if (!popup) {
+                    popup = true;
+                    betweenRoundsPanel.updateText();
+                    dialog.setVisible(true);
+                    /*JOptionPane.showMessageDialog(
+                        this,
+                        "La manche est terminée ! Préparez-vous pour la suivante.",
+                        "Fin de manche",
+                        JOptionPane.INFORMATION_MESSAGE
+                    );*/
+                }
                 break;
             default:
                 //lever une erreur unsupported case
                 throw new IllegalStateException("Unexpected value: " + farm.getRound().getGameStatus());
         }
-
-
     }
 
     public void updateActiveEntity() {
