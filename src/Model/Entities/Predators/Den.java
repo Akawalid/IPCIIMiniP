@@ -8,7 +8,7 @@ import Model.Position.Spot;
 import java.util.Iterator;
 
 public abstract class Den extends Positionnable implements Runnable {
-    private static final int MAX_WOLVES = 5;
+    private static final int MAX_WOLVES = 10;
     protected Farm farm;
     protected boolean active;
 

@@ -11,6 +11,7 @@ import Model.Entities.FarmAnimals.Sheep;
 import Model.Entities.Predators.Den;
 import Model.Entities.Predators.Wolf;
 import Model.Entities.Shepherd;
+import View.Refresh;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -78,6 +79,7 @@ public class Land extends JPanel {
         super.paintComponent(g);
         drawGrid(g);
         drawEnities(g);
+        drawTrees(g);
     }
 
     private void drawGrid(Graphics g){
@@ -85,29 +87,37 @@ public class Land extends JPanel {
         g.setColor(defaultColor);
         for (int row = 0; row < Farm.HEIGHT; row++) {
             for (int col = 0; col < Farm.WIDTH; col++) {
-
-//                else if(farm.getSpot(row, col).isProtectedArea()) g.setColor(new Color(200, 100, 200, 100));
-//                else g.setColor(defaultColor);
-//
-//                g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
-//                g.setColor(Color.BLACK);
-//                g.drawRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
-
                 for(Integer i: Farm.grid1[row][col]){
-                    g.drawImage(gridImages.get(i), colOfModelToView(col),
-                            rowOfModelToView(row),
-                            null);
+                    if(i != 15 && i != 3 && i != 4 && i != 16){
+                        //We draw the trees at last
+                        g.drawImage(gridImages.get(i), colOfModelToView(col),
+                                rowOfModelToView(row),
+                                null);
+                    }
                 }
                 if(farm.getSpot(row, col).getProtectedArea() > 0){
                     g.setColor(new Color(200, 100, 200, 100));
                     g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
                 }
-                /* permet d'afficher en rose les cases non traversables
-                if(!farm.getSpot(row, col).isTraversable()) {
-                    g.setColor(Color.MAGENTA);
+            }
+        }
+    }
+
+    private void drawTrees(Graphics g){
+        for (int row = 0; row < Farm.HEIGHT; row++) {
+            for (int col = 0; col < Farm.WIDTH; col++) {
+                for(Integer i: Farm.grid1[row][col]){
+                    if(i == 15 || i == 3 || i == 4 || i == 16){
+                        //We draw the trees at last
+                        g.drawImage(gridImages.get(i), colOfModelToView(col),
+                                rowOfModelToView(row),
+                                null);
+                    }
+                }
+                if(farm.getSpot(row, col).getProtectedArea() > 0){
+                    g.setColor(new Color(200, 100, 200, 100));
                     g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
                 }
-                */
             }
         }
     }
@@ -129,8 +139,8 @@ public class Land extends JPanel {
                 imgChoice = EntityMetaData.COW_EAT;
                 shadowChoixe = EntityMetaData.COW_SHADOW;
             } else if(e instanceof Wolf){
-                BufferedImage i = EntityMetaData.getAsset(EntityMetaData.WOLF, e.getDirection(), 0);
-                g.drawImage(i, x, y, null);
+                g.setColor(Color.BLACK);
+                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
             } else if(e instanceof Shepherd)
             {
                 g.setColor(Color.BLUE);

@@ -31,18 +31,14 @@ public class EntityMetaData {
     private static BufferedImage cowEat;
     private static BufferedImage henShadow;
     private static BufferedImage henEat;
-    private static BufferedImage wolfleft;
-    private static BufferedImage wolfright;
-    private static BufferedImage wolfup;
-    private static BufferedImage wolfdown;
 
-    private static HashMap<Integer, BufferedImage> cacheMemory;
+    //private static HashMap<Integer, BufferedImage> cacheMemory;
     static {
         uploadAssets();
 
     }
     private static void uploadAssets(){
-        cacheMemory = new HashMap<>();
+        //cacheMemory = new HashMap<>();
         try {
             sheepEat = ImageIO.read(
                     Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/sheep_eat.png"))
@@ -65,39 +61,10 @@ public class EntityMetaData {
             henShadow = ImageIO.read(
                     Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/chicken_shadow.png"))
             );
-            wolfdown = ImageIO.read(
-                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/wolfdown.png"))
-            );
-            wolfup = ImageIO.read(
-                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/wolfup.png"))
-            );
-            wolfright = ImageIO.read(
-                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/wolfright.png"))
-            );
-            wolfleft = ImageIO.read(
-                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/wolfleft.png"))
-            );
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error");
             e.printStackTrace();
         }
-    }
-
-    private static BufferedImage getPortionWolf(BufferedImage im, int idx){
-
-        int sheetWidth = im.getWidth();
-
-        // Calculate number of animation frames per row
-        int framesPerRow;
-        framesPerRow = 4;
-        int tileWidth = sheetWidth / framesPerRow;
-
-        // Calculate coordinates based on direction and frame index
-        int x = (idx % framesPerRow) * tileWidth;
-
-        // Handle edge cases
-        x = Math.min(x, sheetWidth - tileWidth);
-        return im.getSubimage(x, 0, tileWidth, im.getHeight());
     }
     private static BufferedImage getPortion(BufferedImage im, Direction dir, int idx, int shadow) {
 //        // Get sprite sheet dimensions
@@ -142,16 +109,6 @@ public class EntityMetaData {
             return getPortion(henShadow, dir, idx, 0);
         if(which == HEN_EAT)
             return getPortion(henEat, dir, idx, 0);
-        if(which == WOLF) {
-            if (dir == Direction.LEFT)
-                return getPortionWolf(wolfleft, idx);
-            if (dir == Direction.RIGHT)
-                return getPortionWolf(wolfright, idx);
-            if (dir == Direction.UP)
-                return getPortionWolf(wolfup, idx);
-            if (dir == Direction.DOWN)
-                return getPortionWolf(wolfdown, idx);
-        }
         return null;
     }
 }
