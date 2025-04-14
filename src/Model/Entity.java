@@ -3,7 +3,6 @@ package Model;
 import Model.Exceptions.InvalidCoordinates;
 import Model.Exceptions.UnauthorizedAction;
 import Model.Shepherd.FindPath;
-
 import java.util.*;
 
 public abstract class Entity extends Positionnable implements Comparable<Entity> {
@@ -14,12 +13,8 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
     //We need this attribute here in order to get the position of the active entity from the controller easily
     protected ArrayDeque<Spot> path; // Queue to store movements
     private EntityMovementThread thread;
+    private Direction direction;
     protected final int id;
-    // An entity's priority depends on its distance to the target:
-    // The closer it is to the target, the higher its priority.
-    // Therefore, priority is determined by the remaining distance to the target.
-    // TODO: Les bêtes bougent ? Si oui, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
-
     public Entity(Spot position){
         super(position);
 
@@ -27,11 +22,17 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
         idCounter++;
 
         path = new ArrayDeque<>();
+
+        int dirX = Farm.WIDTH/2 - position.getRow();
+        int dirY = Farm.HEIGHT/2 - position.getCol();
+        if(dirX == 0 && dirY == 0) direction = Direction.DOWN;
+        else direction = Direction.fromCoordinates(dirX, dirY);
     }
 
     public int getId(){
         return id;
     }
+    public Direction getDirection(){return direction;}
     public abstract String getSpecies();
 
     //move is an abstract methode because each entity has its own way of moving.

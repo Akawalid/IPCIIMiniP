@@ -9,10 +9,15 @@ import Model.FarmAnimals.Sheep;
 import Model.Predators.Den;
 import Model.Predators.Wolf;
 import Model.Shepherd.Shepherd;
+import View.EntityMetaData;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 public class Land extends JPanel {
@@ -38,17 +43,10 @@ public class Land extends JPanel {
 
     public static final int CELL_SIZE = 32,// Size of each cell in pixels
             WIDTH= CELL_SIZE * Farm.WIDTH,
-            HEIGHT= CELL_SIZE * Farm.HEIGHT;
+            HEIGHT= CELL_SIZE * Farm.HEIGHT,
+            EPSILON = 3;
     private Farm farm;
-    // The data structure below represents the spots we are highlighting on the game map.
-    // Each spot will be highlighted using the color of the entity that will pass through it.
-
-    // Problem 1: Some spots may be traversed by multiple entities. How do we color them?
-    // Solution: We use the color of the first entity that will cross the spot.
-
-    // Problem 2: What if multiple entities will cross the same spot simultaneously?
-    // Solution: In this case, we use the color of the shepherd closest to its target
-    // (shepherds have priority).
+    private HashMap<Integer, Image> gridImages;
 
     public Land(Farm farm) {
         super();
@@ -56,8 +54,25 @@ public class Land extends JPanel {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.LIGHT_GRAY);
         setToolTipText("");
-    }
 
+        gridImages = new HashMap<>();
+        for (int i = 0; i < Farm.HEIGHT; i++) {
+            for (int j = 0; j < Farm.WIDTH; j++) {
+                for (Integer k : Farm.grid1[i][j]) {
+                    try {;
+                        if(gridImages.containsKey(k)) continue;
+                        String imagePath = "/Assets/images/Tiles/tile_00" + String.format("%0" + 2 + "d", k) + ".png";
+                        BufferedImage image = ImageIO.read(Objects.requireNonNull(getClass().getResource(imagePath)));
+                        gridImages.put(k, image);
+                    } catch (IOException | IllegalArgumentException e) {
+                        System.err.println("ERROR: Failed to load image for tile ID " + k);
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+    }
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -71,15 +86,26 @@ public class Land extends JPanel {
         for (int row = 0; row < Farm.HEIGHT; row++) {
             for (int col = 0; col < Farm.WIDTH; col++) {
 
+//                else if(farm.getSpot(row, col).isProtectedArea()) g.setColor(new Color(200, 100, 200, 100));
+//                else g.setColor(defaultColor);
+//
+//                g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
+//                g.setColor(Color.BLACK);
+//                g.drawRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
+
+                for(Integer i: Farm.grid1[row][col]){
+                    g.drawImage(gridImages.get(i), colOfModelToView(col),
+                            rowOfModelToView(row),
+                            null);
+                }
+                if(farm.getSpot(row, col).isProtectedArea()){
+                    g.setColor(new Color(200, 100, 200, 100));
+                    g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
+                }
                 if(!farm.getSpot(row, col).isTraversable()) {
                     g.setColor(Color.MAGENTA);
+                    g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
                 }
-                else if(farm.getSpot(row, col).isProtectedArea()) g.setColor(new Color(200, 100, 200, 100));
-                else g.setColor(defaultColor);
-
-                g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
-                g.setColor(Color.BLACK);
-                g.drawRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
             }
         }
     }
@@ -89,33 +115,39 @@ public class Land extends JPanel {
             Entity e = it.next();
             int y = rowOfModelToView(e.getPosition().getRow());
             int x = colOfModelToView(e.getPosition().getCol());
-            // Set cell color based on the entity type
-            if (e instanceof Shepherd) {
-                //This doesn't make any sens for the moment, but it will be more meaningful, when we work with images
-                //g.setColor(entitiesMetaData.get(e).getColor());
-                g.setColor(Color.BLUE);
-            } else if (e instanceof Sheep) {
-                //g.setColor(entitiesMetaData.get(e).getColor());
-                g.setColor(Color.RED);
-                Sheep sheep = (Sheep) e;
-                //String toolTip = "Esp�ce : %s %s, �ge : %d, �tat : %s".formatted(
-                       // sheep.getSpecies(), sheep.getId(), sheep.getAge(), sheep.getState());
-//                cell.setToolTipText(toolTip);
-            } else if (e instanceof Hen) {
-                g.setColor(Color.YELLOW);
-                // Set tooltip text for hen
-                //Hen hen = (Hen) e;
-                //g.fillRect(hen.getPosition().getRow() * CELL_SIZE,
-                        //hen.getPosition().getCol() * CELL_SIZE, CELL_SIZE, CELL_SIZE);
-                //String toolTip = "Esp�ce : %s %s, �ge : %d, �tat : %s".formatted(
-                        //hen.getSpecies(), hen.getId(), hen.getAge(), hen.getState());
-//                cell.setToolTipText(toolTip);
-            } else if (e instanceof Ewe){
-                g.setColor(Color.PINK);
-            } else if (e instanceof Wolf) {
+            int shadowChoixe = 0, imgChoice = 0;
+            if (e instanceof Sheep) {
+                imgChoice = EntityMetaData.SHEEP_EAT;
+                shadowChoixe = EntityMetaData.LLAMA_SHADOW;
+            } else if(e instanceof Hen){
+                imgChoice = EntityMetaData.LLAMA_EAT;
+                shadowChoixe = EntityMetaData.LLAMA_SHADOW;
+
+            } else if(e instanceof Ewe){
+                imgChoice = EntityMetaData.COW_EAT;
+                shadowChoixe = EntityMetaData.COW_SHADOW;
+            } else if(e instanceof Wolf){
+                //BufferedImage i = EntityMetaData.getAsset(EntityMetaData.WOLF_EAT, e.getDirection(), 0);
+                //g.drawImage(i, x, y, null);
                 g.setColor(Color.BLACK);
+                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+            } else if(e instanceof Shepherd)
+            {
+                g.setColor(Color.BLUE);
+                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
             }
-            g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+            if(!(e instanceof Wolf || e instanceof Shepherd)){
+                BufferedImage i = EntityMetaData.getAsset(shadowChoixe, e.getDirection(), 0);
+                int ix = i.getWidth();
+                int iy = i.getHeight();
+                g.drawImage(i, x  - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2 - EPSILON, null);
+                ix = i.getWidth();
+                iy = i.getHeight();
+                i = EntityMetaData.getAsset(imgChoice, e.getDirection(), 0);
+                g.drawImage(i, x  - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2, null);
+            }
+
+
         }
         for (Iterator<Den> it = farm.getDens(); it.hasNext(); ) {
             Den d = it.next();

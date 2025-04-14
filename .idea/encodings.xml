@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/src/Model/FarmAnimals/FarmAnimal.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/src/Model/Predators/Den.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/View/Land.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/View/World/Land.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/View/World/Land.java" charset="windows-1252" />
   </component>
 </project>

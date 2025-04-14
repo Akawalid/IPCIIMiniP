@@ -29,7 +29,7 @@ public abstract class Den extends Positionnable implements Runnable {
      * Méthode abstraite qui spawn un prédateur (Wolf ou Fox) depuis le den.
      */
     protected abstract void spawnPredator();
-    private int numberOfLivingWolves() {
+    private synchronized int numberOfLivingWolves() {
         int count = 0;
         for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
             Entity entity = it.next();

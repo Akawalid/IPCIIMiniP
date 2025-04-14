@@ -1,59 +1,113 @@
 package View;
 
 
-import java.awt.*;
+import Model.Direction;
+import Model.Farm;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
 
 public class EntityMetaData {
-    //This class represents metadata of an entity such as, it's color, it's status(moving, growing..)
-    //It is not a very elegant way to model it this way, it would be better if we derive this class to
-    // ShepherdMetaData, Anim..., but the latter generates a lot of classes to handle.
-    //TODO: read the comment above and think a bout the most elegant way...
-    private static int colorsCounter = 0;
-    //TODO: Improve after, we are limited to a small amount of colors
-    private static final Color[] colorsArray = {
-            Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW,
-            Color.CYAN, Color.MAGENTA, Color.ORANGE, Color.PINK
-    };
+    public static int LLAMA_SHADOW = 0,
+        LLAMA_EAT = 1,
+        SHEEP_EAT = 2,
+        COW_SHADOW = 3,
+        COW_EAT = 4,
+        HEN_EAT,
+        HEN_SHADOW;
+    private static Random random = new Random();
 
-    //This one holds all the images of the game, I don't know if it is a good idea to load everything no
-    //For bigger games it can damage the RAM.
-    private static final HashMap<Integer, HashMap<Integer, Image>> images = null;
-    /*
-    //TODO: I think status should be put, in the model, we will discuss this after.
-    0: Shepherd stable
-    1: Shepherd in movement
-    2: Shepherd smoking
-    3: Animal ...
-     */
-    private int status;
-    private final Color color;
+    private static BufferedImage sheepEat;
+    private static BufferedImage llamaShadow;
+    private static BufferedImage llamaEat;
 
+    private static BufferedImage cowShadow;
+    private static BufferedImage cowEat;
+    private static BufferedImage henShadow;
+    private static BufferedImage henEat;
+    private static HashMap<Integer, BufferedImage> cacheMemory;
+    static {
+        uploadAssets();
 
-    public EntityMetaData() {
-        // Assign a rotating color from the array
-        this.color = colorsArray[colorsCounter % colorsArray.length];
-        colorsCounter++;
     }
-    public Color applyOpacityForColor() {
-        // Apply 50% opacity (alpha = 128)
-        return new Color(
-                color.getRed(),
-                color.getGreen(),
-                color.getBlue(),
-                128  // Alpha value (0 = fully transparent, 255 = fully opaque)
-        );
+    private static void uploadAssets(){
+        cacheMemory = new HashMap<>();
+        try {
+            sheepEat = ImageIO.read(
+                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/sheep_eat.png"))
+            );
+            llamaShadow = ImageIO.read(
+                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/llama_shadow.png"))
+            );
+            llamaEat = ImageIO.read(
+                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/llama_eat.png"))
+            );
+            cowShadow = ImageIO.read(
+                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/cow_shadow.png"))
+            );
+            cowEat = ImageIO.read(
+                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/cow_eat.png"))
+            );
+            henEat = ImageIO.read(
+                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/chicken_eat.png"))
+            );
+            henShadow = ImageIO.read(
+                    Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/chicken_shadow.png"))
+            );
+        } catch (IOException | IllegalArgumentException e) {
+            System.err.println("Error");
+            e.printStackTrace();
+        }
     }
-    public void setStatus(int s){status = s;}
-    public String getStatus(){
-        return switch (status) {
-            case 0 -> "Shepherd is waiting";
-            case 1 -> "Shepherd is moving";
-            case 2 -> "Shepherd is smoking";
-            default -> throw new IllegalStateException("Invalid status code: " + status);
-        };
+
+    private static BufferedImage getPortion(BufferedImage im, Direction dir, int idx, int shadow) {
+        // Get sprite sheet dimensions
+        if(cacheMemory.containsKey(100 * idx + 10 * dir.ordinal() + shadow)){
+            return cacheMemory.get(100 * idx + 10 * dir.ordinal() + shadow);
+        }
+        int sheetWidth = im.getWidth();
+        int sheetHeight = im.getHeight();
+
+        // Calculate number of animation frames per row
+        int framesPerRow;
+        if(shadow == 1) framesPerRow = 1;
+        else framesPerRow = 4;
+        int tileWidth = sheetWidth / framesPerRow;
+
+        // Calculate number of directions (rows)
+        int directionCount = Direction.values().length;
+        int tileHeight = sheetHeight / directionCount;
+
+        // Calculate coordinates based on direction and frame index
+        int x = (idx % framesPerRow) * tileWidth;
+        int y = dir.ordinal() * tileHeight;
+
+        // Handle edge cases
+        x = Math.min(x, sheetWidth - tileWidth);
+        y = Math.min(y, sheetHeight - tileHeight);
+        cacheMemory.put(100 * idx + 10 * dir.ordinal() + shadow,  im.getSubimage(x, y, tileWidth, tileHeight));
+        return im.getSubimage(x, y, tileWidth, tileHeight);
     }
-    public Color getColor() {
-        return color;
+    public static BufferedImage getAsset(int which, Direction dir, int idx) {
+        if(which == LLAMA_EAT)
+            return getPortion(llamaEat, dir, idx, 9);
+        if(which == LLAMA_SHADOW)
+            return getPortion(llamaShadow, dir, idx, 1);
+        if(which == SHEEP_EAT)
+            return getPortion(sheepEat, dir, idx, 0);
+        if(which == COW_EAT)
+            return getPortion(cowEat, dir, idx, 0);
+        if(which == COW_SHADOW)
+            return getPortion(cowShadow, dir, idx, 0);
+        if(which == HEN_SHADOW)
+            return getPortion(henShadow, dir, idx, 0);
+        if(which == HEN_EAT)
+            return getPortion(henEat, dir, idx, 0);
+        return null;
     }
 }
