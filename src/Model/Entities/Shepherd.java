@@ -1,6 +1,5 @@
 package Model.Entities;
 
-import Model.Entities.Entity;
 import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
 import Model.Position.Spot;

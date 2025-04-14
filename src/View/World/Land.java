@@ -3,12 +3,7 @@ package View.World;
 import Controller.WorldController;
 import Model.Entities.Entity;
 import Model.Farm;
-import Model.FarmAnimals.Ewe;
-import Model.FarmAnimals.Hen;
-import Model.FarmAnimals.Sheep;
-import Model.Predators.Den;
-import Model.Predators.Wolf;
-import Model.Shepherd.Shepherd;
+
 import View.EntityMetaData;
 import Model.Entities.FarmAnimals.Ewe;
 import Model.Entities.FarmAnimals.Hen;

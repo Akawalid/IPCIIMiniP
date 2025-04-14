@@ -1,7 +1,9 @@
-package Model;
+package Model.Entities;
 
+import Model.Direction;
 import Model.Exceptions.InvalidCoordinates;
 import Model.Exceptions.UnauthorizedAction;
+import Model.Farm;
 import Model.Position.EntityMovementThread;
 import Model.Position.Positionnable;
 import Model.Position.Spot;

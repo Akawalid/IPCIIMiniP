@@ -1,9 +1,12 @@
 package Controller;
 
 import Model.Entities.FarmAnimals.Sheep;
+import Model.Entities.FarmAnimals.UpdateAgeThread;
 import Model.Entities.Shepherd;
+import Model.Farm;
 import View.MainMenu.MainMenu;
 import View.PrincipalPanel;
+import View.World.World;
 
 public class Controller {
     public static Shepherd SHEPHERD_TEST_1;
