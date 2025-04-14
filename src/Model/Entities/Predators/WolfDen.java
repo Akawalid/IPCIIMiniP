@@ -4,6 +4,7 @@ import Model.Farm;
 import Model.Position.Spot;
 
 public class WolfDen extends Den {
+
     public WolfDen(Spot s, Farm farm) {
         super(s, farm);
     }

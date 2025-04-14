@@ -1,8 +1,11 @@
 package View;
 
+import Model.Farm;
 import View.World.World;
 
 import javax.swing.*;
+
+import static Model.RoundManagement.GameStatus.CLOSE;
 
 public class Refresh extends Thread {
     public static final int DELAY = 100;

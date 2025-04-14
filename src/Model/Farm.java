@@ -808,34 +808,35 @@ public class Farm {
     public void pause_game(){ //previously called end_game
         //parcourir les entités
         // si c'est un FarmAnimal : arrêter ses threads de production de ressource
+        // si c'est un Preadateur : arrêter son déplacement
         for (Entity e : creatures) {
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 animal.pauseProductionThread();
             }
+            if (e instanceof Predator) {
+                Predator predator = (Predator) e;
+                predator.pauseThread();
+            }
         }
-
         // arrêter la progression des manches
         round.pauseRoundThread();
-
         //arrêter le vieillissement des animaux
         updateAgeThread.pauseThread();
     }
 
     public void resume_game(){
-        //parcourir les entités
-        // si c'est un FarmAnimal : arrêter ses threads de production de ressource
         for (Entity e : creatures) {
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 animal.resumeProductionThread();
             }
+            if (e instanceof Predator) {
+                Predator predator = (Predator) e;
+                predator.resumeThread();
+            }
         }
-
-        // arrêter la progression des manches
         round.resumeRoundThread();
-
-        //arrêter le vieillissement des animaux
         updateAgeThread.resumeThread();
     }
 

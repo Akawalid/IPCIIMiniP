@@ -114,7 +114,6 @@ public class Round {
 
     /** Fonction start_game qui appelle start_round pour la première fois */
     public void start_running() {
-        gameStatus = RUNNING;
         thread.start();
         start_round();
     }
@@ -125,6 +124,7 @@ public class Round {
      */
     public void start_round() {
         //gestion de la manche
+        gameStatus = RUNNING;
         num_round++;
         System.out.println("Round " + num_round + " started.");
 
@@ -135,7 +135,7 @@ public class Round {
         prix_nourriture += (int) (prix_nourriture * INFLATION);
         salaire_shepherd += (int) (salaire_shepherd * INFLATION / 2);
         loyer += (int) (loyer * INFLATION);
-        rbsmt_pret += (int) (rbsmt_pret * TAUX_PRET);
+        //rbsmt_pret += (int) (rbsmt_pret * TAUX_PRET);
 
         //ajout de prédateurs
         //TODO : Izma c'est ici :)
@@ -155,6 +155,7 @@ public class Round {
 
     public void end_game() {
         farm.pause_game();
+        gameStatus = CLOSE;
     }
 
     public void pauseRoundThread(){

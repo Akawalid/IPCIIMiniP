@@ -7,12 +7,22 @@ import Model.Position.Spot;
 public abstract class Predator extends Entity implements Runnable {
     protected Farm farm;
     protected boolean isDead;
+    protected boolean pause = false;
 
     public Predator(Spot s, Farm farm) {
         super(s);
         this.farm = farm;
         isDead = false;
     }
+
+    public void pauseThread(){
+        pause = true;
+    }
+
+    public void resumeThread(){
+        pause = false;
+    }
+
     public boolean getIsDead(){
         return isDead;
     }
