@@ -61,7 +61,9 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
 
         // Get the next spot from the queue
         assert(!path.isEmpty());
-        setPosition(path.poll()); // Move to the new position
+        Spot s = path.poll();
+        direction = Direction.deduceDirection(this.position, s);
+        setPosition(s); // Move to the new position
     }
     protected void handleConflict(){
         /*

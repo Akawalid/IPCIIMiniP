@@ -689,6 +689,8 @@ public class Farm {
                 if (predator.getIsDead()){
                     removeEntity(it, e);
 
+                } else if(predator.getPosition().getProtectedArea() > 0){
+                    predator.kill();
                 }
             }
         }

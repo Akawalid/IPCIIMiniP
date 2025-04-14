@@ -1,5 +1,7 @@
 package Model;
 
+import Model.Position.Spot;
+
 public enum Direction {
     UP(0, -1),    // (dx, dy)
     DOWN(0, 1),
@@ -23,5 +25,19 @@ public enum Direction {
             }
         }
         throw new Error("A direction should exist"); // or throw an exception if no matching direction is found
+    }
+
+    public static Direction deduceDirection(Spot s1, Spot s2){
+        //deduce the orientation of the movement
+        int dx = s2.getRow() - s1.getRow();
+        int dy = s2.getCol() - s1.getCol();
+        if (dx == 0 && dy == 0) {
+            return null; // No movement
+        }
+        if (Math.abs(dx) > Math.abs(dy)) {
+            return dx > 0 ? DOWN : UP;
+        } else {
+            return dy > 0 ? RIGHT : LEFT;
+        }
     }
 }

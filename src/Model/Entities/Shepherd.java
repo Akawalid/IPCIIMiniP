@@ -13,17 +13,22 @@ public class Shepherd extends Entity {
     public Shepherd(Spot s, Farm farm) {
         super(s);
         this.farm = farm;
+        setPosition(s);
     }
     public void setPosition(Spot position){
+        if(farm == null) return;
         assert (position != null);
         assert (position.isTraversable());
         HashSet<Spot> chunk = new HashSet<>();
         if(this.position != null){
             //this.position is null only while creating the instance
             this.position.setIsTraversable(true);
-            if (farm != null)
             chunk = farm.getChunk(this.position, PROTECTION_RADIUS);
-
+            for(Spot s: chunk){
+                if(s.getProtectedArea() > 0){
+                    s.unprotect();
+                }
+            }
 
             this.position.setPositionnable(null);
         }
@@ -31,16 +36,8 @@ public class Shepherd extends Entity {
         this.position = position;
         this.position.setPositionnable(this);
         this.position.setIsTraversable(false);
-        if(farm != null)
         for(Spot s: farm.getChunk(this.position, PROTECTION_RADIUS)){
-            if(chunk.contains(s)){
-                chunk.remove(s);
-                s.setIsProtectedArea(true);
-            }
-        }
-        for(Spot s: chunk){
-            System.out.println("aaaaaaaaaaaa " + s.getRow() + "; " + s.getCol());
-            s.setIsProtectedArea(false);
+            s.protect();
         }
     }
 

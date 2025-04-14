@@ -16,11 +16,13 @@ public abstract class Predator extends Entity implements Runnable {
     public boolean getIsDead(){
         return isDead;
     }
+    public void kill(){isDead = true;}
 
     /**
      * Méthode qui vérifie les cases adjacentes et tue les proies correspondantes.
      */
     protected abstract void checkAndKillPrey();
+
     public void reactToAreaChange() {
         isDead = true;
     }

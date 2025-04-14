@@ -83,7 +83,7 @@ public class Wolf extends Predator {
             if ( entity instanceof FarmAnimal) { // entity != null &&
                 String species = ((FarmAnimal) entity).getSpecies();
                 // Pour le wolf, la proie peut �tre une Ewe ou un Sheep
-                if (species.equals("Ewe") || species.equals("Sheep")) {
+                if (species.equals("Ewe") || species.equals("Sheep") || species.equals("Hen")) {
                     farm.removeEntity(entity);
                     entity.getPosition().setIsTraversable(true);
                 }

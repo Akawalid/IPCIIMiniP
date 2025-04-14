@@ -17,7 +17,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -99,7 +98,7 @@ public class Land extends JPanel {
                             rowOfModelToView(row),
                             null);
                 }
-                if(farm.getSpot(row, col).isProtectedArea()){
+                if(farm.getSpot(row, col).getProtectedArea() > 0){
                     g.setColor(new Color(200, 100, 200, 100));
                     g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
                 }
@@ -130,10 +129,8 @@ public class Land extends JPanel {
                 imgChoice = EntityMetaData.COW_EAT;
                 shadowChoixe = EntityMetaData.COW_SHADOW;
             } else if(e instanceof Wolf){
-                //BufferedImage i = EntityMetaData.getAsset(EntityMetaData.WOLF_EAT, e.getDirection(), 0);
-                //g.drawImage(i, x, y, null);
-                g.setColor(Color.BLACK);
-                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                BufferedImage i = EntityMetaData.getAsset(EntityMetaData.WOLF, e.getDirection(), 0);
+                g.drawImage(i, x, y, null);
             } else if(e instanceof Shepherd)
             {
                 g.setColor(Color.BLUE);
@@ -157,10 +154,10 @@ public class Land extends JPanel {
             int y = rowOfModelToView(d.getPosition().getRow());
             int x = colOfModelToView(d.getPosition().getCol());
             if(d.isActive())
-                g.setColor(Color.green);
+                g.setColor(new Color(0x283618));
             else
-                g.setColor(new Color(0, 255, 9, 100));
-            g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                g.setColor(new Color(16 * 2 + 8, 3 * 16 + 6, 16 + 8, 100));
+            g.fillOval(x, y, CELL_SIZE, CELL_SIZE);
         }
         g.setColor(null);
     }

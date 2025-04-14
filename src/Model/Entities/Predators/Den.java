@@ -20,7 +20,7 @@ public abstract class Den extends Positionnable implements Runnable {
     }
 
     public void reactToAreaChange() {
-        active = !this.position.isProtectedArea();
+        active = this.position.getProtectedArea() == 0;
     }
 
     public boolean isActive(){return active;}

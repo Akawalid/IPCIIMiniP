@@ -7,13 +7,14 @@ public class Spot {
     public static final int SIZE = 1;//1 * 1 metre²
     private int x, y;
     private boolean isTraversable;
-    private boolean isProtectedArea;
+    //number of shepherds that protect this area
+    private int isProtectedArea;
     private Positionnable positionnable;
     public Spot(int x, int y) {
         this.x = x;
         this.y = y;
         isTraversable = true;
-        isProtectedArea = false;
+        isProtectedArea = 0;
         positionnable = null;
     }
     public boolean isTraversable() {
@@ -22,11 +23,18 @@ public class Spot {
     public void setIsTraversable(boolean traversable) {
         isTraversable = traversable;
     }
-    public void setIsProtectedArea(boolean protectedArea) {
-        isProtectedArea = protectedArea;
+    public void protect() {
+        isProtectedArea++;
         if(positionnable != null) positionnable.reactToAreaChange();
     }
-    public boolean isProtectedArea() {
+
+    public void unprotect() {
+        isProtectedArea--;
+        assert(isProtectedArea >= 0);
+        //we call protect the same number of times as unprotect
+        if(positionnable != null && isProtectedArea == 0) positionnable.reactToAreaChange();
+    }
+    public int getProtectedArea() {
         return isProtectedArea;
     }
     public int getRow() {
