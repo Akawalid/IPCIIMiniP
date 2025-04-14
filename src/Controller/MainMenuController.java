@@ -50,6 +50,9 @@ public class MainMenuController {
                 simThread.start();
                 genController.getView().add("World", world);
                 genController.getView().showCard("World");
+
+                //Lancement du thread d'écoulement du temps (les manches)
+                farm.getRound().start_running();
             }
         };
     }

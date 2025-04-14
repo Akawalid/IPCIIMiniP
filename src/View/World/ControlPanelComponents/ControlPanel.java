@@ -25,17 +25,17 @@ public class ControlPanel extends JSplitPane {
     //MARGIN, represents the margin between the information, actions panels and the whole ControlPanel
     public static final int W = 250, H = 700;
 
-    private GameStatePanel gameStatePanel;
+    private final GameStatePanel gameStatePanel;
     //first part of the panel is the information panel, on top
 
-    private MarketPanel marketPanel;
+    private final MarketPanel marketPanel;
     private InformationPanel informationPanel;
     //second part of the panel is the action panel, on the bottom
     private ActionPanel actionPanel;
 
     private WorldController controller;
-    private Farm farm;
-    private World world;
+    private final Farm farm;
+    private final World world;
     private JSplitPane sp, sp2;
 
 

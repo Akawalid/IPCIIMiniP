@@ -1,7 +1,7 @@
 package Model.Resources;
 
 public class Milk extends Resource{
-    private final static int COOLDOWN_MAX_MILK = 10, PRICE = 20;
+    private final static int COOLDOWN_MAX_MILK = 10, PRICE = 30;
     public Milk() {
         super(PRICE, COOLDOWN_MAX_MILK);
     }

@@ -5,11 +5,14 @@ import Model.Entities.Entity;
 import Model.Entities.FarmAnimals.AgeState;
 import Model.Entities.FarmAnimals.FarmAnimal;
 //import Model.Entities.Predators.FoxDen;
+import Model.Entities.Shepherd;
 import Model.Position.FindPath;
 import Model.Position.Spot;
 import Model.Entities.Predators.Den;
 import Model.Entities.Predators.Predator;
 import Model.Entities.Predators.WolfDen;
+import Model.RoundManagement.Round;
+import java.util.AbstractMap.SimpleEntry;
 
 import java.util.*;
 
@@ -532,6 +535,8 @@ public class Farm {
     //this attribute represents the active entity on the farm, the one on which we want to apply operations
     private Entity selectedEntity;
 
+    private Round round;
+
     public Farm(){
         FindPath.farm = this;
         creatures = new HashSet<>();
@@ -539,6 +544,7 @@ public class Farm {
         dens = new ArrayList<>();
 
         bank = new Bank();
+        round = new Round(this);
 
         initLand();
         selectedEntity = null;
@@ -570,6 +576,29 @@ public class Farm {
         return spots.get(row * WIDTH + col);
     }
 
+    /* getter getRound */
+    public Round getRound() {
+        return round;
+    }
+
+    /** renvoie une paire contenant :
+     * - fst : le nombre d'entités de type FarmAnimal
+     * - snd : le nombre d'entités de type Shepherd
+     */
+
+    public SimpleEntry<Integer, Integer> getNbAnimalsAndShepherds() {
+        int count_animals = 0;
+        int count_shepherd = 0;
+        for (Entity e : creatures) {
+            if (e instanceof FarmAnimal) {
+                count_animals++;
+            }
+            if (e instanceof Shepherd) {
+                count_shepherd++;
+            }
+        }
+        return new SimpleEntry<>(count_animals, count_shepherd);
+    }
 
     public boolean validCoordinates(int row, int col){
         //this method checks if the given coordinates are valid.
