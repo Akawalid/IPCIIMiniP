@@ -9,20 +9,14 @@ import java.util.AbstractMap;
 
 public class GameStatePanel extends JPanel {
 
-    private static final JLabel PANEL_NAME = new JLabel("Game state");
-
-    private Farm farm;
-    private Round round;
-    private JLabel roundLabel;
-    private JPanel objectivePanel;
-    private JLabel objectiveTitle;
-    private JLabel objectiveFeeding;
-    private JLabel objectiveShepherd;
-    private JLabel objectiveRent;
-    private JLabel objectiveLoan;
-    private JLabel objectiveSeparator;
-    private JLabel objectiveTotal;
-    private JLabel balanceLabel;
+    private final Farm farm;
+    private final Round round;
+    private final JLabel objectiveFeeding;
+    private final JLabel objectiveShepherd;
+    private final JLabel objectiveRent;
+    private final JLabel objectiveLoan;
+    private final JLabel objectiveTotal;
+    private final JLabel balanceLabel;
 
 
     //constructeur
@@ -31,16 +25,17 @@ public class GameStatePanel extends JPanel {
         farm = f;
         round = farm.getRound();
 
-        roundLabel = new JLabel("Round: " + round.getNumRound());
+        RoundProgressBar roundProgressBar = new RoundProgressBar(round);
         balanceLabel = new JLabel("Balance:" +  farm.getBank().getBalance());
 
-        objectivePanel = new JPanel();
-        objectiveTitle = new JLabel("End round payment");
+        //Objective panel : one lign for each objective
+        JPanel objectivePanel = new JPanel();
+        JLabel objectiveTitle = new JLabel("End round payment");
         objectiveFeeding = new JLabel();
         objectiveShepherd = new JLabel();
         objectiveRent = new JLabel();
         objectiveLoan = new JLabel();
-        objectiveSeparator = new JLabel("-------------------------");
+        JLabel objectiveSeparator = new JLabel("-------------------------");
         objectiveTotal = new JLabel();
         update_objective_text();
 
@@ -57,8 +52,7 @@ public class GameStatePanel extends JPanel {
         //layout and adding objects for GameStatePanel
         setBackground(Color.WHITE);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(PANEL_NAME);
-        add(roundLabel);
+        add(roundProgressBar);
         add(objectivePanel);
         add(balanceLabel);
 
@@ -73,8 +67,8 @@ public class GameStatePanel extends JPanel {
 
     private void update_objective_text(){
         AbstractMap.SimpleEntry<Integer, Integer> nbAS = farm.getNbAnimalsAndShepherds();
-        objectiveFeeding.setText("Farm animals feeding: " + round.getAnimalFeedingPrice(farm.getNbAnimalsAndShepherds().getKey()));
-        objectiveShepherd.setText("+ Shepherd salary: " + round.getShepherdSalary(farm.getNbAnimalsAndShepherds().getValue()));
+        objectiveFeeding.setText("Feeding Animals: " + round.getAnimalFeedingPrice(farm.getNbAnimalsAndShepherds().getKey()));
+        objectiveShepherd.setText("+ Shepherd salaries: " + round.getShepherdSalary(farm.getNbAnimalsAndShepherds().getValue()));
         objectiveRent.setText("+ Rent: " + round.getRent());
         objectiveLoan.setText("+ Loan repayment: " + round.getLoanRepayment());
         objectiveTotal.setText("Total: " + round.getTotalPayment(farm.getNbAnimalsAndShepherds()));
@@ -83,9 +77,9 @@ public class GameStatePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        //roundProgressBar.paintComponent(g);
         balanceLabel.setText("Balance: " + farm.getBank().getBalance());
         update_objective_text();
-        roundLabel.setText("Round: " + farm.getRound().getNumRound());
     }
 
     public void connect(WorldController c){

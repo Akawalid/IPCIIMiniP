@@ -20,6 +20,7 @@ public class UpdateAgeThread extends Thread {
      */
     public UpdateAgeThread(Farm farm) {
         this.farm = farm;
+        farm.setUpdateAgeThread(this);
     }
 
     public void stopThread(){

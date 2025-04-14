@@ -7,7 +7,6 @@ public class EntityMovementThread extends Thread {
     public static final int DELAY = 100;
     private Entity e;
     public EntityMovementThread(Entity e){
-
         this.e = e;
     }
     @Override

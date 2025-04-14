@@ -64,6 +64,9 @@ public class WorldController {
                             case HEN:
                                 newEntity = new Hen(spot);
                                 break;
+                            case SHEPHERD:
+                                newEntity = new Shepherd(spot, farm);
+                                break;
                             default:
                                 System.out.println("Unknown purchase type.");
                         }
@@ -73,7 +76,7 @@ public class WorldController {
                             try{
                                 farm.getBank().withdraw(newEntity.get_buying_price());
                             } catch (UnauthorizedAction s) {
-                                //TODO: inform the vue to display the error
+                                //rien
 
                             }
                             System.out.println(world.getPurchaseMode() + " placed at (" + row + ", " + col + ")");
@@ -95,7 +98,7 @@ public class WorldController {
                     if (entity instanceof Shepherd) {
                         farm.launchMovementThread(row, col);
                     } else {
-                        // TODO: gérer le déplacement pour d'autres types d'entités si nécessaire
+                        //gérer le déplacement pour d'autres types d'entités si nécessaire
                     }
                 } else {
                     // 3. Sinon, le clic est interprété comme une sélection d'entité
@@ -127,7 +130,7 @@ public class WorldController {
                     farm.getBank().deposit(fa.get_selling_price());
                     farm.removeEntity(fa);
                 } catch (UnauthorizedAction s) {
-                    //TODO
+                    //rien
                 }
             }
         };
@@ -191,7 +194,7 @@ public class WorldController {
                     r.collect();
                     farm.getBank().deposit(r.get_selling_price());
                 } catch (Exception ex) {
-                    //TODO
+                    //rien
                 }
             }
         };

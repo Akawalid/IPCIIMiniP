@@ -35,6 +35,9 @@ public class Controller {
         simThread.start();
         this.view.add("World", world);
         this.view.showCard("World");
+
+        //Lancement du thread d'écoulement du temps (les manches)
+        farm.getRound().start_running();
     }
 
     public PrincipalPanel getView() {

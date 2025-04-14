@@ -25,6 +25,14 @@ public class RoundThread extends Thread {
         this.active = true;
     }
 
+    public int getCooldownMax(){
+        return CD_MAX;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
     /** Fonction stopThread() */
     public void stopThread() {
         this.active = false;

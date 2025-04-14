@@ -103,10 +103,12 @@ public class Land extends JPanel {
                     g.setColor(new Color(200, 100, 200, 100));
                     g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
                 }
+                /* permet d'afficher en rose les cases non traversables
                 if(!farm.getSpot(row, col).isTraversable()) {
                     g.setColor(Color.MAGENTA);
                     g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
                 }
+                */
             }
         }
     }

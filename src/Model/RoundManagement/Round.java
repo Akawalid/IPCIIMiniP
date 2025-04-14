@@ -5,6 +5,8 @@ import Model.Farm;
 
 import java.util.AbstractMap;
 
+import static Model.RoundManagement.GameStatus.*;
+
 public class Round {
 
     /* Ecrire les attributs suivants
@@ -18,6 +20,8 @@ public class Round {
     private boolean condition_fin;
     private RoundThread thread;
     private Farm farm;
+
+    private GameStatus gameStatus;
 
     /* Attributs pour les paiements à réaliser chaque mois */
 
@@ -59,6 +63,14 @@ public class Round {
         return num_round;
     }
 
+    public int getProgress(){
+        return thread.getCooldown();
+    }
+
+    public int getMaxProgress(){
+        return thread.getCooldownMax();
+    }
+
     /** getAnimalFeedingPrice(int nbAnimals)
      * = nbAnimals * prix_nourriture
      */
@@ -97,6 +109,7 @@ public class Round {
 
     /** Fonction start_game qui appelle start_round pour la première fois */
     public void start_running() {
+        gameStatus = RUNNING;
         thread.start();
         start_round();
     }
@@ -106,6 +119,7 @@ public class Round {
      * 2. Ré-initialise le thread
      */
     private void start_round() {
+        //gestion de la manche
         num_round++;
         System.out.println("Round " + num_round + " started.");
         thread.initialize();
@@ -114,10 +128,14 @@ public class Round {
         salaire_shepherd += (int) (salaire_shepherd * INFLATION / 2);
         loyer += (int) (loyer * INFLATION);
         rbsmt_pret += (int) (rbsmt_pret * TAUX_PRET);
+
+        //gestion des prédateurs
+        //TODO : Izma c'est ici :)
     }
 
     /** Fonction end_round qui met fin au round */
     protected void end_round() {
+        gameStatus = BETWEEN_ROUNDS;
         System.out.println("Round " + num_round + " ended.");
         //TODO fin de manche
 
@@ -129,8 +147,12 @@ public class Round {
     }
 
     private void end_running() {
+        gameStatus = GAME_OVER;
+        farm.end_game();
+    }
+
+    public void stopRoundThread(){
         thread.stopThread();
-        //TODO : farm.end_game();
     }
 
 }

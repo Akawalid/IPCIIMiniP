@@ -92,4 +92,12 @@ public abstract class FarmAnimal extends Entity {
         else
             throw new UnauthorizedAction("Impossible to sell a BABY farm animal.");
     }
+
+    /** Fonction stopProductionThread qui met fin aux threads de production de chaque ressource */
+    public void stopProductionThread() {
+        for (Resource r : resourceList) {
+            r.stopProductionThread();
+        }
+    }
+
 }

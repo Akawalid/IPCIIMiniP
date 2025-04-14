@@ -45,10 +45,14 @@ public class ControlPanel extends JSplitPane {
         this.farm = farm;
         this.world = world;
         setPreferredSize(new Dimension(W, H));
+
+        //State of the game
         gameStatePanel = new GameStatePanel(farm);
         gameStatePanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         gameStatePanel.setPreferredSize(new Dimension(W, 100));
         gameStatePanel.setBackground(Color.red);
+
+        //Market
         marketPanel = new MarketPanel(world);
         marketPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         marketPanel.setPreferredSize(new Dimension(W, 100));

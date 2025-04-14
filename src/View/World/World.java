@@ -43,7 +43,7 @@ public class World extends JLayeredPane {
 
         // Control Panel (Right Column)
         controlPanel = new ControlPanel(farm, this);
-        controlPanel.setPreferredSize(new Dimension(200, 200));
+        controlPanel.setPreferredSize(new Dimension(180, 200));
         worldPanel.add(controlPanel, JSplitPane.RIGHT);
 
         add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer

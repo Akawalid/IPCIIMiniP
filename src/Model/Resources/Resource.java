@@ -41,4 +41,9 @@ public abstract class Resource {
     public int get_selling_price(){
         return PRICE;
     }
+
+    /** Fonction stopProductionThread */
+    public void stopProductionThread() {
+        cooldown_thread.stopThread();
+    }
 }

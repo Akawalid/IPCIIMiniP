@@ -11,13 +11,13 @@ import java.awt.*;
 public class ResourceBarPanel extends JPanel {
 
     //création d'une variable de type JProgressBar
-    private JProgressBar progressBar;
+    private final JProgressBar progressBar;
 
     //boutons
     private final CustomButton collectButton;
 
     //création d'une variable Resource
-    private Resource resource;
+    private final Resource resource;
 
     /** Classe qui indique quand la ressource associée à ResourceBarPanel est prête
      * à l'aide d'une barre de progression (basée sur cpt de ResourceCooldownThread)
@@ -29,13 +29,15 @@ public class ResourceBarPanel extends JPanel {
 
         //créer un FlowLayout avec le nom de la ressource, la barre de progression et un bouton
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        JLabel resourceLabel = new JLabel(resource.get_name());
-        add(resourceLabel);
+        //JLabel resourceLabel = new JLabel(resource.get_name());
+        //add(resourceLabel);
 
         //création de la barre de progression
         progressBar = new JProgressBar();
         progressBar.setValue(resource.get_cooldown());
         progressBar.setMaximum(resource.get_cooldown_max());
+        progressBar.setString(resource.get_name());
+        progressBar.setStringPainted(true);
         add(progressBar);
 
         //ajouter un bouton qui collecte la ressource

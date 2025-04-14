@@ -5,6 +5,7 @@ import Model.Entities.Entity;
 import Model.Entities.FarmAnimals.AgeState;
 import Model.Entities.FarmAnimals.FarmAnimal;
 //import Model.Entities.Predators.FoxDen;
+import Model.Entities.FarmAnimals.UpdateAgeThread;
 import Model.Entities.Shepherd;
 import Model.Position.FindPath;
 import Model.Position.Spot;
@@ -537,6 +538,8 @@ public class Farm {
 
     private Round round;
 
+    private UpdateAgeThread updateAgeThread;
+
     public Farm(){
         FindPath.farm = this;
         creatures = new HashSet<>();
@@ -585,7 +588,6 @@ public class Farm {
      * - fst : le nombre d'entités de type FarmAnimal
      * - snd : le nombre d'entités de type Shepherd
      */
-
     public SimpleEntry<Integer, Integer> getNbAnimalsAndShepherds() {
         int count_animals = 0;
         int count_shepherd = 0;
@@ -792,6 +794,29 @@ public class Farm {
             }
         }
         return chunk;
+    }
+
+    public void setUpdateAgeThread(UpdateAgeThread t){
+        updateAgeThread = t;
+    }
+
+    public void end_game(){
+        //parcourir les entités
+        // si c'est un FarmAnimal : arrêter ses threads de production de ressource
+        for (Entity e : creatures) {
+            if (e instanceof FarmAnimal) {
+                FarmAnimal animal = (FarmAnimal) e;
+                animal.stopProductionThread();
+            }
+        }
+
+        // arrêter la progression des manches
+        round.stopRoundThread();
+
+        //arrêter le vieillissement des animaux
+        updateAgeThread.stopThread();
+
+
     }
 
 }

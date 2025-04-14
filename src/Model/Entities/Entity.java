@@ -24,7 +24,7 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
     // An entity's priority depends on its distance to the target:
     // The closer it is to the target, the higher its priority.
     // Therefore, priority is determined by the remaining distance to the target.
-    // TODO: Les bêtes bougent ? Si oui, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
+    // Si les bêtes bougent, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
 
     public Entity(Spot position){
         super(position);
