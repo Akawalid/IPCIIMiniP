@@ -16,6 +16,7 @@ import View.World.ControlPanelComponents.Information.PurchaseType;
 import View.World.Land;
 import View.World.World;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -207,7 +208,7 @@ public class WorldController {
         };
     }
 
-    public MouseAdapter getNextRoundHandler() {
+    /*public MouseAdapter getNextRoundHandler() {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -215,7 +216,28 @@ public class WorldController {
                 farm.getRound().start_round();
             }
         };
+    }*/
+
+    public MouseAdapter getNextRoundHandler() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                farm.getRound().nextRound(); // Démarre le round suivant et incrémente num_round
+            }
+        };
     }
+
+
+    /*public MouseAdapter getEndGameHandler() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                farm.getRound().end_game();
+            }
+        };
+    }*/
 
     public MouseAdapter getEndGameHandler() {
         return new MouseAdapter() {
@@ -223,6 +245,13 @@ public class WorldController {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 farm.getRound().end_game();
+
+                // Fermer la fenêtre principale
+                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(world);
+                if (topFrame != null) {
+                    topFrame.dispose();
+                }
+                System.exit(0);
             }
         };
     }
