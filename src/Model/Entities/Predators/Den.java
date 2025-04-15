@@ -7,8 +7,14 @@ import Model.Position.Spot;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Abstract class representing a Den where predators can spawn.
+ * This class implements the Runnable interface to allow for concurrent execution.
+ */
 public abstract class Den extends Positionnable implements Runnable {
-    private static final int MAX_WOLVES = 3;
+
+    // Maximum number of predators allowed to be alive from this den at once
+    private static final int MAX_PREDATORS = 2;
     protected Farm farm;
     protected boolean active;
     protected ArrayList<Predator> livingPredators;
@@ -16,6 +22,12 @@ public abstract class Den extends Positionnable implements Runnable {
     // Nouveau flag pour éviter de lancer plusieurs threads de désactivation simultanée
     private boolean tempDisableRunning = false;
 
+
+    /**
+     * Constructor for the Den.
+     * @param s the Spot where the den is located
+     * @param farm the Farm object that holds the current game state
+     */
     public Den(Spot s, Farm farm) {
         super(s);
 
@@ -29,9 +41,9 @@ public abstract class Den extends Positionnable implements Runnable {
     }*/
 
     /**
-     * Méthode réagissant aux changements d'aire protégée sur le spot.
-     * Si la zone est protégée (protectedArea > 0) et que le den est actif,
-     * il se désactive pendant 8 secondes.
+     * React to changes in the protected area of the spot.
+     * If the area is protected (protectedArea > 0) and the den is active,
+     * it is temporarily disabled for a set duration.
      */
    public synchronized void reactToAreaChange() {
         if (this.position.getProtectedArea() > 0) {
@@ -51,16 +63,16 @@ public abstract class Den extends Positionnable implements Runnable {
     }
 
     /**
-     * Méthode privée qui désactive le den pendant 8 secondes.
-     * Un thread est lancé pour effectuer le délai, après quoi, si la zone n'est plus protégée,
-     * le den est réactivé.
+     * Private method to disable the den temporarily.
+     * It starts a new thread that sleeps for a specified time (25 seconds in this case);
+     * after the delay, if the area protection has been removed, the den is reactivated.
      */
     private synchronized void disableTemporarily() {
         tempDisableRunning = true;
         active = false;
         new Thread(() -> {
             try {
-                Thread.sleep(20000); // Délai de 10 secondes
+                Thread.sleep(25000); // Délai de 10 secondes
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -76,49 +88,68 @@ public abstract class Den extends Positionnable implements Runnable {
         }).start();
     }
 
+    /**
+     * Checks if the den is active.
+     * @return true if active, false otherwise.
+     */
 
     public boolean isActive(){return active;}
 
     /**
-     * M�thode abstraite qui spawn un pr�dateur (Wolf ou Fox) depuis le den.
+     * Abstract method to spawn a predator (such as a Wolf or Fox) from the den.
+     * Concrete subclasses must provide an implementation.
      */
     protected abstract void spawnPredator();
+
+    /**
+     * Updates the list of living predators by removing those that are dead.
+     */
     private void updateLivingPredators() {
         for(Iterator<Predator> iterator = livingPredators.iterator(); iterator.hasNext();) {
             Predator predator = iterator.next();
             if (predator.getIsDead())  iterator.remove();
         }
     }
-    /*@Override
-    public void run() {
-        while(true) {
-            updateLivingPredators();
-            if(livingPredators.size() < MAX_WOLVES && active) spawnPredator();
-            try {
-                Thread.sleep(5000); // D�lai entre chaque spawn
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }*/
 
+    /**
+     * Stops the den from deploying new predators and stops all predators spawned from this den.
+     * This method should be called to gracefully shut down the den.
+     */
+    public void stopDen() {
+        active = false;
+        // Arrêtez également tous les prédateurs spawnés par ce dens
+        for (Predator p : livingPredators) {
+            p.kill();  // ou p.stopPredator(), selon votre implémentation
+        }
+    }
+
+    /**
+     * The run method for this Runnable.
+     * This method continuously checks the protection level of the area,
+     * updates the list of living predators, and spawns new predators if allowed.
+     */
     @Override
     public void run() {
-        while (true) {
+        while (active) {
             // Vérifier périodiquement le niveau de protection
             this.reactToAreaChange();
             // Mise à jour de la liste des prédateurs vivants et tentative de spawn
             updateLivingPredators();
-            if (livingPredators.size() < MAX_WOLVES && active) {
+            if (livingPredators.size() < MAX_PREDATORS && active) {
                 spawnPredator();
             }
             try {
-                Thread.sleep(5000); // Intervalle de spawn
+                Thread.sleep(6000); // Intervalle de spawn
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;
             }
         }
     }
+
+
+
+
+
 
 }

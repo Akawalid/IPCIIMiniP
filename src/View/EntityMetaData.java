@@ -5,6 +5,7 @@ import Model.Direction;
 import Model.Farm;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,6 +13,11 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
+
+/**
+ * This class is responsible for loading and providing access to various entity images used in the game.
+ * It includes methods to retrieve specific images based on their type and direction.
+ */
 public class EntityMetaData {
     public static int LLAMA_SHADOW = 0,
         LLAMA_EAT = 1,
@@ -20,7 +26,9 @@ public class EntityMetaData {
         COW_EAT = 4,
         HEN_EAT = 5,
         HEN_SHADOW = 6,
-    WOLF = 7;
+    WOLF = 7,
+
+    FOX = 8;
     private static Random random = new Random();
 
     private static BufferedImage sheepEat;
@@ -31,6 +39,8 @@ public class EntityMetaData {
     private static BufferedImage cowEat;
     private static BufferedImage henShadow;
     private static BufferedImage henEat;
+    private static BufferedImage wolfImage;
+    private static BufferedImage foxImage;
 
     //private static HashMap<Integer, BufferedImage> cacheMemory;
     static {
@@ -61,6 +71,17 @@ public class EntityMetaData {
             henShadow = ImageIO.read(
                     Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/chicken_shadow.png"))
             );
+            // Charger l'image du loup
+            wolfImage = ImageIO.read(Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/wolf.png")));
+            wolfImage = toBufferedImage(
+                    wolfImage.getScaledInstance(12, 12, Image.SCALE_SMOOTH)
+            );
+            // Charger l'image du renard
+            foxImage = ImageIO.read(Objects.requireNonNull(EntityMetaData.class.getResource("/Assets/images/Animals/fox.png")));
+            foxImage = toBufferedImage(
+                    foxImage.getScaledInstance(12, 12, Image.SCALE_SMOOTH)
+            );
+
         } catch (IOException | IllegalArgumentException e) {
             System.err.println("Error");
             e.printStackTrace();
@@ -111,4 +132,38 @@ public class EntityMetaData {
             return getPortion(henEat, dir, idx, 0);
         return null;
     }
+
+    /**
+     * Méthode pour récupérer l'image du loup.
+     *
+     */
+    public static BufferedImage getWolfAsset() {
+        return wolfImage;
+    }
+
+    public static BufferedImage getFoxAsset() {
+        return foxImage;
+    }
+
+    /**
+     * Converts a generic Image to a BufferedImage.
+     * This is useful for scaling and processing images.
+     *
+     * @param img the Image to be converted.
+     * @return the corresponding BufferedImage.
+     */
+    private static BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
+            return (BufferedImage) img;
+        }
+        BufferedImage bimage = new BufferedImage(
+                img.getWidth(null), img.getHeight(null),
+                BufferedImage.TYPE_INT_ARGB
+        );
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+        return bimage;
+    }
+
 }

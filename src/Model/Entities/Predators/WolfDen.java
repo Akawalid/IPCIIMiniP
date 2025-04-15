@@ -22,4 +22,5 @@ public class WolfDen extends Den {
             new Thread(wolf).start();
         }
     }
+
 }

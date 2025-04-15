@@ -5,6 +5,7 @@ import Model.Entities.Entity;
 import Model.Entities.FarmAnimals.AgeState;
 import Model.Entities.FarmAnimals.FarmAnimal;
 import Model.Entities.FarmAnimals.UpdateAgeThread;
+import Model.Entities.Predators.FoxDen;
 import Model.Entities.Shepherd;
 import Model.Position.FindPath;
 import Model.Position.Spot;
@@ -623,13 +624,19 @@ public class Farm {
         return creatures.iterator();
     }
 
-    public HashSet<Entity> getEntitiesSet(){
+    /*public HashSet<Entity> getEntitiesSet(){
         return creatures;
+    }*/
+
+    public synchronized HashSet<Entity> getEntitiesSet() {
+        return new HashSet<>(creatures);
     }
 
-    public void addEntity(Entity e){
+
+    public synchronized void addEntity(Entity e) {
         creatures.add(e);
     }
+
 
     public Entity getEntityInSpot(int row, int col){
         if(getSpot(row, col).getPositionnable() instanceof Entity){
@@ -683,7 +690,7 @@ public class Farm {
         return null;
     }
 
-    public void cleanDeadEntities() {
+    public synchronized void cleanDeadEntities() {
         Iterator<Entity> it = creatures.iterator();
         while (it.hasNext()) {
             Entity e = it.next();
@@ -723,7 +730,7 @@ public class Farm {
                 FarmAnimal animal = (FarmAnimal) e;
                 animal.updateAge();
 //                if (animal.getState() == AgeState.DEAD)
-//                    // Supprime en toute sécurité l'élément actuellement itéré
+//                    // Supprime l'élément actuellement itéré
 //                    removeEntity(it, e);
             }
         }
@@ -731,8 +738,8 @@ public class Farm {
 
     public void generateDens() {
         Random rand = new Random();
-        int numWolfDens = rand.nextBoolean() ? 2 : 3; // g�n�re 2 ou 3 dens de loup
-        //int numFoxDens = rand.nextBoolean() ? 2 : 3;  // g�n�re 2 ou 3 dens de renard
+        int numWolfDens = rand.nextBoolean() ? 1 : 2; // g�n�re 2 ou 3 dens de loup
+        int numFoxDens = rand.nextBoolean() ? 1 : 2;  // g�n�re 2 ou 3 dens de renard
 
         for (int i = 0; i < numWolfDens; i++) {
             Spot spot = getRandomTraversableSpot();
@@ -740,12 +747,12 @@ public class Farm {
             dens.add(wolfDen);
             new Thread(wolfDen).start();
         }
-//        for (int i = 0; i < numFoxDens; i++) {
-//            Spot spot = getRandomTraversableSpot();
-//            //FoxDen foxDen = new FoxDen(spot, this);
-//            //addEntity(foxDen);
-//            //new Thread(foxDen).start();
-//        }
+        for (int i = 0; i < numFoxDens; i++) {
+            Spot spot = getRandomTraversableSpot();
+            FoxDen foxDen = new FoxDen(spot, this);
+            dens.add(foxDen);
+            new Thread(foxDen).start();
+        }
     }
 
     // M�thode utilitaire pour obtenir une case traversable al�atoire
@@ -766,7 +773,7 @@ public class Farm {
         generateDens();
     }
 
-    public void removeEntity(Entity e){
+    public synchronized void removeEntity(Entity e){
         /** This method removes an entity from the farm
          * it is used when an entity dies or when it is removed from the farm
          */
@@ -787,7 +794,7 @@ public class Farm {
 
         System.out.printf("%s-%d died.\n", e.getSpecies(), e.getId());
     }
-    public void removeEntity(Iterator<Entity> it, Entity e){
+    public synchronized void removeEntity(Iterator<Entity> it, Entity e){
         /** This method removes an entity from the farm
          * it is used when an entity dies or when it is removed from the farm
          */
@@ -865,5 +872,35 @@ public class Farm {
         round.resumeRoundThread();
         updateAgeThread.resumeThread();
     }
+
+    public synchronized void refreshPredators() {
+        // Arrêtez tous les dens existants
+        for (Den d : dens) {
+            d.stopDen(); // Méthode à implémenter dans Den pour arrêter correctement son thread
+        }
+        // Vider la collection
+        dens.clear();
+        removeInactiveDens();
+        // Générer de nouveaux dens
+        generateDens();
+    }
+
+    public synchronized void removeInactiveDens() {
+        // On crée un snapshot de la liste pour éviter la ConcurrentModificationException
+        ArrayList<Den> densSnapshot = new ArrayList<>(dens);
+        for (Den d : densSnapshot) {
+            // Ici, on considère que "inactif" signifie que le dens n'est pas actif
+            // (il a été désactivé, par exemple via reactToAreaChange ou stopDen)
+            if (!d.isActive()) {
+                // Arrêter le thread du dens
+                d.stopDen();
+                // Retirer le dens de la collection principale
+                dens.remove(d);
+                System.out.println("Den retiré à (" + d.getPosition().getRow() + ", " + d.getPosition().getCol() + ")");
+            }
+        }
+    }
+
+
 
 }

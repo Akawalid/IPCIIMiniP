@@ -1,5 +1,8 @@
 package Model.Entities.Predators;
 
+
+
+
 import Model.Entities.Entity;
 import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
@@ -10,11 +13,12 @@ import Model.Exceptions.InvalidCoordinates;
 
 import java.util.*;
 
-public class Wolf extends Predator {
+public class Fox extends Predator {
 
-    public Wolf(Spot s, Farm farm) {
+    public Fox(Spot s, Farm farm) {
         super(s, farm);
     }
+
     @Override
     public void move() throws InvalidCoordinates {
         super.move();
@@ -31,7 +35,7 @@ public class Wolf extends Predator {
             }
 
             if(pause) continue;
-            // 1. V�rifier et tuer toute proie adjacente (Ewe ou Sheep)
+            // 1. V?rifier et tuer toute proie adjacente (Ewe ou Sheep)
             checkAndKillPrey();
 
             // 2. Chercher la proie la plus proche
@@ -48,7 +52,7 @@ public class Wolf extends Predator {
                     }
                 }
             } else {
-                // Si aucune proie n'est d�tect�e, se d�placer al�atoirement
+                // Si aucune proie n'est d?tect?e, se d?placer al?atoirement
                 List<Spot> freeSpots = new ArrayList<>();
                 for (Spot neighbor : getAdjacentSpots(this.getPosition())) {
                     if (neighbor.isTraversable() && neighbor.getProtectedArea() == 0) {
@@ -57,7 +61,7 @@ public class Wolf extends Predator {
                 }
                 if (!freeSpots.isEmpty()) {
                     Spot next = freeSpots.get(rand.nextInt(freeSpots.size()));
-                    // Cr�er un chemin d'une seule case pour le d�placement
+                    // Cr?er un chemin d'une seule case pour le d?placement
                     ArrayDeque<Spot> singleStep = new ArrayDeque<>();
                     singleStep.add(next);
                     this.setPath(singleStep);
@@ -73,24 +77,23 @@ public class Wolf extends Predator {
 
         }
     }
-protected void checkAndKillPrey() {
-    for (Spot neighbor : getAdjacentSpots(this.getPosition())) {
-        Entity entity = farm.getEntityInSpot(neighbor.getRow(), neighbor.getCol());
-        if (entity instanceof FarmAnimal) { // entity != null &&
-            String species = entity.getSpecies();
-            // Pour le wolf, la proie peut �tre une Ewe ou un Sheep
-            if (species.equals("Ewe") || species.equals("Sheep") ) {
+    protected void checkAndKillPrey() {
+        for (Spot neighbor : getAdjacentSpots(this.getPosition())) {
+            Entity entity = farm.getEntityInSpot(neighbor.getRow(), neighbor.getCol());
+            if (entity instanceof FarmAnimal) { // entity != null &&
+                String species = entity.getSpecies();
+                // Pour le wolf, la proie peut ?tre une Ewe ou un Sheep
+                if (species.equals("Hen")) {
 //                    farm.removeEntity(entity);
 //                    entity.getPosition().setIsTraversable(true);
-                entity.kill();
+                    entity.kill();
+                }
             }
         }
     }
-}
-
 
     /**
-     * Recherche la proie la plus proche (Ewe ou Sheep) parmi les entit�s de la ferme.
+     * Recherche la proie la plus proche (Ewe ou Sheep) parmi les entit?s de la ferme.
      */
     public FarmAnimal findClosestPrey() {
         FarmAnimal closest = null;
@@ -101,7 +104,7 @@ protected void checkAndKillPrey() {
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 String species = animal.getSpecies();
-                if (species.equals("Ewe") || species.equals("Sheep")) {
+                if (species.equals("Hen")) {
                     double distance = this.getPosition().distanceTo(animal.getPosition());
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -112,17 +115,20 @@ protected void checkAndKillPrey() {
         }
         return closest;
     }
-    @Override //TODO
+
+    @Override
     public String getSpecies() {
-        return "Wolf";
-    }
-    @Override //TODO
-    public int get_buying_price() {
-        throw new UnsupportedOperationException("Not supported on predator.");
+        return null;
     }
 
     @Override
-    public int get_selling_price() {
-        throw new UnsupportedOperationException("Not supported on predator.");
+    public int get_buying_price() throws UnauthorizedAction {
+        return 0;
+    }
+
+    @Override
+    public int get_selling_price() throws UnauthorizedAction {
+        return 0;
     }
 }
+
