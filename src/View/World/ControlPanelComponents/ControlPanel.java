@@ -71,7 +71,7 @@ public class ControlPanel extends JSplitPane {
                 Dialog.ModalityType.APPLICATION_MODAL
         );
         dialog.setContentPane(betweenRoundsPanel);
-        dialog.setSize(400, 200);
+        dialog.setSize(200, 150);
         //dialog.setLocationRelativeTo(this);
 
         popup = false; //est-ce qu'une popup est actuellement affichée
@@ -114,12 +114,6 @@ public class ControlPanel extends JSplitPane {
                     popup = true;
                     betweenRoundsPanel.updateText();
                     dialog.setVisible(true);
-                    /*JOptionPane.showMessageDialog(
-                        this,
-                        "La manche est terminée ! Préparez-vous pour la suivante.",
-                        "Fin de manche",
-                        JOptionPane.INFORMATION_MESSAGE
-                    );*/
                 }
                 break;
             default:
