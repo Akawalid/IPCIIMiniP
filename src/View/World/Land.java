@@ -2,14 +2,13 @@ package View.World;
 
 import Controller.WorldController;
 import Model.Entities.Entity;
+import Model.Entities.Predators.*;
 import Model.Farm;
 
 import View.EntityMetaData;
 import Model.Entities.FarmAnimals.Ewe;
 import Model.Entities.FarmAnimals.Hen;
 import Model.Entities.FarmAnimals.Sheep;
-import Model.Entities.Predators.Den;
-import Model.Entities.Predators.Wolf;
 import Model.Entities.Shepherd;
 import View.Refresh;
 
@@ -116,10 +115,10 @@ public class Land extends JPanel {
                                 null);
                     }
                 }
-                if(!farm.getSpot(row, col).isTraversable()){
-                    g.setColor(new Color(255, 0, 0, 100));
-                    g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
-                }
+                //if(!farm.getSpot(row, col).isTraversable()){
+                    //g.setColor(new Color(255, 0, 0, 100));
+                    //g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
+                //}
             }
         }
     }
@@ -138,21 +137,57 @@ public class Land extends JPanel {
                 imgChoice = EntityMetaData.SHEEP_EAT;
                 shadowChoice = EntityMetaData.LLAMA_SHADOW;
             } else if (e instanceof Hen) {
+                imgChoice = EntityMetaData.HEN_EAT;
+                //imgChoice = EntityMetaData.LLAMA_EAT;
+                shadowChoice = EntityMetaData.HEN_SHADOW;
+            } else if (e instanceof Ewe) {
                 imgChoice = EntityMetaData.LLAMA_EAT;
                 shadowChoice = EntityMetaData.LLAMA_SHADOW;
-            } else if (e instanceof Ewe) {
-                imgChoice = EntityMetaData.COW_EAT;
-                shadowChoice = EntityMetaData.COW_SHADOW;
             } else if (e instanceof Wolf) {
-                g.setColor(Color.BLACK);
-                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                //g.setColor(Color.BLACK);
+                //imgChoice = EntityMetaData.WOLF;
+                //g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                // Récupérer l'image du loup déjà redimensionnée
+                BufferedImage wolfImg = EntityMetaData.getWolfAsset();
+                if (wolfImg != null) {
+                    // redimensionner ici si nécessaire (par défaut 32 x32)
+                    Image scaledWolf = wolfImg.getScaledInstance(CELL_SIZE, CELL_SIZE, Image.SCALE_SMOOTH);
+                    g.drawImage(scaledWolf, x, y, null);
+                } else {
+                    // En cas d'échec, dessiner un rectangle de secours
+                    g.setColor(Color.BLACK);
+                    g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                }
+            } else if (e instanceof Fox) {
+                BufferedImage foxImg = EntityMetaData.getFoxAsset();
+                if (foxImg != null) {
+                    // redimensionner ici si nécessaire (par défaut 32 x32)
+                    Image scaledFox = foxImg.getScaledInstance(CELL_SIZE, CELL_SIZE, Image.SCALE_SMOOTH);
+                    g.drawImage(scaledFox, x, y, null);
+                } else {
+                    // En cas d'échec, dessiner un rectangle de secours
+                    g.setColor(Color.BLACK);
+                    g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                }
+
+            //g.setColor(Color.BLACK);
+            //imgChoice = EntityMetaData.WOLF;
+            //g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+
             } else if (e instanceof Shepherd) {
                 g.setColor(Color.BLUE);
                 g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
 
-            }
+            } /*else {
+            // Traitement pour les autres entités
+            BufferedImage i = EntityMetaData.getAsset(shadowChoice, e.getDirection(), 0);
+            int ix = i.getWidth();
+            int iy = i.getHeight();
+            g.drawImage(i, x - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2 - EPSILON, null);
+            i = EntityMetaData.getAsset(imgChoice, e.getDirection(), 0);
+            g.drawImage(i, x - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2, null);*/
 
-            if (!(e instanceof Wolf || e instanceof Shepherd)) {
+          if (!(e instanceof Wolf || e instanceof Shepherd || e instanceof Fox)) {
                 BufferedImage i = EntityMetaData.getAsset(shadowChoice, e.getDirection(), 0);
                 int ix = i.getWidth();
                 int iy = i.getHeight();
@@ -166,8 +201,30 @@ public class Land extends JPanel {
         for (Den d : densSnapshot) { // Utiliser la copie
             int y = rowOfModelToView(d.getPosition().getRow());
             int x = colOfModelToView(d.getPosition().getCol());
-            g.setColor(d.isActive() ? new Color(0x283618) : new Color(40, 54, 24, 70) // alpha = 128 sur 255 (≈ 50% d'opacité)
-            );
+
+            // Choix de la couleur selon le type de terrier et son état actif
+            if (d instanceof WolfDen) {
+                // Pour un terrier de loup : gris foncé (active) ou gris foncé semi-transparent (inactive)
+                if(d.isActive()){
+                    g.setColor(new Color(64, 64, 64)); // Gris foncé
+                } else {
+                    g.setColor(new Color(64, 64, 64, 100)); // Même couleur mais avec transparence
+                }
+            }
+            else if (d instanceof FoxDen) {
+                // Pour un terrier de renard : rouge brique foncé (active) ou orange foncé semi-transparent (inactive)
+                if(d.isActive()){
+                    g.setColor(new Color(150, 50, 50)); // rouge brique  foncé (RGB 255, 140, 0)
+                } else {
+                    g.setColor(new Color(150, 50, 50, 100)); // Même couleur avec transparence
+                }
+            }
+            else {
+                // Pour toute autre classe de Den, utiliser la couleur par défaut existante
+                g.setColor(d.isActive() ? new Color(0x283618) : new Color(40, 54, 24, 70));
+            }
+
+            // Dessiner le terrier sous forme d'ovale dans la case
             g.fillOval(x, y, CELL_SIZE, CELL_SIZE);
         }
 
@@ -192,7 +249,7 @@ public class Land extends JPanel {
         int col = Farm.WIDTH - Math.floorDiv(x, CELL_SIZE) - 1;
         int row = Math.floorDiv(y, CELL_SIZE);
 
-        // V�rifier que row et col sont dans les limites valides
+        // Vérifier que row et col sont dans les limites valides
         if (row < 0 || row >= Farm.HEIGHT || col < 0 || col >= Farm.WIDTH) {
             return null;
         }
