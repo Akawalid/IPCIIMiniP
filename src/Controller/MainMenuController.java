@@ -5,6 +5,7 @@ import Model.Entities.FarmAnimals.Sheep;
 import Model.Entities.FarmAnimals.UpdateAgeThread;
 import Model.Entities.Shepherd;
 import View.MainMenu.MainMenu;
+import View.World.PlaySound;
 import View.World.World;
 
 import java.awt.event.MouseAdapter;
@@ -50,6 +51,8 @@ public class MainMenuController {
                 simThread.start();
                 genController.getView().add("World", world);
                 genController.getView().showCard("World");
+                PlaySound ps = new PlaySound(farm);
+                ps.start();
             }
         };
     }

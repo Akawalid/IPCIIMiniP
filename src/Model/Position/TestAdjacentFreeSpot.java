@@ -1,7 +1,6 @@
 package Model.Position;
 
 import Model.Farm;
-import Model.Position.Spot;
 
 public class TestAdjacentFreeSpot {
     public static void main(String[] args) {
@@ -13,7 +12,7 @@ public class TestAdjacentFreeSpot {
         System.out.println("Testing for spot at (" + center.getRow() + ", " + center.getCol() + ")");
 
         // 1. Cas initial : tous les spots adjacents sont traversables (libres)
-        Spot freeSpot = farm.getAdjacentFreeSpot(center);
+        Spot freeSpot = farm.getAdjascentFreeUnsecureSpot(center);
         if (freeSpot != null) {
             System.out.println("Free adjacent spot found: (" + freeSpot.getRow() + ", " + freeSpot.getCol() + ")");
         } else {
@@ -35,7 +34,7 @@ public class TestAdjacentFreeSpot {
         }
 
         // Rechercher un spot libre apr�s avoir marqu� les voisins
-        Spot freeSpotAfter = farm.getAdjacentFreeSpot(center);
+        Spot freeSpotAfter = farm.getAdjascentFreeUnsecureSpot(center);
         if (freeSpotAfter != null) {
             System.out.println("After marking adjacent spots, free spot found: (" +
                     freeSpotAfter.getRow() + ", " + freeSpotAfter.getCol() + ")");

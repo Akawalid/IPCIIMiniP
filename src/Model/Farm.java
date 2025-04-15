@@ -4,7 +4,6 @@ import Model.Entities.CleanDeadEntitiesThread;
 import Model.Entities.Entity;
 import Model.Entities.FarmAnimals.AgeState;
 import Model.Entities.FarmAnimals.FarmAnimal;
-//import Model.Entities.Predators.FoxDen;
 import Model.Entities.FarmAnimals.UpdateAgeThread;
 import Model.Entities.Shepherd;
 import Model.Position.FindPath;
@@ -601,7 +600,12 @@ public class Farm {
         }
         return new SimpleEntry<>(count_animals, count_shepherd);
     }
-
+    public boolean seek(int id){
+        for(Entity creat: creatures){
+            if(creat.getId() == id) return true;
+        }
+        return false;
+    }
     public boolean validCoordinates(int row, int col){
         //this method checks if the given coordinates are valid.
         return row >= 0
@@ -610,8 +614,8 @@ public class Farm {
                 && col < WIDTH
                 && getSpot(row, col).isTraversable();
     }
-    public Iterator<Den> getDens(){
-        return dens.iterator();
+    public ArrayList<Den> getDens(){
+        return dens;
     }
     public Iterator<Entity> getEntities(){
         //this method returns an iterator of the creatures,
@@ -619,16 +623,19 @@ public class Farm {
         return creatures.iterator();
     }
 
+    public HashSet<Entity> getEntitiesSet(){
+        return creatures;
+    }
+
     public void addEntity(Entity e){
         creatures.add(e);
     }
 
     public Entity getEntityInSpot(int row, int col){
-        Spot s = getSpot(row, col);
-        for(Entity e: creatures)
-            if(e.getPosition() == s) {
-                return e;
-            }
+        if(getSpot(row, col).getPositionnable() instanceof Entity){
+            return (Entity) getSpot(row, col).getPositionnable();
+        }
+        //null is treated automatically
         return null;
     }
     public void launchMovementThread(int destRow, int destCol){
@@ -653,7 +660,7 @@ public class Farm {
      * @param s the reference spot
      * @return a free adjacent spot if one is found, or null otherwise.
      */
-    public Spot getAdjacentFreeSpot(Spot s) {
+    public Spot getAdjascentFreeUnsecureSpot(Spot s) {
         int row = s.getRow();
         int col = s.getCol();
 
@@ -666,7 +673,7 @@ public class Farm {
                 // V�rifier que les coordonn�es sont valides
                 if (i >= 0 && i < HEIGHT && j >= 0 && j < WIDTH) {
                     Spot candidate = getSpot(i, j);
-                    if (candidate.isTraversable()) {
+                    if (candidate.isTraversable() && candidate.getProtectedArea() == 0) {
                         return candidate;
                     }
                 }
@@ -676,23 +683,30 @@ public class Farm {
         return null;
     }
 
-    public void cleanDeadEntities(){
+    public void cleanDeadEntities() {
         Iterator<Entity> it = creatures.iterator();
         while (it.hasNext()) {
             Entity e = it.next();
-            if (e instanceof FarmAnimal) {
-                FarmAnimal animal = (FarmAnimal) e;
-                if (animal.getState() == AgeState.DEAD)
-                    removeEntity(it, e);
-            } else if(e instanceof Predator){
-                Predator predator = (Predator) e;
-                if (predator.getIsDead()){
-                    removeEntity(it, e);
+//            if (e instanceof FarmAnimal) {
+//                FarmAnimal animal = (FarmAnimal) e;
+//                if (animal.getState() == AgeState.DEAD)
+//                    removeEntity(it, e);
+//            } else if(e instanceof Predator){
+//                Predator predator = (Predator) e;
+//                if (predator.getIsDead()){
+//                    removeEntity(it, e);
+//                } else if(predator.getPosition().getProtectedArea() > 0){
+//                    predator.kill();
+//                }
+//            }
 
-                } else if(predator.getPosition().getProtectedArea() > 0){
-                    predator.kill();
-                }
+            if (e instanceof Predator &&  e.getPosition().getProtectedArea() > 0) {
+                e.kill();
             }
+            if (e.getIsDead()) {
+                removeEntity(it, e);
+            }
+
         }
     }
 
@@ -700,16 +714,17 @@ public class Farm {
      * Updates the age of all farm animals and removes those that are dead.
      * This method is synchronized to prevent concurrent modifications.
      */
-    public synchronized void updateEntities() {
-        Iterator<Entity> it = creatures.iterator();
+    public void updateEntities() {
+        Set<Entity> entitiesSnapshot = new HashSet<>(creatures); // Copie défensive
+        Iterator<Entity> it = entitiesSnapshot.iterator();
         while (it.hasNext()) {
             Entity e = it.next();
             if (e instanceof FarmAnimal) {
                 FarmAnimal animal = (FarmAnimal) e;
                 animal.updateAge();
-                if (animal.getState() == AgeState.DEAD)
-                    // Supprime en toute sécurité l'élément actuellement itéré
-                    removeEntity(it, e);
+//                if (animal.getState() == AgeState.DEAD)
+//                    // Supprime en toute sécurité l'élément actuellement itéré
+//                    removeEntity(it, e);
             }
         }
     }
@@ -717,7 +732,7 @@ public class Farm {
     public void generateDens() {
         Random rand = new Random();
         int numWolfDens = rand.nextBoolean() ? 2 : 3; // g�n�re 2 ou 3 dens de loup
-        int numFoxDens = rand.nextBoolean() ? 2 : 3;  // g�n�re 2 ou 3 dens de renard
+        //int numFoxDens = rand.nextBoolean() ? 2 : 3;  // g�n�re 2 ou 3 dens de renard
 
         for (int i = 0; i < numWolfDens; i++) {
             Spot spot = getRandomTraversableSpot();
@@ -725,12 +740,12 @@ public class Farm {
             dens.add(wolfDen);
             new Thread(wolfDen).start();
         }
-        for (int i = 0; i < numFoxDens; i++) {
-            Spot spot = getRandomTraversableSpot();
-            //FoxDen foxDen = new FoxDen(spot, this);
-            //addEntity(foxDen);
-            //new Thread(foxDen).start();
-        }
+//        for (int i = 0; i < numFoxDens; i++) {
+//            Spot spot = getRandomTraversableSpot();
+//            //FoxDen foxDen = new FoxDen(spot, this);
+//            //addEntity(foxDen);
+//            //new Thread(foxDen).start();
+//        }
     }
 
     // M�thode utilitaire pour obtenir une case traversable al�atoire

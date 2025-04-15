@@ -20,6 +20,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Land extends JPanel {
     //This class represents the grid on the screen, where the game will be played.
@@ -114,8 +116,8 @@ public class Land extends JPanel {
                                 null);
                     }
                 }
-                if(farm.getSpot(row, col).getProtectedArea() > 0){
-                    g.setColor(new Color(200, 100, 200, 100));
+                if(!farm.getSpot(row, col).isTraversable()){
+                    g.setColor(new Color(255, 0, 0, 100));
                     g.fillRect(colOfModelToView(col), rowOfModelToView(row), CELL_SIZE, CELL_SIZE);
                 }
             }
@@ -123,52 +125,51 @@ public class Land extends JPanel {
     }
 
     private void drawEnities(Graphics g){
-        for (Iterator<Entity> it = farm.getEntities(); it.hasNext(); ) {
-            Entity e = it.next();
+        // Créer une copie thread-safe des entités
+        Set<Entity> entitiesSnapshot = new HashSet<>(farm.getEntitiesSet()); // Copie défensive
+        List<Den> densSnapshot = new ArrayList<>(farm.getDens()); // Idem pour les terriers
+        // Dessiner les entités
+        for (Entity e : entitiesSnapshot) { // Utiliser la copie, pas l'original
             int y = rowOfModelToView(e.getPosition().getRow());
             int x = colOfModelToView(e.getPosition().getCol());
-            int shadowChoixe = 0, imgChoice = 0;
+            int shadowChoice = 0, imgChoice = 0;
+
             if (e instanceof Sheep) {
                 imgChoice = EntityMetaData.SHEEP_EAT;
-                shadowChoixe = EntityMetaData.LLAMA_SHADOW;
-            } else if(e instanceof Hen){
+                shadowChoice = EntityMetaData.LLAMA_SHADOW;
+            } else if (e instanceof Hen) {
                 imgChoice = EntityMetaData.LLAMA_EAT;
-                shadowChoixe = EntityMetaData.LLAMA_SHADOW;
-
-            } else if(e instanceof Ewe){
+                shadowChoice = EntityMetaData.LLAMA_SHADOW;
+            } else if (e instanceof Ewe) {
                 imgChoice = EntityMetaData.COW_EAT;
-                shadowChoixe = EntityMetaData.COW_SHADOW;
-            } else if(e instanceof Wolf){
+                shadowChoice = EntityMetaData.COW_SHADOW;
+            } else if (e instanceof Wolf) {
                 g.setColor(Color.BLACK);
                 g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
-            } else if(e instanceof Shepherd)
-            {
+            } else if (e instanceof Shepherd) {
                 g.setColor(Color.BLUE);
                 g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+
             }
-            if(!(e instanceof Wolf || e instanceof Shepherd)){
-                BufferedImage i = EntityMetaData.getAsset(shadowChoixe, e.getDirection(), 0);
+
+            if (!(e instanceof Wolf || e instanceof Shepherd)) {
+                BufferedImage i = EntityMetaData.getAsset(shadowChoice, e.getDirection(), 0);
                 int ix = i.getWidth();
                 int iy = i.getHeight();
-                g.drawImage(i, x  - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2 - EPSILON, null);
-                ix = i.getWidth();
-                iy = i.getHeight();
+                g.drawImage(i, x - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2 - EPSILON, null);
                 i = EntityMetaData.getAsset(imgChoice, e.getDirection(), 0);
-                g.drawImage(i, x  - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2, null);
+                g.drawImage(i, x - (ix - CELL_SIZE)/2, y - (iy - CELL_SIZE)/2, null);
             }
-
-
         }
-        for (Iterator<Den> it = farm.getDens(); it.hasNext(); ) {
-            Den d = it.next();
+
+        // Dessiner les terriers
+        for (Den d : densSnapshot) { // Utiliser la copie
             int y = rowOfModelToView(d.getPosition().getRow());
             int x = colOfModelToView(d.getPosition().getCol());
-            if(d.isActive())
-                g.setColor(new Color(0x283618));
-            else
-                g.setColor(new Color(16 * 2 + 8, 3 * 16 + 6, 16 + 8, 100));
+            g.setColor(d.isActive() ? new Color(0x283618) : new Color(0x2F3E46));
             g.fillOval(x, y, CELL_SIZE, CELL_SIZE);
         }
+
         g.setColor(null);
     }
 

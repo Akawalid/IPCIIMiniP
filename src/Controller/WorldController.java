@@ -1,6 +1,8 @@
 package Controller;
 
 import Model.Entities.Entity;
+import Model.Entities.Predators.Den;
+import Model.Entities.Predators.Predator;
 import Model.Farm;
 import Model.Entities.FarmAnimals.Ewe;
 import Model.Entities.FarmAnimals.Hen;
@@ -104,7 +106,12 @@ public class WorldController {
                     // 3. Sinon, le clic est interprété comme une sélection d'entité
                     Entity entity = farm.getEntityInSpot(row, col);
                     if (farm.getSelectedEntity() == entity) return;
-                    farm.setSelectedEntity(entity);
+                    if(entity instanceof Predator) {
+                        farm.setSelectedEntity(null);
+                        System.out.println("aaaaaaaaaaaaaa" + entity.getSpecies() + "aaaa" + entity.getId());
+                        System.out.println("eeeee" + farm.seek(entity.getId()) + "  " + entity.getIsDead());
+                    }
+                    else farm.setSelectedEntity(entity);
                     world.inform(World.UPDATE_ACTIVE_ENTITY);
                 }
             }

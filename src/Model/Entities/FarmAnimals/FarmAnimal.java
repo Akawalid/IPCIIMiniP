@@ -55,6 +55,7 @@ public abstract class FarmAnimal extends Entity {
         } else if (age == 10) {
             // L'animal meurt de vieillesse
             System.out.println("L'animal est mort de vieillesse.");
+            isDead = true;
             state = DEAD;
         }
         System.out.println("Âge : " + age + " - État : " + state);

@@ -6,6 +6,7 @@ import Model.Entities.Shepherd;
 import Model.Farm;
 import View.MainMenu.MainMenu;
 import View.PrincipalPanel;
+import View.World.PlaySound;
 import View.World.World;
 
 public class Controller {
@@ -38,6 +39,8 @@ public class Controller {
 
         //Lancement du thread d'écoulement du temps (les manches)
         farm.getRound().start_running();
+        PlaySound ps = new PlaySound(farm);
+        ps.start();
     }
 
     public PrincipalPanel getView() {

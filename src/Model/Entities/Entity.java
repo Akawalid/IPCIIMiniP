@@ -1,6 +1,7 @@
 package Model.Entities;
 
 import Model.Direction;
+import Model.Entities.FarmAnimals.Sheep;
 import Model.Exceptions.InvalidCoordinates;
 import Model.Exceptions.UnauthorizedAction;
 import Model.Farm;
@@ -25,7 +26,7 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
     // The closer it is to the target, the higher its priority.
     // Therefore, priority is determined by the remaining distance to the target.
     // Si les bêtes bougent, alors il faut bien adapter la priorité ainsi que les méthodes qui en dépendent pour leurs mouvements.
-
+    protected boolean isDead;
     public Entity(Spot position){
         super(position);
 
@@ -38,7 +39,17 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
         int dirY = Farm.HEIGHT/2 - position.getCol();
         if(dirX == 0 && dirY == 0) direction = Direction.DOWN;
         else direction = Direction.fromCoordinates(dirX, dirY);
+        isDead = false;
     }
+    public boolean getIsDead(){
+        return isDead;
+    }
+    public void kill(){
+        isDead = true;
+        position.setIsTraversable(true);
+        position.setPositionnable(null);
+    }
+    public int getPathSize(){return path.size();}
 
     public int getId(){
         return id;

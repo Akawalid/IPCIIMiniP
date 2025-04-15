@@ -7,7 +7,7 @@ import Model.Position.Spot;
 import java.util.HashSet;
 
 public class Shepherd extends Entity {
-    public static int PROTECTION_RADIUS = 3;
+    public static int PROTECTION_RADIUS = 2;
     private final int PRICE = 80;
     private final Farm farm;
     public Shepherd(Spot s, Farm farm) {

@@ -11,7 +11,7 @@ public class EntityMovementThread extends Thread {
     }
     @Override
     public void run() {
-        while(e.hasMovements()) {
+        while(e.hasMovements() && !e.getIsDead()) {
             try {
                 e.move();
                 Thread.sleep(DELAY);
