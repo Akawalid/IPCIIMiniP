@@ -1,6 +1,7 @@
 package View.MainMenu;
 
 import Controller.MainMenuController;
+import View.Oiseau;
 
 import javax.sound.sampled.Clip;
 import javax.swing.*;
@@ -15,7 +16,9 @@ import javax.sound.sampled.*;
 public class MainMenu extends JPanel {
     private JLabel backgroundLabel; // Use JLabel to hold the animated GIF
     private JButton centerButton;
-    private Clip clip; // Clip pour la musique
+    //private Clip clip; // Clip pour la musique
+
+    private Oiseau oiseau; // variable membre pour l'instance Oiseau
 
     public MainMenu() {
         JLayeredPane layeredPane = new JLayeredPane();
@@ -48,6 +51,18 @@ public class MainMenu extends JPanel {
         layeredPane.add(centerButton, JLayeredPane.PALETTE_LAYER);
         // Jouer le son dans un thread séparé
         new Thread(() -> jouerSon("Assets/sounds/lancement.wav")).start();
+        new Thread(() -> jouerSon("Assets/sounds/NatureMatin.wav")).start();
+
+        // Ici, on ajoute le thread Oiseau.
+        // Par exemple, on crée un oiseau commençant à x=800 avec une vitesse de 5
+        Oiseau oiseau = new Oiseau(800, 5);
+        // On peut également conserver cette référence en tant que variable d'instance si nécessaire
+
+        // Si vous voulez que l'oiseau soit visible, il faut
+        // redessiner régulièrement le panel pour mettre à jour son animation.
+        // Vous pouvez ajouter un timer pour appeler repaint() sur ce panel.
+        Timer timer = new Timer(50, e -> repaint());
+        timer.start();
     }
 
     // Méthode pour jouer un son
@@ -60,14 +75,23 @@ public class MainMenu extends JPanel {
             }
 
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(url);
-            clip = AudioSystem.getClip();
-            clip.open(audioStream);
-            clip.loop(Clip.LOOP_CONTINUOUSLY); // Joue la musique en boucle
-            clip.start();
+            Clip localClip = AudioSystem.getClip(); // Variable locale
+            localClip.open(audioStream);
+            localClip.loop(Clip.LOOP_CONTINUOUSLY); // Joue la musique en boucle
+            localClip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
         }
     }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if(oiseau != null) {
+            oiseau.draw(g);
+        }
+    }
+
 
     private JButton createImageButton(String imagePath) {
         JButton button = new JButton();

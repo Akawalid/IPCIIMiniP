@@ -18,4 +18,9 @@ public class PrincipalPanel extends JPanel {
     public void showCard(String cardName) {
         cardLayout.show(this, cardName);
     }
+    public void closeApplication() {
+        SwingUtilities.getWindowAncestor(this).dispose();
+        System.exit(0);
+    }
+
 }
