@@ -58,6 +58,9 @@ public class ControlPanel extends JSplitPane {
         gameStatePanel.setPreferredSize(new Dimension(W, 100));
         gameStatePanel.setBackground(Color.red);
 
+        // Utilisez setTopComponent() pour le composant supérieur du JSplitPane
+        setTopComponent(gameStatePanel);
+
         //Market
         marketPanel = new MarketPanel(world);
         marketPanel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -88,11 +91,11 @@ public class ControlPanel extends JSplitPane {
         sp2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
         // En 1er : gameStatePanel
-        this.add(gameStatePanel, JSplitPane.TOP);
+        //this.add(gameStatePanel, JSplitPane.TOP);
         // En 2e : sp1
         sp1.setTopComponent(marketPanel);
         sp1.setBottomComponent(sp2);
-        add(sp1, JSplitPane.BOTTOM);
+        setBottomComponent(sp1);
         // Ajout de Information- et Action- Panel plus tard
 
         lastShownEntity = null;
@@ -109,6 +112,15 @@ public class ControlPanel extends JSplitPane {
                 dialog.setVisible(false);
                 updateActiveEntity();
                 break;
+            case WINNER:
+
+                // Afficher un message de victoire
+                g.setFont(new Font("Arial", Font.BOLD, 36));
+                g.setColor(Color.GREEN);
+                g.drawString("You Win!", 50, 100);
+                // ajouter ici d'autres actions,
+                // comme fermer certaines parties de l'interface ou désactiver les contrôles
+                break;
             case BETWEEN_ROUNDS: case GAME_OVER:
                 if (!popup) {
                     popup = true;
@@ -116,6 +128,7 @@ public class ControlPanel extends JSplitPane {
                     dialog.setVisible(true);
                 }
                 break;
+
             default:
                 //lever une erreur unsupported case
                 throw new IllegalStateException("Unexpected value: " + farm.getRound().getGameStatus());
@@ -161,8 +174,8 @@ public class ControlPanel extends JSplitPane {
             if(controller != null) connect(controller);
 
             //in case e is not null
-            sp2.add(informationPanel, JSplitPane.TOP);
-            sp2.add(actionPanel, JSplitPane.BOTTOM);
+            sp2.setTopComponent(informationPanel);
+            sp2.setBottomComponent(actionPanel);
         }
     }
 

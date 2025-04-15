@@ -3,10 +3,15 @@ package Model.RoundManagement;
 import Model.Bank;
 import Model.Farm;
 
+import javax.swing.*;
 import java.util.AbstractMap;
 
 import static Model.RoundManagement.GameStatus.*;
 
+/**
+ *  The Round class manages the logic of the game round.
+**   It is responsible for initializing prices, handling payments,
+*   and advancing the game with each round. */
 public class Round {
 
     /* Ecrire les attributs suivants
@@ -43,11 +48,14 @@ public class Round {
     private int loyer; //montant du loyer mensuel
 
     private int total_payment; //total à payer pour la manche
+    private static final int WIN_THRESHOLD = 20020;
+
 
 
     public Round(Farm farm) {
         this.farm = farm;
-        this.num_round = 0;
+        //this.num_round = 0;
+        this.num_round = 1; // Début de la première manche avec le numéro 1
         this.thread = new RoundThread(this);
 
         //paiement
@@ -86,6 +94,12 @@ public class Round {
     /** getShepherdSalary(nbShepherd)
      * = nbShepherd * salaire_shepherd
      */
+
+    /**
+     * Calculates the total salary required for shepherds for the round.
+     * @param nbShepherd number of shepherds.
+     * @return total salary cost.
+     */
     public int getShepherdSalary(int nbShepherd) {
         return nbShepherd * salaire_shepherd;
     }
@@ -115,7 +129,7 @@ public class Round {
     /** Fonction start_game qui appelle start_round pour la première fois */
     public void start_running() {
         thread.start();
-        start_round();
+        start_round(); // Première manche démarrée automatiquement
     }
 
     /** Fonction start_round qui lance la manche
@@ -125,11 +139,12 @@ public class Round {
     public void start_round() {
         //gestion de la manche
         gameStatus = RUNNING;
-        num_round++;
+        //num_round++;
         System.out.println("Round " + num_round + " started.");
 
         farm.getBank().withdraw(total_payment);
         farm.resume_game(); //relance les threads de la ferme
+
 
         // Augmentation des prix
         prix_nourriture += (int) (prix_nourriture * INFLATION);
@@ -137,12 +152,10 @@ public class Round {
         loyer += (int) (loyer * INFLATION);
         //rbsmt_pret += (int) (rbsmt_pret * TAUX_PRET);
 
-        //ajout de prédateurs
-        //TODO : Izma c'est ici :)
     }
 
     /** Fonction end_round qui met fin au round */
-    protected void end_round() {
+    /*protected void end_round() {
         gameStatus = BETWEEN_ROUNDS;
         farm.pause_game(); //met les threads en pause
 
@@ -151,11 +164,62 @@ public class Round {
         //total à payer
         total_payment = getTotalPayment(farm.getNbAnimalsAndShepherds());
         if(farm.getBank().getBalance() < total_payment) gameStatus = GAME_OVER;
+        // Arrête le thread pour éviter qu'il ne refasse tourner le cooldown.
+        thread.stopThread();
+
+
+    }*/
+    public void end_round() {
+        gameStatus = BETWEEN_ROUNDS;
+        farm.pause_game(); // Met les threads en pause
+
+        System.out.println("Round " + num_round + " ended.");
+
+        // Calcul du total à payer
+        total_payment = getTotalPayment(farm.getNbAnimalsAndShepherds());
+
+        // Condition de défaite : si le solde est insuffisant, le jeu est GAME_OVER
+        if (farm.getBank().getBalance() < total_payment) {
+            gameStatus = GameStatus.GAME_OVER;
+        }
+        // Condition de victoire : si le solde atteint ou dépasse le seuil défini, le jeu est gagné
+        else if (farm.getBank().getBalance() >= WIN_THRESHOLD) {
+            gameStatus = GameStatus.WINNER;
+        }
+
+        // Arrête le thread pour éviter qu'il ne refasse tourner le cooldown.
+        thread.stopThread();
+
+        // Si le statut est WINNER, on affiche une fenêtre de victoire
+        if (gameStatus == GameStatus.WINNER) {
+            JOptionPane.showMessageDialog(null, "WINNER", "Victory", JOptionPane.INFORMATION_MESSAGE);
+            // Optionnel : quitter l'application
+            System.exit(0);
+        }
     }
+
+
 
     public void end_game() {
         farm.pause_game();
         gameStatus = CLOSE;
+    }
+
+    public void nextRound() {
+        // On vérifie que le round précédent est terminé
+        if (gameStatus == BETWEEN_ROUNDS) {
+            num_round++; // Incrémente le numéro du round
+
+            // Crée un nouveau thread RoundThread
+            thread = new RoundThread(this);
+            thread.start();
+
+            // Démarre le nouveau round
+            start_round();
+            // Réinitialiser les dens en supprimant les anciens et en générant de nouveaux
+            farm.refreshPredators();
+
+        }
     }
 
     public void pauseRoundThread(){
@@ -166,4 +230,7 @@ public class Round {
         thread.resumeThread();
     }
 
+    public int getWinThreshold() {
+        return WIN_THRESHOLD;
+    }
 }
