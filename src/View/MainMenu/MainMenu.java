@@ -2,15 +2,20 @@ package View.MainMenu;
 
 import Controller.MainMenuController;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
+
 
 public class MainMenu extends JPanel {
     private JLabel backgroundLabel; // Use JLabel to hold the animated GIF
     private JButton centerButton;
+    private Clip clip; // Clip pour la musique
 
     public MainMenu() {
         JLayeredPane layeredPane = new JLayeredPane();
@@ -41,6 +46,27 @@ public class MainMenu extends JPanel {
 
         // Add button to a higher layer
         layeredPane.add(centerButton, JLayeredPane.PALETTE_LAYER);
+        // Jouer le son dans un thread séparé
+        new Thread(() -> jouerSon("Assets/sounds/lancement.wav")).start();
+    }
+
+    // Méthode pour jouer un son
+    private void jouerSon(String cheminFichier) {
+        try {
+            URL url = getClass().getClassLoader().getResource(cheminFichier);
+            if (url == null) {
+                System.err.println("Fichier audio introuvable : " + cheminFichier);
+                return;
+            }
+
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(url);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.loop(Clip.LOOP_CONTINUOUSLY); // Joue la musique en boucle
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            System.err.println("Erreur lors de la lecture du son : " + e.getMessage());
+        }
     }
 
     private JButton createImageButton(String imagePath) {
