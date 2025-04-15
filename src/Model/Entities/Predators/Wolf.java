@@ -10,12 +10,16 @@ import Model.Exceptions.InvalidCoordinates;
 
 import java.util.*;
 
-public class Wolf extends Predator implements Runnable {
+public class Wolf extends Predator {
 
     public Wolf(Spot s, Farm farm) {
         super(s, farm);
     }
-
+    @Override
+    public void move() throws InvalidCoordinates {
+        super.move();
+        if(position.getProtectedArea() > 0) kill();
+    }
     @Override
     public void run() {
         Random rand = new Random();
@@ -36,7 +40,7 @@ public class Wolf extends Predator implements Runnable {
                 // Utiliser FindPath pour calculer le chemin vers la proie
                 ArrayDeque<Spot> path = FindPath.findPath(this.getPosition(), target.getPosition());
                 this.setPath(path);
-                if (this.hasMovements()) {
+                if (this.hasMovements() && !isDead) {
                     try {
                         this.move();
                     } catch (InvalidCoordinates e) {
@@ -57,13 +61,16 @@ public class Wolf extends Predator implements Runnable {
                     ArrayDeque<Spot> singleStep = new ArrayDeque<>();
                     singleStep.add(next);
                     this.setPath(singleStep);
-                    try {
-                        this.move();
-                    } catch (InvalidCoordinates e) {
-                        e.printStackTrace();
+                    if(!isDead){
+                        try {
+                            this.move();
+                        } catch (InvalidCoordinates e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+
         }
     }
 protected void checkAndKillPrey() {

@@ -166,7 +166,8 @@ public class Land extends JPanel {
         for (Den d : densSnapshot) { // Utiliser la copie
             int y = rowOfModelToView(d.getPosition().getRow());
             int x = colOfModelToView(d.getPosition().getCol());
-            g.setColor(d.isActive() ? new Color(0x283618) : new Color(0x2F3E46));
+            g.setColor(d.isActive() ? new Color(0x283618) : new Color(40, 54, 24, 70) // alpha = 128 sur 255 (≈ 50% d'opacité)
+            );
             g.fillOval(x, y, CELL_SIZE, CELL_SIZE);
         }
 

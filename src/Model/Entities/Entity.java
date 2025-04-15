@@ -44,12 +44,11 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
     public boolean getIsDead(){
         return isDead;
     }
-    public void kill(){
+    public synchronized void kill(){
         isDead = true;
         position.setIsTraversable(true);
         position.setPositionnable(null);
     }
-    public int getPathSize(){return path.size();}
 
     public int getId(){
         return id;
@@ -71,10 +70,11 @@ public abstract class Entity extends Positionnable implements Comparable<Entity>
         };
 
         // Get the next spot from the queue
-        assert(!path.isEmpty());
-        Spot s = path.poll();
-        direction = Direction.deduceDirection(this.position, s);
-        setPosition(s); // Move to the new position
+        if(!path.isEmpty()){
+            Spot s = path.poll();
+            direction = Direction.deduceDirection(this.position, s);
+            setPosition(s); // Move to the new position
+        }
     }
     protected void handleConflict(){
         /*

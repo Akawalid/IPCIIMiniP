@@ -62,6 +62,8 @@ public class World extends JLayeredPane {
                 updateBounds();
             }
         });
+        PlaySound ps = new PlaySound(farm);
+        ps.start();
     }
 
     public void updateBounds() {

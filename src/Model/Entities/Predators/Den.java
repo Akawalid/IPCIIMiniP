@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public abstract class Den extends Positionnable implements Runnable {
-    private static final int MAX_WOLVES = 10;
+    private static final int MAX_WOLVES = 5;
     protected Farm farm;
     protected boolean active;
     protected ArrayList<Predator> livingPredators;
@@ -22,7 +22,7 @@ public abstract class Den extends Positionnable implements Runnable {
     }
 
     public void reactToAreaChange() {
-        active = this.position.getProtectedArea() == 0;
+        active = this.position.getProtectedArea() <= 0;
     }
 
     public boolean isActive(){return active;}

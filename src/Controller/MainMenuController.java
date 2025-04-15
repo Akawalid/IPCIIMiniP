@@ -35,12 +35,6 @@ public class MainMenuController {
                 SHEEP_TEST_1 = new Sheep(farm.getSpot(5, 5));
                 farm.addEntity(SHEEP_TEST_1);
 
-
-                //create obstacles on the map
-                farm.getSpot(1, 1).setIsTraversable(false);
-                farm.getSpot(2, 2).setIsTraversable(false);
-                farm.getSpot(2, 3).setIsTraversable(false);
-
                 // Initialiser les dens de prédateurs (Génère des dens de loups et de renards qui spawneront leurs prédateurs)
                 farm.initPredators();
                 World world = new World(farm);
@@ -51,8 +45,9 @@ public class MainMenuController {
                 simThread.start();
                 genController.getView().add("World", world);
                 genController.getView().showCard("World");
-                PlaySound ps = new PlaySound(farm);
-                ps.start();
+
+                //Lancement du thread d'écoulement du temps (les manches)
+                farm.getRound().start_running();
             }
         };
     }

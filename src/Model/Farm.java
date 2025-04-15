@@ -700,9 +700,9 @@ public class Farm {
 //                }
 //            }
 
-            if (e instanceof Predator &&  e.getPosition().getProtectedArea() > 0) {
-                e.kill();
-            }
+//            if (e instanceof Predator &&  e.getPosition().getProtectedArea() > 0) {
+//                e.kill();
+//            }
             if (e.getIsDead()) {
                 removeEntity(it, e);
             }
@@ -772,6 +772,7 @@ public class Farm {
          */
         //remove from Spot
         e.getPosition().setIsTraversable(true);
+        e.getPosition().setPositionnable(null);
 
         //remove from Farm
         creatures.remove(e);
@@ -793,6 +794,14 @@ public class Farm {
         //remove from Spot
         e.getPosition().setIsTraversable(true);
         e.getPosition().setPositionnable(null);
+
+        //si instance == FarmAnimal
+        if(e instanceof FarmAnimal){
+            ((FarmAnimal) e).pauseProductionThread();
+        }
+
+        //if it was selected, then stop selecting it
+        if(e == getSelectedEntity()) setSelectedEntity(null);
 
         //remove from Farm
         it.remove();
