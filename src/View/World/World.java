@@ -34,19 +34,32 @@ public class World extends JLayeredPane {
 
         this.farm = farm;
         //entitiesMetaData = new HashMap<>();
-
         worldPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
-        // World Panel (Left Column)
+        // Créez d’abord LAND et CONTROL_PANEL
         land = new Land(farm);
-        worldPanel.add(land, JSplitPane.LEFT);
+        controlPanel = new ControlPanel(farm, this);
+
+        // Maintenant, on peut les insérer dans le JSplitPane
+        worldPanel.setLeftComponent(land);
+        worldPanel.setRightComponent(controlPanel);
+
+        // Position initiale de la barre (70% pour la gauche)
+        worldPanel.setDividerLocation(0.9); // 90 % pour le terrain, 10 % pour le panneau de contrôle.
+
+        // Permettre le repli
+        worldPanel.setOneTouchExpandable(true);
+        worldPanel.setDividerSize(8);
+
+        add(worldPanel, JLayeredPane.DEFAULT_LAYER);
+
 
         // Control Panel (Right Column)
-        controlPanel = new ControlPanel(farm, this);
-        controlPanel.setPreferredSize(new Dimension(180, 200));
-        worldPanel.add(controlPanel, JSplitPane.RIGHT);
+        //controlPanel = new ControlPanel(farm, this);
+        controlPanel.setPreferredSize(new Dimension(120, 700));
+        controlPanel.setMinimumSize(new Dimension(120, 700));
 
-        add(worldPanel, JLayeredPane.DEFAULT_LAYER); // Default layer
+
 
 
         shadowPanel = new JPanel();
@@ -64,6 +77,9 @@ public class World extends JLayeredPane {
         });
         PlaySound ps = new PlaySound(farm);
         ps.start();
+
+        //worldPanel.setDividerLocation(0.7); // 70 % pour le terrain, 30 % pour le panneau de contrôle.
+
     }
 
     public void updateBounds() {
